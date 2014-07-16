@@ -1,0 +1,20 @@
+<!-- 
+    This includes any CSS and JavaScript files and sources
+    that are standard across most JSP pages in the application.
+
+-->
+
+<%@ page pageEncoding="UTF-8" %>
+
+<%
+        final String CONTEXT = request.getContextPath();
+%>
+
+<!-- STYLE SHEETS -->
+<link rel="stylesheet" href="<%= CONTEXT %>/RESOURCES/stylesheets/bootstrap/css/bootstrap.css" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+<link href="<%= CONTEXT %>/RESOURCES/stylesheets/fonts/font.css" rel="stylesheet" type="text/css" />
+
+<!-- JAVA SCRIPTS -->
+<script type="text/javascript" src="<%= CONTEXT %>/RESOURCES/scripts/jquery/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="<%= CONTEXT %>/RESOURCES/stylesheets/bootstrap/js/bootstrap.js"></script>
