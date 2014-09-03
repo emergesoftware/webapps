@@ -1,0 +1,113 @@
+<%-- 
+    - The Bootstrap CDN Hosted Library WebPage: http://glyphicons.getbootstrap.com/
+
+--%>
+<%@ page pageEncoding="UTF-8" %>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>MetroBus App</title>
+
+<!-- STYLESHEETS -->
+
+<link type="text/css" rel="stylesheet"
+      href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cosmo/bootstrap.min.css" />
+
+<link type="text/css" rel="stylesheet"
+      href="<%= request.getContextPath() %>/resources/stylesheets/loadingPanel.css" />
+
+<link type="text/css" rel="stylesheet"
+      href="<%= request.getContextPath() %>/resources/stylesheets/default.css" />
+
+<!-- JAVASCRIPTS -->
+<script type="text/javascript" 
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
+</script>
+
+<script type="text/javascript"
+    src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js">
+</script>
+
+<script type="text/javascript"
+        src="<%= request.getContextPath() %>/resources/javascript/loadingPanel.js">
+</script>
+        
+<script type="text/javascript" 
+        src="<%= request.getContextPath() %>/resources/javascript/smooth-wheel/jquery.smoothwheel.js">
+</script>
+        
+
+<!-- carries the functions to validate the search bar 
+    on the navigation bar -->
+<script type="text/javascript">
+    
+    /**
+     * Validates the Search Form in the navigation bar
+     * 
+     * @returns {Boolean}
+     */
+    function checkSearchBusRouteForm() {
+        
+        // the form group that carries the search box
+        var searchRouteFormGroup = document.getElementById("searchRouteFormGroup");
+        // the search box
+        var searchRouteNumberBox = document.getElementById("searchRouteNumberBox");
+        
+        // exit if either of the elements
+        // do not exist
+        if (searchRouteFormGroup == null || searchRouteNumberBox == null) {
+            return false;
+        }
+        
+        // check the value in the search box
+        if (searchRouteNumberBox.value == null || 
+                searchRouteNumberBox.value.trim().length == 0) {
+            $(searchRouteFormGroup).addClass('has-error');
+            return false;
+        }
+        
+        else {
+            $(searchRouteFormGroup).removeClass('has-error');
+            return true;
+        }
+    }
+    
+</script>
+
+<!-- Force reload if the web page was 
+    persisted -->
+<script type="text/javascript">
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            document.body.style.display = "none";
+            location.reload();
+        }
+    };
+</script>
+
+<!-- Register an event to
+    listen for the webpage loading
+-->
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        window.onbeforeunload = function() {
+            toggleLoadingPanel(true);
+        };
+
+    });
+</script>
+
+
+<!-- register a smooth wheel scroll plugin -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        
+        var pageContent = document.getElementById("page-content");
+        if (pageContent == null)
+            return;
+        
+        $(pageContent).smoothWheel();
+        
+    });
+</script>

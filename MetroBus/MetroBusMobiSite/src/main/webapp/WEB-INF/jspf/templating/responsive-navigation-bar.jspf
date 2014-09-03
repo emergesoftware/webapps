@@ -1,0 +1,108 @@
+<%@page import="java.util.List"%>
+<%@page import="za.co.metrobus.hibernate.entity.NavigationBarLink"%>
+<%@page import="com.emergelets.metrobus.mobisite.component.WebPageInfo"%>
+<%@ page pageEncoding="UTF-8" %>
+
+<%
+    // Resolve the web page info
+    WebPageInfo webPageInfo = (WebPageInfo)request.getAttribute(
+            WebPageInfo.class.getName());
+    
+    if (webPageInfo == null)
+        webPageInfo = new WebPageInfo();
+    
+    
+%>
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+     
+      <div class="container">
+          
+        <!-- The Header Part -->
+        <div class="navbar-header">
+            <a href="#" class="navbar-brand">
+                <span>
+                    &nbsp;<%= (webPageInfo.getTitle() == null) ? "Bus Services App" : webPageInfo.getTitle() %>
+                </span>
+            </a>
+          
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          
+        </div>
+          
+        <div class="navbar-collapse collapse" id="navbar-main">
+            
+            <!-- form class="navbar-form navbar-right" role="form"
+                  method="get" action="/time-tables/find-by-bus-route"
+                  onsubmit="return checkSearchBusRouteForm()">
+            
+                <div id="searchRouteFormGroup" class="form-group">
+                    <input type="search" placeholder="Search Bus Route"
+                           maxlength="4" class="form-control"
+                           name="routeNumber"
+                           id="searchRouteNumberBox"/>
+                </div>
+               
+            </form-->
+            
+            <ul class="nav navbar-nav">
+                
+                
+                <li>
+                    <a href="<%=  request.getContextPath() %>/index">
+                        <i class="glyphicon glyphicon-home"></i>&nbsp;
+                        <span>Home</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="<%=  request.getContextPath() %>/time-tables/select-option">
+                        <i class="glyphicon glyphicon-th-large"></i>&nbsp;
+                        <span>Time Tables</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="<%=  request.getContextPath() %>/search/find-available-routes">
+                        <i class="glyphicon glyphicon-search"></i>&nbsp;
+                        <span>Search</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-tags"></i>&nbsp;
+                        <span>Fares</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-info-sign"></i>&nbsp;
+                        <span>About</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-envelope"></i>&nbsp;
+                        <span>Contact Developer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-star"></i>&nbsp;
+                        <span>Rate And Review</span>
+                    </a>
+                </li>
+                
+            </ul>
+           
+        </div>
+      </div>
+    </div>
+

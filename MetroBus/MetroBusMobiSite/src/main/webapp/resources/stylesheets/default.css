@@ -1,0 +1,18 @@
+
+/* 
+    Created on : 27 Aug 2014, 4:51:59 PM
+    Author     : tsepo maleka
+*/
+
+h1, h2, h3, h4 {
+    font-weight: bold;
+}
+
+#page-content {
+    
+    margin-top: 42px;
+    margin-bottom: 42px;
+    width: 100%;
+    
+}
+
