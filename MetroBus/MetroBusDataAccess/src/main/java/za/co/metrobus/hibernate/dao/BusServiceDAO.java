@@ -235,4 +235,15 @@ public interface BusServiceDAO {
      */
     public List<RouteDescription> getRouteDescriptions(String routeNumber) 
             throws DataAccessException;
+    
+    /**
+     * Gets a list of bus routes
+     * within the bus route
+     * 
+     * @param routeNumber
+     * @return
+     * @throws DataAccessException 
+     */
+    public List<BusStop> getBusStopsByRouteNumber(String routeNumber)
+            throws DataAccessException;
 }

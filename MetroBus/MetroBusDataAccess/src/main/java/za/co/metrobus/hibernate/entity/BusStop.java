@@ -21,8 +21,13 @@ public class BusStop implements Serializable {
     private int busStopId;
     
     @OneToOne(targetEntity = BusRoute.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "zone_number", nullable = false)
+    @JoinColumn(name = "route_number", nullable = false)
     private BusRoute route;
+    
+    @OneToOne(targetEntity = BusZone.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "zone_number", nullable = false)
+    private BusZone zone;
+    
     
     @Column(name = "bus_stop_short_desc", nullable = false)
     private String shortDescription;
@@ -86,6 +91,15 @@ public class BusStop implements Serializable {
     public void setGpsLongitude(double gpsLongitude) {
         this.gpsLongitude = gpsLongitude;
     }
+
+    public BusZone getZone() {
+        return zone;
+    }
+
+    public void setZone(BusZone zone) {
+        this.zone = zone;
+    }
+    
     
     
 }

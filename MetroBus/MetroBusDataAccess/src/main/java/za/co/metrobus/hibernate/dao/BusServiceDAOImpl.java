@@ -19,7 +19,7 @@ import za.co.metrobus.hibernate.entity.*;
  *
  * @author Tsepo Maleka
  */
-public class BusServiceDAOImpl extends DefaultFactory 
+public class BusServiceDAOImpl extends DefaultDataAccessObject 
                                implements BusServiceDAO {
     
     // Logger
@@ -31,32 +31,7 @@ public class BusServiceDAOImpl extends DefaultFactory
      */
     public BusServiceDAOImpl() {
         super();
-        startConfiguration();
-    }
-    
-    /**
-     * Starts the configuration for Hibernate
-     */
-    private void startConfiguration() {
-        try {
-            
-            LOG.log(Level.INFO, "starting configuration for Hibernate..."); 
-            
-            addAnnotatedClass(BusRoute.class);
-            addAnnotatedClass(Location.class);
-            addAnnotatedClass(BusDeparture.class);
-            addAnnotatedClass(BusZone.class);
-            addAnnotatedClass(BusArrival.class);
-            addAnnotatedClass(RouteDescription.class); 
-            
-            constructSessionFactory();
-        }
-        catch (IllegalAccessException e) {
-            LOG.log(Level.SEVERE, "Could not begin config: " 
-                    + e.getMessage()); 
-            
-        }
-        
+        //startConfiguration();
     }
 
     @Override
@@ -70,7 +45,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(Location.class);
             criteria.add(Restrictions.or(Restrictions.ilike("fullName", name, MatchMode.ANYWHERE), 
@@ -87,7 +63,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
          
     }
@@ -101,7 +77,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(Location.class);
             criteria.add(Restrictions.eq("locationId", locationId));
@@ -119,7 +96,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -132,7 +109,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusRoute.class);
             criteria.add(Restrictions.eq("routeNumber", routeNumber));
@@ -151,7 +129,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
         
     }
@@ -165,7 +143,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusRoute.class);
             criteria.add(Restrictions.ilike("routeDescription", keyword, MatchMode.ANYWHERE));
@@ -181,7 +160,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -194,7 +173,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusRoute.class)
                     .createAlias("zone", "zones", JoinType.FULL_JOIN)
@@ -211,7 +191,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -243,7 +223,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
         
     }
@@ -257,7 +237,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusDeparture.class, "times");
             criteria.createAlias("departureLocation", "from", JoinType.FULL_JOIN).add(
@@ -275,7 +256,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
         
     }
@@ -290,7 +271,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusDeparture.class);
             criteria.createAlias("to", "arrivalLocation", JoinType.FULL_JOIN).add(
@@ -309,7 +291,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -321,7 +303,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusDeparture.class, "departure");
             
@@ -349,7 +332,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -362,7 +345,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusDeparture.class, "departure");
             criteria.createAlias("route", "routes", JoinType.FULL_JOIN).add(
@@ -384,7 +368,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -397,7 +381,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusDeparture.class, "departure");
             
@@ -437,7 +422,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -450,7 +435,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusDeparture.class, "departure");
             
@@ -474,7 +460,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
         
     }
@@ -487,7 +473,9 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
+            
             tx = session.beginTransaction();
             
             session.save(departure);
@@ -502,7 +490,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -514,7 +502,9 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
+            
             tx = session.beginTransaction();
             
             session.save(arrival);
@@ -531,7 +521,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -546,7 +536,8 @@ public class BusServiceDAOImpl extends DefaultFactory
 
         try {
 
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusDeparture.class, "departure");
             criteria.createAlias("route", "busRoute", JoinType.FULL_JOIN);
@@ -565,7 +556,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
 
     }
@@ -583,7 +574,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusDeparture.class, "departure");
             criteria.createAlias("route", "routes", JoinType.FULL_JOIN).add(
@@ -627,7 +619,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -638,7 +630,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(BusRoute.class);
             
@@ -670,7 +663,7 @@ public class BusServiceDAOImpl extends DefaultFactory
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
         
     }
@@ -686,21 +679,23 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
+            
             criteria = session.createCriteria(BusStop.class);
             criteria.add(Restrictions.ilike("fullDescription", location, MatchMode.ANYWHERE));
-            
+            criteria.addOrder(Order.asc("busStopId"));
             routes = criteria.list();
             return routes;
             
         }
         
         catch (HibernateException e) {
-        LOG.log(Level.SEVERE, "Error: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Error: " + e.getMessage());
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
     }
 
@@ -712,7 +707,8 @@ public class BusServiceDAOImpl extends DefaultFactory
         
         try {
             
-            openSession();
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
             
             criteria = session.createCriteria(RouteDescription.class, "description");
             criteria.createAlias("route", "route", JoinType.FULL_JOIN);
@@ -723,13 +719,45 @@ public class BusServiceDAOImpl extends DefaultFactory
         }
         
         catch (HibernateException e) {
-        LOG.log(Level.SEVERE, "Error: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Error: " + e.getMessage());
             throw new DataAccessException(e);
         }
         finally {
-            closeSession();
+            DataRepositoryUtility.close();
         }
         
+    }
+
+    @Override
+    public List<BusStop> getBusStopsByRouteNumber(String routeNumber) throws DataAccessException {
+        
+        if (routeNumber == null || routeNumber.isEmpty())
+            return null;
+        
+        List<BusStop> busStops = null;
+        
+        try {
+        
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
+            
+            criteria = session.createCriteria(BusStop.class, "busStop");
+            criteria.createAlias("route", "route", JoinType.FULL_JOIN);
+            criteria.add(Restrictions.eq("route.routeNumber", routeNumber));
+            criteria.addOrder(Order.asc("busStop.busStopId"));
+            busStops = criteria.list();
+            
+            return busStops;
+            
+        }
+        catch (HibernateException e) {
+            LOG.severe("Error: " + e.getMessage());
+            throw new DataAccessException(e);
+        }
+        
+        finally {
+            DataRepositoryUtility.close();
+        }
     }
     
 

@@ -2,6 +2,7 @@ package za.co.metrobus.hibernate.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
@@ -88,4 +89,54 @@ public class BusRoute implements Serializable {
         this.sundayService = sundayService;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + Objects.hashCode(this.routeNumber);
+        hash = 11 * hash + Objects.hashCode(this.routeDescription);
+        hash = 11 * hash + (this.weekdayService ? 1 : 0);
+        hash = 11 * hash + (this.saturdayService ? 1 : 0);
+        hash = 11 * hash + (this.sundayService ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        
+        final BusRoute other = (BusRoute) obj;
+        if (!Objects.equals(this.routeNumber, other.routeNumber)) {
+            return false;
+        }
+        if (!Objects.equals(this.routeDescription, other.routeDescription)) {
+            return false;
+        }
+        if (this.weekdayService != other.weekdayService) {
+            return false;
+        }
+        if (this.saturdayService != other.saturdayService) {
+            return false;
+        }
+        if (this.sundayService != other.sundayService) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "BusRoute {" + "routeNumber=" + routeNumber + 
+                ", routeDescription=" + routeDescription + 
+                ", weekdayService=" + weekdayService + 
+                ", saturdayService=" + saturdayService + 
+                ", sundayService=" + sundayService + "}";
+    }
+
+    
+    
 }
