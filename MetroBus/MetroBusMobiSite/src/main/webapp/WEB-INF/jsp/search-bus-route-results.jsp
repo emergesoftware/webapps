@@ -1,3 +1,7 @@
+<%@page import="java.util.Set"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="za.co.metrobus.hibernate.entity.BusStop"%>
 <%@page import="za.co.metrobus.hibernate.entity.BusRoute"%>
 <%@page import="com.emergelets.metrobus.mobisite.component.SearchForm"%>
@@ -10,7 +14,31 @@
             searchForm.getBusStops() == null)
         response.sendRedirect(request.getContextPath() + "/search/find-available-routes");
     
-    int foundCount = searchForm.getBusStops().size();
+    Map<BusRoute, List<BusStop>> map = new HashMap<BusRoute, List<BusStop>>();
+    
+    if (searchForm.getBusStops().size() > 0) {
+        
+        List<BusStop> list = null;
+        BusRoute key = null;
+        
+        for (BusStop stop : searchForm.getBusStops()) {
+            
+            key = stop.getRoute();
+            
+            if (map.containsKey(key)){
+                list = map.get(key);
+                list.add(stop);
+            }
+            
+            else {
+                list = new ArrayList<BusStop>();
+                list.add(stop);
+                map.put(key, list);
+            }
+        }
+    }
+    
+    int foundCount = map.size();
     
 %>
 
@@ -26,9 +54,6 @@
 
     <body>
         
-        <!-- the loading panel -->
-        <%@include file="../jspf/templating/loadingPanel.jspf" %>
-
         <!-- wrap the page navigation here -->
         <%@include file="../jspf/templating/responsive-navigation-bar.jspf" %>
 
@@ -39,15 +64,15 @@
                 <br/>
                 <p class="text-muted">
                     <strong>
-                        <%= (foundCount == 1) ? ("Found: " + foundCount + " route.") : 
-                                ("Found: " + foundCount + " routes.") %>
+                        <%= (foundCount == 1) 
+                                ? ("Found: " + foundCount + " bus route going past " + searchForm.getSearchQuery()) : 
+                                ("Found: " + foundCount + " bus routes going past " + searchForm.getSearchQuery()) %>
                     </strong>
                 </p>
                 <hr/>
                 
                 <%
-                    if (searchForm.getBusStops() == null || 
-                            searchForm.getBusStops().isEmpty()) {
+                    if (map.isEmpty()) {
                         
                         %>
                         
@@ -67,33 +92,51 @@
                         
                         %><div class="list-group"> <%
 
-                        List<BusStop> busStops = searchForm.getBusStops();
+                        Set<BusRoute> keySet = map.keySet();
 
-                        for (BusStop stop : busStops) {
+                        for (BusRoute route : keySet) {
                             
-                            BusRoute route = stop.getRoute();
                             String link = request.getContextPath() + 
                                     "/time-tables/find-by-bus-route?"
                                     + "routeNumber=" + route.getRouteNumber();
-                    %>
+                            
+                            %>
+                            <a id="busRouteItem<%= route.getRouteNumber() %>" 
+                                href="<%= link %>" class="list-group-item" style="font-weight: bold">
+                                
+                                <span class="label label-primary"><%= route.getRouteNumber() %></span>
+                                <span>&nbsp;</span>
+                                <span><%= route.getRouteDescription() %></span>
+                                <hr/>
+                                
+                                <span class="text-primary">Going past: </span><br/>
+                            <%
+                            
+                            for (BusStop stop : map.get(route)) {
+                                
+                                %>
+                                
+                                <span class="glyphicon glyphicon-circle-arrow-right"></span>
+                                <span class="text-muted"><%= stop.getFullDescription() %></span>
+                                <br/>
+                                
+                                <%
+                                
+                            }
+                            %>
 
-                    <a id="busRouteItem<%= route.getRouteNumber() %>" 
-                       href="<%= link %>" class="list-group-item" style="font-weight: bold">
-                        <span class="label label-primary"><%= route.getRouteNumber() %></span>
-                        <span>&nbsp;</span>
-                        <span><%= route.getRouteDescription() %></span><br/>
-                        <span class="text-muted"><%= stop.getFullDescription() %></span>
-                    </a>
-                    <%
+                        </a>
+                            <%
                         }
-                    %>
+                            %>
                     </div>
-                    
-                    <% } %>
+
+                <% } %>
                 
             </div>
         </div>
 
-              
+        <%@include file="../jspf/templating/default-footer.jspf" %>
+        
     </body>
 </html>

@@ -30,8 +30,6 @@
 
     <body>
 
-        <%@include file="../jspf/templating/loadingPanel.jspf" %>
-
         <!-- wrap the page navigation here -->
         <%@include file="../jspf/templating/responsive-navigation-bar.jspf" %>
 
@@ -42,48 +40,13 @@
                 <br/><br/>
                 
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#firstTab" data-toggle="tab">I know the bus route</a></li>
-                    <li><a href="#secondTab" data-toggle="tab">Browse routes</a></li>
+                    <li class="active"><a href="#firstTab" data-toggle="tab">Browse routes</a></li>
+                    <li><a href="#secondTab" data-toggle="tab">I know the bus route</a></li>
                 </ul>
                 
                 <div id="tabContent" class="tab-content">
                     
                     <div class="tab-pane fade active in" id="firstTab">
-                        
-                        <form role="form" method="get" id="routeNumberForm"
-                            action="<%= request.getContextPath() %>/time-tables/find-by-bus-route"
-                            onsubmit="return checkBusRouteNumberForm()">
-
-                          <h4>I know the bus route number:</h4>
-
-                          <p class="text-muted">If you know the bus route number,
-                              then enter it below:</p>
-
-                          <div id="routeNumberFormGroup" class="form-group">
-
-                              <input type="search" placeholder="Enter Bus Route No." 
-                                     name="routeNumber" maxlength="4"
-                                     class="form-control" id="routeNumber"/>
-                              <br/>
-                              <p id="routeNumberError" class="text-danger" style="display: none">
-                                  <span class="glyphicon glyphicon-warning-sign"></span>
-                                  <span> Please provide the bus route number first.</span>
-                              </p>
-
-                          </div>
-
-                          <div class="form-group">
-                              <input type="submit" class="btn btn-primary form-control" 
-                                     value="Show Time Table"
-                                     name="requestTimesTableByRouteNumber"
-                                     ondblclick="return false" />
-                          </div>
-                      </form>
-
-                        
-                    </div>
-                    
-                    <div class="tab-pane fade" id="secondTab">
                         
                         <form id="browseRoutesForm" role="form">
                     
@@ -92,7 +55,8 @@
 
                                 <input type="text" class="form-control" id="filterBusRoutes"
                                        placeholder="Type here to filter the bus routes" 
-                                       onkeyup="filterAvailableBusRoutesList(this)" />
+                                       onkeyup="filterAvailableBusRoutesList(this)" 
+                                       autocomplete="off"/>
                                 <br/>
 
                                 <div id="availableBusRoutesListGroup" class="list-group">
@@ -120,10 +84,49 @@
                         
                     </div>
                     
+                    <div class="tab-pane fade" id="secondTab">
+                        
+                        <form role="form" method="get" id="routeNumberForm"
+                            action="<%= request.getContextPath() %>/time-tables/find-by-bus-route"
+                            onsubmit="return checkBusRouteNumberForm()">
+
+                          <h4>I know the bus route number:</h4>
+
+                          <p class="text-muted">If you know the bus route number,
+                              then enter it below:</p>
+
+                          <div id="routeNumberFormGroup" class="form-group">
+
+                              <input type="search" placeholder="Enter Bus Route No." 
+                                     name="routeNumber" maxlength="4"
+                                     class="form-control" id="routeNumber"
+                                     autocomplete="off" />
+                              <br/>
+                              <p id="routeNumberError" class="text-danger" style="display: none">
+                                  <span class="glyphicon glyphicon-warning-sign"></span>
+                                  <span> Please provide the bus route number first.</span>
+                              </p>
+
+                          </div>
+
+                          <div class="form-group">
+                              <input type="submit" class="btn btn-primary form-control" 
+                                     value="Show Time Table"
+                                     name="requestTimesTableByRouteNumber"
+                                     ondblclick="return false" />
+                          </div>
+                      </form>
+
+                        
+                    </div>
+                    
                 </div>
                
             </div>
 
-        </div>       
+        </div>      
+                                
+        <%@include file="../jspf/templating/default-footer.jspf" %>
+        
     </body>
 </html>

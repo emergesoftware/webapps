@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.emergelets.metrobus.mobisite.controller;
 
 import com.emergelets.metrobus.mobisite.component.RouteForm;
 import com.emergelets.metrobus.mobisite.component.WebPageInfo;
 import java.io.Serializable;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +16,8 @@ import za.co.metrobus.hibernate.dao.BusServiceDAOImpl;
 @Controller
 @RequestMapping(value = RouteController.MAPPING)
 public class RouteController extends GenericController implements Serializable {
+    
+    private static Logger LOG = Logger.getLogger(RouteController.class.getName(), null);
     
     // the root mapping
     public static final String MAPPING = "/route/*";
@@ -100,6 +97,34 @@ public class RouteController extends GenericController implements Serializable {
     public ModelAndView displayRouteBusStops(HttpServletRequest request,
             @PathVariable("routeNumber")String routeNumber) {
         
+        // check if the route number is not null
+        if (routeNumber == null || routeNumber.isEmpty()) {
+            LOG.warning("No route number value in the path variable...");
+            return sendRedirect("/index?error=yes");
+        }
+        
+        // get the form from session - or
+        // recreate if null
+        form = (RouteForm)getFromSessionScope(request, RouteForm.class);
+        if (form == null)
+            form = new RouteForm();
+        
+        // pad the route number if its digit is one
+        routeNumber = routeNumber.trim();
+        if (routeNumber.length() == 1)
+            routeNumber = "0" + routeNumber;
+        
+        // pull the data from the repo
+        form.setRouteBusStops(repo.getBusStopsByRouteNumber(routeNumber));
+        
+        // pull the route information
+        form.setRoute(repo.getBusRouteByRouteNumber(routeNumber));
+        
+        // serialise to the session
+        saveToSessionScope(request, form);
+        
+        // set the title
+        setTitle(request, "Bus Stops");
         
         return createModelAndView(ROUTE_BUS_STOPS_PAGE);
         

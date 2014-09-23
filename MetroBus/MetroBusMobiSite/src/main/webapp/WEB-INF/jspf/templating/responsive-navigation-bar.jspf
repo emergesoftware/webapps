@@ -73,21 +73,21 @@
                     </a>
                 </li>
 
-                <li>
+                <!-- li>
                     <a href="#">
                         <i class="glyphicon glyphicon-tags"></i>&nbsp;
                         <span>Fares</span>
                     </a>
-                </li>
+                </li-->
                 
                 <li>
-                    <a href="#">
+                    <a href="<%= request.getContextPath() %>/about/app">
                         <i class="glyphicon glyphicon-info-sign"></i>&nbsp;
                         <span>About</span>
                     </a>
                 </li>
 
-                <li>
+                <!-- li>
                     <a href="#">
                         <i class="glyphicon glyphicon-envelope"></i>&nbsp;
                         <span>Contact Developer</span>
@@ -98,7 +98,7 @@
                         <i class="glyphicon glyphicon-star"></i>&nbsp;
                         <span>Rate And Review</span>
                     </a>
-                </li>
+                </li-->
                 
             </ul>
            

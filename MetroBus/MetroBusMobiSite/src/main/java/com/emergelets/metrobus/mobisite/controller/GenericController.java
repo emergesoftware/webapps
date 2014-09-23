@@ -134,7 +134,7 @@ public abstract class GenericController {
      * @return 
      */
     protected boolean checkParameter(HttpServletRequest request, String parameterName) {
-        return (request.getParameter(parameterName) != null || 
+        return (request.getParameter(parameterName) != null && 
                 request.getParameter(parameterName).isEmpty() == false);
     }
     

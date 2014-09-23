@@ -14,9 +14,6 @@
       href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cosmo/bootstrap.min.css" />
 
 <link type="text/css" rel="stylesheet"
-      href="<%= request.getContextPath() %>/resources/stylesheets/loadingPanel.css" />
-
-<link type="text/css" rel="stylesheet"
       href="<%= request.getContextPath() %>/resources/stylesheets/default.css" />
 
 <!-- JAVASCRIPTS -->
@@ -27,10 +24,6 @@
 <script type="text/javascript"
     src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js">
 </script>
-
-<script type="text/javascript"
-        src="<%= request.getContextPath() %>/resources/javascript/loadingPanel.js">
-</script>
         
 <script type="text/javascript" 
         src="<%= request.getContextPath() %>/resources/javascript/smooth-wheel/jquery.smoothwheel.js">
@@ -39,7 +32,7 @@
 
 <!-- carries the functions to validate the search bar 
     on the navigation bar -->
-<script type="text/javascript">
+<!-- script type="text/javascript">
     
     /**
      * Validates the Search Form in the navigation bar
@@ -72,7 +65,7 @@
         }
     }
     
-</script>
+</script-->
 
 <!-- Force reload if the web page was 
     persisted -->
@@ -88,7 +81,7 @@
 <!-- Register an event to
     listen for the webpage loading
 -->
-<script type="text/javascript">
+<!-- script type="text/javascript">
     $(document).ready(function() {
 
         window.onbeforeunload = function() {
@@ -96,7 +89,7 @@
         };
 
     });
-</script>
+</script-->
 
 
 <!-- register a smooth wheel scroll plugin -->

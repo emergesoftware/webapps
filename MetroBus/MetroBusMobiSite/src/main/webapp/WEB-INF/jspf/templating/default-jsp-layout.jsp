@@ -25,7 +25,8 @@
                 
             </div>
         </div>
-
+        
+        <%@include file="../jspf/templating/default-footer.jspf" %>
               
     </body>
 </html>

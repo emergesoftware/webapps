@@ -35,9 +35,6 @@
     </head>
 
     <body>
-        
-        <!-- the loading panel -->
-        <%@include file="../jspf/templating/loadingPanel.jspf" %>
 
         <!-- wrap the page navigation here -->
         <%@include file="../jspf/templating/responsive-navigation-bar.jspf" %>
@@ -138,6 +135,7 @@
             </div>
         </div>
 
-              
+        <%@include file="../jspf/templating/default-footer.jspf" %>
+        
     </body>
 </html>

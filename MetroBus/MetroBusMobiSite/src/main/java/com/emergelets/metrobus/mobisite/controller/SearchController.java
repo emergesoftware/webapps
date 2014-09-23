@@ -114,6 +114,9 @@ public class SearchController extends GenericController implements Serializable 
             return sendRedirect("/search/find-available-routes");
         }
         
+        // save the search query
+        searchForm.setSearchQuery(to.toUpperCase().trim());
+        
         // search the repository for bus routes 
         // according to the given criteria
         if (to != null && !to.isEmpty()) {

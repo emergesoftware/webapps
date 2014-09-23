@@ -44,7 +44,6 @@
 
     <body onload="initialise()">
 
-        <%@include file="../jspf/templating/loadingPanel.jspf" %>
        <!-- wrap the page navigation here -->
        <%@include file="../jspf/templating/responsive-navigation-bar.jspf" %>
 
@@ -128,57 +127,80 @@
                     }
                 %>
                     
-                <p class="text-muted"><strong><%= serviceType %></strong></p>
+                <p class="text-muted" style="font-size: 130%">
+                    <strong><%= serviceType %></strong>
+                </p>
                 
                 <hr/>
                 
-                    <!-- [2] THE AVAILABILITY LABELS -->
-                    
+                <!-- [2] THE AVAILABILITY LABELS -->
+                
+                <div class="well">
+                
                 <%
                     // determine the available services for
                     // this route
                     if (route != null) {
                         
                         %>
-                        <span class="text-muted"><b>Availability: </b></span><br/>
+                        <span class="text-muted">Availability: </span><br/>
                         <%
                     
                         if (route.isWeekdayService()) {
-                            %> <label class="label label-success" onclick="changeServiceType('weekday')">MON - FRI</label> <%
+                            %> <a class="btn btn-success btn-sm"
+                                    onclick="changeServiceType('weekday')">
+                                <span class="glyphicon glyphicon-list-alt"></span>
+                                <span> Monday - Friday</span>    
+                                
+                                </a> 
+                            <%
                         }
 
                         if (route.isSaturdayService()) {
-                            %> <label class="label label-warning" onclick="changeServiceType('saturday')">SATURDAY</label> <%
+                            %> 
+                            <a class="btn btn-warning btn-sm"
+                                    onclick="changeServiceType('saturday')">
+                                <span class="glyphicon glyphicon-list-alt"></span>
+                                <span> Saturday</span> 
+                            </a> 
+                            <%
                         }
 
                         if (route.isSundayService()) {
-                            %> <label class="label label-danger" onclick="changeServiceType('sunday')">SUNDAY</label> <%
+                            %> <a class="btn btn-danger btn-sm"
+                                    onclick="changeServiceType('sunday')">
+                                <span class="glyphicon glyphicon-list-alt"></span>
+                                <span> Sunday</span> 
+                                </a> 
+                            <%
                         }
                         
                         %>
-                            <br/><br/>
-                            <span class="text-muted"><strong>More bus route options:</strong></span><br/>
-                            <div style="margin-top: 8px; width: 100%">
-                                <label class="label label-default" style="margin: 5px; padding: 5px; float: left " 
-                                       onclick="openRouteDescription('<%= route.getRouteNumber() %>')">
-                                    ROUTE DESCRIPTION
-                                </label>
-                                <label class="label label-default" style="margin: 5px; padding: 5px; float: left" 
-                                       onclick="openRouteBusStops('<%= route.getRouteNumber() %>')">
-                                    BUS STOPS
-                                </label>
-                                <label class="label label-default" style="margin: 5px; padding: 5px; float: left" 
-                                       onclick="openRouteAreaCoverage('<%= route.getRouteNumber() %>')">
-                                    AREA COVERAGE
-                                </label>
-                            </div>
                             <br/>
+                            <hr/>
+                            
+                            <span class="text-muted">More bus route options:</span><br/>
+                            
+                            <div>
+                                
+                                <a class="btn btn-primary btn-sm"
+                                    onclick="openRouteDescription('<%= route.getRouteNumber() %>')">
+                                    <span class="glyphicon glyphicon-tasks"></span>
+                                    <span> Route Description</span>
+                                </a>
+                                
+                                <a class="btn btn-primary btn-sm"
+                                    onclick="openRouteBusStops('<%= route.getRouteNumber() %>')">
+                                    <span class="glyphicon glyphicon-map-marker"></span>
+                                    <span> Bus Stops</span>
+                                </a>
+                                
+                            </div>
                             
                         <%
                     }
                 %>
 
-                <br/>
                 <hr/>
                 
                 
@@ -188,31 +210,31 @@
                         %>
                             <input type="hidden" id="serviceType" name="serviceType" value="<%= serviceParam %>"/>
 
-                            <label
-                                   for="locations">Show only buses from:</label><br/>
+                            <span class="text-muted">Filter by departure location:</span><br/>
                             <select name="from" id="locations" class="form-control"
                                     onchange="document.getElementById('timesTableForm').submit()">
                                 <option value="0">ALL DEPARTURE LOCATIONS</option>
                         <%
 
                         for (Location location : form.getLocations()) {
+                            
                             %>
                                 <option value="<%= location.getLocationId() %>"
                                         <%= (form.getSearchLocationId() == location.getLocationId()) ?
                                                 "selected='selected'" : "" %>>
-                                    <%= location.getFullName() %>
+                                    <%= location.getShortName() %>
                                 </option>
                             <%
                         }
 
                         %>
                         </select>
-                        <hr/>
+                        
                         <%
                     }
                 %>
 
-                    
+                </div> 
                     
                     <%
                         if (form.getSecondsBeforeNextDeparture()> -1 && 
@@ -257,11 +279,9 @@
                         }
                     %>
 
-                
-
                 <table border="0" width="100%" class="table">
                     <thead>
-                        <th>Departure Time</th>
+                        <th>Time</th>
                         <th>Departs From</th>
                         <th>Stopping At</th>
                     </thead>
@@ -293,24 +313,45 @@
                            StringBuilder arrivals = new StringBuilder();
 
                            %>
-
-                            <tr id="departureItem<%= departure.getBusDepartureId() %>" <%= ((departure.isNextDeparture()) ?
-                                    "class='text-primary' style='font-weight: bold; font-size: 110%'" : "") %>>
-                                <td style="font-size: 120%"><%= time %></td>
+                           
+                           <%
+                           if (departure.isNextDeparture()) {
+                               %>
+                               <tr class="active">
+                                   <td colspan="3">
+                                       <label class="label label-danger">
+                                           <i class="glyphicon glyphicon-time"></i>
+                                           NEXT BUS
+                                       </label>
+                                   </td>
+                               </tr>
+                            <%
+                           }
+                           %>
+                           
+                            <tr id="departureItem<%= departure.getBusDepartureId() %>" 
+                                <%= ((departure.isNextDeparture()) ?
+                                    "class='active' style='font-size:120%'" : "") %>>
+                                <td>
+                                    <span><%= time %></span> 
+                                </td>
                                 <td><%= departsFrom %></td>
                            
                            <%
-
+                           
+                           int counter = 0;
+                           
                            for (BusArrival arrival : departure.getBusArrivals()) {
-
-                               if (arrival.isViaLocation())
-                                   arrivals.append("<b>via</b> ")
-                                          .append(arrival.getArrivalLocation().getShortName())
+                               
+                               counter++;
+                               
+                               if (counter == departure.getBusArrivals().size())
+                                   arrivals.append(arrival.getArrivalLocation().getShortName())
                                           .append("</br>");
-                               if (arrival.isTurnAroundLocation())
-                                   arrivals.append("<b>to</b> ")
-                                          .append(arrival.getArrivalLocation().getShortName())
-                                          .append("</br>");
+                               
+                               else 
+                                   arrivals.append(arrival.getArrivalLocation().getShortName())
+                                          .append(",</br>");
                            }
                            %>
 
@@ -325,12 +366,46 @@
                     </tbody>
                 </table>
                 
+                <hr/>
+                
+                <label class="label label-primary">
+                    PLEASE NOTE:
+                </label>
+                <br/>
+                
+                <div class="well" style="font-size: 80%">
+                    
+                    <ul>
+                        <li>
+                            This time table for this specified route was correct at
+                            the time of capture and is the most updated version. 
+                            We try our best to keep the time tables up to
+                            date, as often as we can.
+                        </li>
+                        <li>
+                            You may notice a change of times and differences in the
+                            actual MetroBus services as well as this time table. MetroBus
+                            may cancel, postpone or modify the time table
+                            for this route, with or without notice to the developer.
+                        </li>
+                        <li>
+                            This time table assumes that the bus service is running
+                            smoothly and on time, all the time.
+                            There is no guarantee that this is always the case. Other
+                            factors like traffic, broken down buses or disruption
+                            within the MetroBus services may cause slight inconvenience.
+                        </li>
+                    </ul>
+                </div>
                 
                 <% } %>
                 
                 </form>
             </div>
 
-        </div>       
+        </div>    
+                
+       <%@include file="../jspf/templating/default-footer.jspf" %>
+       
     </body>
 </html>

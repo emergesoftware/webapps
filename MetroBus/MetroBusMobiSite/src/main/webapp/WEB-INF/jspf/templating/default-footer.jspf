@@ -1,0 +1,37 @@
+<%@ page pageEncoding="UTF-8" %>
+
+<div id="footer" class="container">
+    <hr/>
+    
+    <div style='display: table; margin: 0px auto'>
+        
+        <p class="text-center">MetroBus App. © 2014 
+            <a href="http://emergesoftware.co.za" target="_blank">
+                Emerge Software (Pty) Ltd 
+            </a>
+            </p>
+        <p class="text-muted text-center">Follow us on:</p>
+        
+        <div style='display: table; margin: 0px auto'>
+            <table border="0" style='width: auto'>
+                <tr>
+                    <td>
+                        <a href="http://facebook.com/EmergeSoftware" target="_blank">
+                            <img src="<%= request.getContextPath() %>/resources/images/facebook.jpg" 
+                                 alt="facebook-icon" style="width: 32px; margin: 5px"/>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="http://twitter.com/emergesoftware" target="_blank">
+                            <img src="<%= request.getContextPath() %>/resources/images/twitter.jpg" 
+                                 alt="facebook-icon" style="width: 32px; margin: 5px"/>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+                                 
+    <br/>
+    <br/>
+</div>

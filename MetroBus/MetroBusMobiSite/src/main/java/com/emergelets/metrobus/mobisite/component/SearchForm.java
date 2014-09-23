@@ -8,9 +8,7 @@ package com.emergelets.metrobus.mobisite.component;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Component;
-import za.co.metrobus.hibernate.entity.BusRoute;
 import za.co.metrobus.hibernate.entity.BusStop;
 
 @Component
@@ -21,6 +19,9 @@ public class SearchForm implements Serializable {
     
     // the results list
     private List<BusStop> busStops;
+    
+    // the search query
+    private String searchQuery;
     
     public SearchForm() {
         errors = null;
@@ -40,6 +41,14 @@ public class SearchForm implements Serializable {
 
     public void setBusStops(List<BusStop> busStops) {
         this.busStops = busStops;
+    }
+
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
     }
     
     

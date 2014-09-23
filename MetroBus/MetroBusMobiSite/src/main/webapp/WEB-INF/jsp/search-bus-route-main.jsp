@@ -119,9 +119,6 @@
     </head>
 
     <body onload="initialise()">
-        
-        <!-- the loading panel -->
-        <%@include file="../jspf/templating/loadingPanel.jspf" %>
 
         <!-- wrap the page navigation here -->
         <%@include file="../jspf/templating/responsive-navigation-bar.jspf" %>
@@ -152,12 +149,12 @@
                       action="<%= request.getContextPath() %>/search/retrieve-results"
                       onsubmit="return validateSearchAvailableRoutesForm()">
                     
-                    <h4>Looking for buses going to: </h4>
+                    <h4>Looking for buses going to or past: </h4>
                     
                     <div id="toLocationFormGroup" class="form-group">
                         <input type="text" class="form-control" id="toLocation" 
-                               name="to" placeholder="Enter your departure location" 
-                               maxlength="32" />
+                               name="to" placeholder="Example: Sandton or Oxford Road" 
+                               maxlength="32" autocomplete="off"/>
                     </div>
                     
                     <div class="form-group">
@@ -173,6 +170,7 @@
             </div>
         </div>
 
-              
+        <%@include file="../jspf/templating/default-footer.jspf" %>
+        
     </body>
 </html>

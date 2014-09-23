@@ -11,8 +11,6 @@
 
     <body>
 
-        <%@include file="../jspf/templating/loadingPanel.jspf" %>
-
        <!-- wrap the page navigation here -->
        <%@include file="../jspf/templating/responsive-navigation-bar.jspf" %>
 
@@ -23,59 +21,37 @@
                 
                 <br/>
                 
-                <!-- table border="0" style="width: 100%">
-                    <tr>
-                        <td><img src="/resources/images/metrobus-logo-jpeg.jpg" 
-                         alt="" style="height: 64px"/></td>
-                        <td>
-                            <div style="margin-left: 18px">
-                                <h3 class="text-primary">
-                                    Johannesburg MetroBus App
-                                </h3>
-                            </div> 
-                        </td>
-                    </tr>
-                </table>
-                
-                <hr/ -->
+                <div class="jumbotron">
+                    <h1>The MetroBus App</h1>
+                    <p>The mobile app designed for MetroBus commuters in Jozi, has landed in town, 
+                    first of it's kind - made just for you.</p>
+                    <p><a class="btn btn-primary btn-lg" href="#getGoingHeader">Get going</a></p>
+                </div>
                 
                 
-                <br/>
+                <h3 id="getGoingHeader">Let's get going...</h3>
                 
-                <a class="btn btn-primary form-control" 
-                   href="<%= request.getContextPath() %>/time-tables/select-option">
-                    <span class="glyphicon glyphicon-th-large"></span>
-                    <span>&nbsp;</span>
-                    <span>Time Tables</span>
-                </a>
-                <br/>
-                <br/>
-                    
-                <a class="btn btn-primary form-control" 
-                   href="<%= request.getContextPath() %>/search/find-available-routes">
-                    <span class="glyphicon glyphicon-search"></span>
-                    <span>&nbsp;</span>
-                    <span>Search</span>
-                </a>
-                <br/>
-                <br/>
+                <p class="text-primary">
+                    Here's a few options to explore:
+                </p>
                 
-                <a class="btn btn-primary form-control" 
-                   href="#">
-                    <span class="glyphicon glyphicon-tags"></span>
-                    <span>&nbsp;</span>
-                    <span>Fares</span>
+                <a href="<%= request.getContextPath() %>/time-tables/select-option" 
+                   class="btn btn-default btn-lg btn-block">
+                    Check bus routes + time tables
                 </a>
                 <br/>
                 
-               
+                <a href="<%= request.getContextPath() %>/search/find-available-routes" 
+                   class="btn btn-default btn-lg btn-block">
+                    Search where you'd like to go
+                </a>
                 <br/>
                 
             </div>
 
         </div>
  
-
+        <%@include file="../jspf/templating/default-footer.jspf" %>
         
     </body>
 </html>

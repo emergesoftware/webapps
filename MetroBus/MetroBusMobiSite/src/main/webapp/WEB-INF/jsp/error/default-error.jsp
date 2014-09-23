@@ -11,19 +11,27 @@
 
     <body>
 
-        <!-- wrap the page navigation here -->
-        <%@include file="../jspf/templating/responsive-navigation-bar.jspf" %>
+       <!-- wrap the page navigation here -->
+       <%@include file="../jspf/templating/responsive-navigation-bar.jspf" %>
 
         <!--wrap the page content do not style this-->
         <div id="page-content">
+
             <div class="container" >
                 
-                <!-- place main content here -->
+                <br/>
+                <h2>Oops, something went wrong</h2>
+                <hr/>
+                <p>
+                    We have detected that something must have gone wrong
+                    or you tried to access a non-existent resource.
+                </p>
                 
             </div>
+
         </div>
-        
+ 
         <%@include file="../jspf/templating/default-footer.jspf" %>
-              
+        
     </body>
 </html>
