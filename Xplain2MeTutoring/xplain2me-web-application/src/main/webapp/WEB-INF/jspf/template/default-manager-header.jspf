@@ -1,0 +1,25 @@
+<%@ page pageEncoding="UTF-8" %>
+
+<link rel="stylesheet" type="text/css" 
+      href="<%= request.getContextPath() %>/assets/themes/dark-theme/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" 
+      href="<%= request.getContextPath() %>/assets/themes/dark-theme/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" 
+      href="<%= request.getContextPath() %>/assets/themes/dark-theme/css/local.css" />
+
+<script type="text/javascript" 
+    src="<%= request.getContextPath() %>/assets/themes/dark-theme/js/jquery-1.10.2.min.js">
+</script>
+<script type="text/javascript" 
+    src="<%= request.getContextPath() %>/assets/themes/dark-theme/bootstrap/js/bootstrap.min.js">
+</script>
+
+<!-- force reload on back press -->
+<script type="text/javascript">
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            document.body.style.display = "none";
+            location.reload();
+        }
+    };
+</script>
