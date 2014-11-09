@@ -7,14 +7,26 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+    </listener>
     <servlet>
         <servlet-name>dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>MetroBusWebService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MetroBusWebService</servlet-name>
+        <url-pattern>/MetroBusWebService</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -24,17 +36,14 @@
     <welcome-file-list>
         <welcome-file>redirect.jsp</welcome-file>
     </welcome-file-list>
-    
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/error-occured</location>
     </error-page>
-
     <error-page>
         <error-code>403</error-code>
         <location>/error-occured</location>
     </error-page>
-
     <error-page>
         <error-code>404</error-code>
         <location>/error-occured</location>

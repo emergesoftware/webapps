@@ -3,6 +3,7 @@ package com.emergelets.metrobus.mobisite.controller;
 import com.emergelets.metrobus.mobisite.component.TimesTableForm;
 import com.emergelets.metrobus.mobisite.component.WebPageInfo;
 import com.emergelets.metrobus.util.Utils;
+import com.emergelets.metrobus.webservice.MetroBusWebService;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import za.co.metrobus.hibernate.dao.BusServiceDAO;
-import za.co.metrobus.hibernate.dao.BusServiceDAOImpl;
 import za.co.metrobus.hibernate.entity.BusArrival;
 import za.co.metrobus.hibernate.entity.BusDeparture;
 import za.co.metrobus.hibernate.entity.BusServiceType;
@@ -48,16 +47,18 @@ public class TimeTablesController extends GenericController
     public static final String DISPLAY_SINGLE_SERVICE_TIMES_TABLE_PAGE = "bus-route-time-table";
     // --------------- end JSP VIEWS ------------------------
 
-    // the forms + data access objects
+    // web services
+    private MetroBusWebService service;
+    
+    // the forms
     private TimesTableForm form;
-    private BusServiceDAO data;
     
     /**
      * Constructor
      */
     public TimeTablesController() {
         this.form = new TimesTableForm();
-        this.data = new BusServiceDAOImpl();
+        this.service = new MetroBusWebService();
     }
 
 
@@ -71,7 +72,7 @@ public class TimeTablesController extends GenericController
         
         // get the list of all
         // available bus routes
-        form.setRoutes(data.getAllBusRoutes(null));
+        form.setRoutes(service.getAllBusRoutesOperatingOn(null));
         
         // save the form to the session
         saveToSessionScope(request, form);
@@ -155,7 +156,7 @@ public class TimeTablesController extends GenericController
         form.setSearchLocationId(locationId);
         
         // gather bus route information
-        form.setRoute(data.getBusRouteByRouteNumber(routeNumber));
+        form.setRoute(service.getBusRouteByRouteNumber(routeNumber));
 
         // resolve the service type
         BusServiceType type  = null;
@@ -179,7 +180,7 @@ public class TimeTablesController extends GenericController
         
         // filter the unique locations in the
         // bus departure
-        form.setLocations(data.getDepartureLocationsFromBusRoute(routeNumber));
+        form.setLocations(service.getDepartureLocationsFromBusRoute(routeNumber));
         if (form.getLocations() != null && 
                 !form.getLocations().isEmpty() &&
                 form.getSearchLocationId() < 100) {
