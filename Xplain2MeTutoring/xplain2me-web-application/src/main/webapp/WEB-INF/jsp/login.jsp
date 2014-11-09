@@ -63,7 +63,8 @@
             
             <form role="form" id="loginForm" name="loginForm" method="post"
                 action="<%= request.getContextPath() + "/login" %>"
-                onsubmit="return validateLoginForm(this)">
+                onsubmit="return validateLoginForm(this)"
+                style="width:60%">
                 
                 <%
                     // determine if there are any errors

@@ -65,7 +65,8 @@
             
             <form id="verificationCodeForm" name="verificationCodeForm"
                   method="post" action="<%= request.getContextPath() %>/verify-tutor-request"
-                  onsubmit="return validateVerificationCodeForm(this)">
+                  onsubmit="return validateVerificationCodeForm(this)"
+                  style="width:60%">
                 
                 <div id="verificationCodeFormGroup" class="form-group">
                     <label>Verification Code:</label>

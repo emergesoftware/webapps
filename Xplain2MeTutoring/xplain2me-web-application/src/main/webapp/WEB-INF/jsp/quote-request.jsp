@@ -45,7 +45,8 @@
             
             <form id="requestQuoteForm" name="requestQuoteForm" role="form"
                   action="<%= request.getContextPath() %>/quote-request"
-                  method="post" onsubmit="return validateRequestQuoteForm(this)">
+                  method="post" onsubmit="return validateRequestQuoteForm(this)"
+                  style="width:60%">
                 
                 <%
                     

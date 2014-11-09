@@ -50,7 +50,8 @@
             
             <form id="becomeTutorForm" name="becomeTutorForm" role="form"
                   action="<%= request.getContextPath() %>/become-a-tutor"
-                  method="post" onsubmit="return validateBecomeTutorForm(this)">
+                  method="post" onsubmit="return validateBecomeTutorForm(this)"
+                  style="width:60%">
                 
                 <%
                     

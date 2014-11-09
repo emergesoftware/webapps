@@ -79,7 +79,7 @@
                 <div id="tabContent" class="tab-content">
                     
                     <!-- first tab content -->
-                    <div class="tab-pane fade active in" id="firstTab">
+                    <div class="tab-pane fade active in" id="firstTab" style="width:60%">
                         <br/>
                         
                         <h3 class="text-primary">Personal Information</h3>
@@ -175,7 +175,7 @@
                     <!-- end of first tab -->
                     
                     <!-- second tab content -->
-                    <div class="tab-pane fade" id="secondTab">
+                    <div class="tab-pane fade" id="secondTab" style="width:60%">
                         <br/>
                         
                         <h3 class="text-primary">Academic Details</h3>
@@ -236,7 +236,7 @@
                     <!-- end of second tab -->
                     
                     <!-- third tab content -->
-                    <div class="tab-pane fade" id="thirdTab">
+                    <div class="tab-pane fade" id="thirdTab" style="width:60%">
                         
                         <br/>
                         
