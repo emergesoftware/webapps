@@ -135,7 +135,7 @@
                 <div id="idNumberFormGroup" class="form-group">
                     <label>Identity Number:</label>
                     <input type="text" class="form-control" id="idNumber"
-                           name="idNumber" maxlength="13"
+                           name="idNumber" maxlength="24"
                            placeholder="Enter the ID / Passport Number"
                            autocomplete="off"/>
                 </div>

@@ -146,10 +146,16 @@ public class BecomeTutorControllerHelper extends GenericController {
             form.getErrorsEncountered().add("First Names is too short.");
         }
         
-        if (request.getIdentityNumber() == null || 
+        if (request.getIdentityNumber() == null || request.getIdentityNumber().isEmpty()) {
+            count++;
+            form.getErrorsEncountered().add("Identity /Passport Number is too short.");
+        }
+        
+        if (request.getCitizenship().getId() == Citizenship.SOUTH_AFRICAN && 
                 SouthAfricanIdentityTool.isValid(request.getIdentityNumber()) == false) {
             count++;
-            form.getErrorsEncountered().add("Identity Number does not appear authentic.");
+            form.getErrorsEncountered().add("Identity Number does not appear authentic "
+                    + "for South African citizen.");
         }
         
         Date now = new Date();

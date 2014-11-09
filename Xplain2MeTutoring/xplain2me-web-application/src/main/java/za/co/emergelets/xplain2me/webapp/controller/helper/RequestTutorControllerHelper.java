@@ -6,7 +6,6 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import za.co.emergelets.util.CellphoneNumberValidator;
 import za.co.emergelets.util.EmailAddressValidator;
 import za.co.emergelets.xplain2me.dao.TutorRequestDAO;
 import za.co.emergelets.xplain2me.entity.Subject;
@@ -147,9 +146,8 @@ public class RequestTutorControllerHelper extends GenericController {
         
         int count = 0;
         
-        if (form.getTutorRequest().getContactNumber() == null || 
-                !CellphoneNumberValidator.isCellphoneNumberValid(
-                        "27" + form.getTutorRequest().getContactNumber().substring(1))) {
+        if (form.getTutorRequest().getContactNumber() == null ||
+                form.getTutorRequest().getContactNumber().isEmpty()) {
             count++;
             form.getErrorsEncountered().add("Contact Number does not appear authentic.<br/>");
         }
@@ -172,7 +170,7 @@ public class RequestTutorControllerHelper extends GenericController {
      * @param form
      * @return 
      */
-    public boolean isTutorRequestCompletelyUnique(TutorRequestDAO tutorRequestDAO, 
+    /* public boolean isTutorRequestCompletelyUnique(TutorRequestDAO tutorRequestDAO, 
             RequestTutorForm form) {
         
         if (form == null || tutorRequestDAO == null)
@@ -188,7 +186,7 @@ public class RequestTutorControllerHelper extends GenericController {
         
         
         return isCompletelyUnique;
-    }
+    } */
     
     /**
      * Verify the reCAPTCHA code

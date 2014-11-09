@@ -102,8 +102,8 @@ function validateBecomeTutorForm(form) {
    }
    
    // validate the ID number
-   if (form.idNumber.value === null || form.idNumber.value.length !== 13) {
-       errors += "<strong>Identity Number:</strong> value too short.<br/>";
+   if (form.idNumber.value === null || form.idNumber.value.length < 3) {
+       errors += "<strong>Identity/Passport Number:</strong> value too short.<br/>";
        addClass("idNumberFormGroup", "has-error");
    }
 

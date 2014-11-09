@@ -1,6 +1,8 @@
 package za.co.emergelets.xplain2me.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "tutor_request")
@@ -34,10 +37,10 @@ public class TutorRequest implements Serializable {
     private boolean gender;
     
     // Contact Information
-    @Column(name = "tutor_request_email_address", nullable = false, unique = true)
+    @Column(name = "tutor_request_email_address", nullable = false)
     private String emailAddress;
     
-    @Column(name = "tutor_request_contact_number", nullable = false, unique = true)
+    @Column(name = "tutor_request_contact_number", nullable = false)
     private String contactNumber;
     
     @Column(name = "tutor_request_street_address", nullable = false)
@@ -64,13 +67,56 @@ public class TutorRequest implements Serializable {
     @Column(name = "tutor_request_additional_information")
     private String additionalInformation;
     
-    // Terms of Service Agreement
     @Column(name = "tutor_request_agreed_to_terms_of_service")
     private boolean agreeToTermsOfService;
+    
+    @Column(name = "tutor_request_received", nullable = false)
+    private boolean received;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "tutor_request_date_received")
+    private Date dateReceived;
+    
+    @Column(name = "tutor_request_request_ref_number", nullable = false)
+    private String referenceNumber;
     
     public TutorRequest() {
         this.agreeToTermsOfService = true;
         this.subjects = null;
+    }
+    
+    /**
+     * Generates a reference number
+     * 
+     * @param request
+     * @return 
+     */
+    public static String generateReferenceNumber(TutorRequest request) {
+        
+        if (request == null || 
+                request.getId() == 0)
+            return null;
+        
+        final String REFERENCE_PREFIX = "TR";
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
+        Date today = new Date();
+        
+        String id = null;
+        
+        if (String.valueOf(request.getId()).length() < 3) {
+            if (String.valueOf(request.getId()).length() == 1) 
+                id = "00" + request.getId();
+            else if (String.valueOf(request.getId()).length() == 2)
+                id = "0" + request.getId();
+        }
+        
+        else {
+            id = String.valueOf(request.getId());
+        }
+        
+        return REFERENCE_PREFIX + format.format(today) 
+                + id;
+        
     }
 
     public String getFirstNames() {
@@ -183,6 +229,30 @@ public class TutorRequest implements Serializable {
 
     public void setGender(boolean gender) {
         this.gender = gender;
+    }
+
+    public boolean isReceived() {
+        return received;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
+
+    public Date getDateReceived() {
+        return dateReceived;
+    }
+
+    public void setDateReceived(Date dateReceived) {
+        this.dateReceived = dateReceived;
+    }
+
+    public String getReferenceNumber() {
+        return referenceNumber;
+    }
+
+    public void setReferenceNumber(String referenceNumber) {
+        this.referenceNumber = referenceNumber;
     }
     
     

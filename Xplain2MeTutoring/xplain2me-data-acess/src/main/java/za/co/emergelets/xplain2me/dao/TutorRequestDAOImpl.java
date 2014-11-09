@@ -3,7 +3,6 @@ package za.co.emergelets.xplain2me.dao;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.TutorRequest;
 import za.co.emergelets.xplain2me.entity.TutorRequestSubject;
@@ -111,7 +110,7 @@ public class TutorRequestDAOImpl extends DefaultDataAccessObject implements Tuto
         }
         
         catch (HibernateException e) {
-            LOG.severe("Error: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         
@@ -125,8 +124,7 @@ public class TutorRequestDAOImpl extends DefaultDataAccessObject implements Tuto
         
         if (request == null || (request.getSubjects() == null 
                 || request.getSubjects().isEmpty()))
-            throw new DataAccessException(
-                    new NullPointerException("null"));
+            throw new DataAccessException("null");
         
         try {
             
@@ -149,6 +147,13 @@ public class TutorRequestDAOImpl extends DefaultDataAccessObject implements Tuto
                 session.persist(subject);
             }
             
+            // generate a reference number
+            request.setReferenceNumber(TutorRequest
+                    .generateReferenceNumber(request));
+            
+            // update the tutor request
+            session.update(request);
+            
             // commit the transaction block
             tx.commit();
             
@@ -156,7 +161,7 @@ public class TutorRequestDAOImpl extends DefaultDataAccessObject implements Tuto
         }
         
         catch (HibernateException e) {
-            LOG.severe("Error: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         
@@ -165,7 +170,7 @@ public class TutorRequestDAOImpl extends DefaultDataAccessObject implements Tuto
         }
     }
 
-    @Override
+/*    @Override
     public boolean isTutorRequestCompletelyUnique(TutorRequest request) throws DataAccessException {
         if (request == null)
             return false;
@@ -199,5 +204,5 @@ public class TutorRequestDAOImpl extends DefaultDataAccessObject implements Tuto
             DataRepositoryUtility.close();
         }
     }
-    
+    */
 }

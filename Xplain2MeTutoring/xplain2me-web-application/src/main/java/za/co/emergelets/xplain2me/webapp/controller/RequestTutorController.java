@@ -249,23 +249,30 @@ public class RequestTutorController extends GenericController {
                 RequestTutorControllerHelper.isNaN(verificationCode) == false)) {
                 
                 // check if this tutor request is completely unique
-                if (helper.isTutorRequestCompletelyUnique(tutorRequestDAO, form) == false) {
+                /*if (helper.isTutorRequestCompletelyUnique(tutorRequestDAO, form) == false) {
                     return createModelAndView("request-a-tutor-submitted");
-                }
+                } 
                 
-                else {
-                    // save the data 
-                    // into the database
-                    tutorRequestDAO.saveTutorRequest(form.getTutorRequest());
+                else { */
+                
+                // generate the date this was received
+                // and assign a temporary ref number
+                form.getTutorRequest().setReferenceNumber("");
+                form.getTutorRequest().setDateReceived(new Date());
+                form.getTutorRequest().setReceived(false);
+                
+                // save the data 
+                // into the database
+                tutorRequestDAO.saveTutorRequest(form.getTutorRequest());
 
-                    // start a thread to send an email to the 
-                    // manager about this new request for a tutor
-                    new Thread(new AsyncNewApplicantNotifier(form)).start();
+                // start a thread to send an email to the 
+                // manager about this new request for a tutor
+                new Thread(new AsyncNewApplicantNotifier(form)).start();
 
-                    // start a thread to send an email to the applicant to
-                    // confirm that the application was received
-                    new Thread(new AsyncApplicationReceiptNotifier(form)).start();
-                }
+                // start a thread to send an email to the applicant to
+                // confirm that the application was received
+                new Thread(new AsyncApplicationReceiptNotifier(form)).start();
+                //}
                 
             }
             
@@ -386,8 +393,11 @@ public class RequestTutorController extends GenericController {
                        "Thank you for your interest in our tutoring services. \n" +
                        "We have received your request for a tutor and we will be \n" +
                        "in contact very soon. \n\n" + 
+                       "Your reference number for this request is: " + form.getTutorRequest().getReferenceNumber() + "\n" + 
+                       "Use your reference number whenever communicating about your \n" +
+                       "tutor request application.\n\n" +
                        "Do not hesitate to contact us - find our details from our\n" + 
-                       "website: http:" + "//" + "xplain2me.co.za/\n\n" + 
+                       "website: http:" + "//" + "www." + "xplain2me.co.za/\n\n" + 
                        "Yours truly, \n" +
                        "Xplain2Me Tutoring Services\n\n";
                 
@@ -455,6 +465,7 @@ public class RequestTutorController extends GenericController {
                        "Howdy, \n\n" + 
                        "A new request for a tutor was completed on " + date + ".\n" +
                        "Below are the details of this request:\n\n" + 
+                       "REFERENCE NUMBER: " + form.getTutorRequest().getReferenceNumber() + "\n\n" +
                        "Last Name: " + form.getTutorRequest().getLastName().toUpperCase() + "\n" +
                        "First Name(s): " + form.getTutorRequest().getFirstNames().toUpperCase() + "\n" + 
                        "Gender: " + gender + "\n" +
@@ -476,4 +487,5 @@ public class RequestTutorController extends GenericController {
         }
         
     }
+    
 }

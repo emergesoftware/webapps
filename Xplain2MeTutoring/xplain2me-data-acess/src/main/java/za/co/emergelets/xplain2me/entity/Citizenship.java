@@ -10,15 +10,9 @@ import javax.persistence.Table;
 @Table(name = "citizenship")
 public class Citizenship implements Serializable {
     
-    /*
-        
-    Table: citizenship
+    public static final long SOUTH_AFRICAN = 100;
+    public static final long NON_SOUTH_AFRICAN = 200;
     
-    Columns:
-        citizenship_id int not null unique,
-        citizenship_desc varchar(128) not null unique
-    
-    */
     
     @Id
     @Column(name = "citizenship_id", unique = true, nullable = false)
