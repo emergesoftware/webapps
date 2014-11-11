@@ -1,19 +1,36 @@
 package za.co.emergelets.xplain2me.webapp.controller.helper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import za.co.emergelets.util.CellphoneNumberValidator;
 import za.co.emergelets.util.EmailAddressValidator;
+import za.co.emergelets.util.SHA256Encryptor;
 import za.co.emergelets.util.SouthAfricanIdentityTool;
+import za.co.emergelets.xplain2me.dao.AcademicLevelDAO;
 import za.co.emergelets.xplain2me.dao.BecomeTutorRequestDAO;
 import za.co.emergelets.xplain2me.dao.CitizenshipDAO;
 import za.co.emergelets.xplain2me.dao.GenderDAO;
+import za.co.emergelets.xplain2me.entity.AcademicLevel;
+import za.co.emergelets.xplain2me.entity.AcademicLevelsTutoredBefore;
 import za.co.emergelets.xplain2me.entity.BecomeTutorRequest;
+import za.co.emergelets.xplain2me.entity.BecomeTutorSupportingDocument;
 import za.co.emergelets.xplain2me.entity.Citizenship;
 import za.co.emergelets.xplain2me.entity.Gender;
 import za.co.emergelets.xplain2me.webapp.component.BecomeTutorForm;
@@ -24,7 +41,58 @@ public class BecomeTutorControllerHelper extends GenericController {
     private static final Logger LOG = 
             Logger.getLogger(BecomeTutorControllerHelper.class.getName(), null);
     
+    private static final long MAX_FILE_UPLOAD_SIZE = 1000000 * 5;
+    private static final int FILE_SIZE_THRESHOLD = 4 * 1024;
+    private static final String WIN_FILE_REPOSITORY = "C:\\\\Users\\{0}\\Temp";
+    private static final String LINUX_FILE_REPOSITORY = "/tmp";
+    
     public BecomeTutorControllerHelper() {
+    }
+    
+    /**
+     * Validates the HTTP Post 
+     * content length
+     * 
+     * @param request
+     * @param form
+     * @return 
+     */
+    public boolean validateHttpPostContentLength(HttpServletRequest request, 
+            BecomeTutorForm form) {
+        
+        // the content length header
+        final String CONTENT_LENGTH = "Content-Length";
+        // check if the request has this content length header
+        if (request.getHeader(CONTENT_LENGTH) == null) {
+            LOG.warning("No Content-Length header was found...");
+            return false;
+        }
+        
+        // get the size of the request
+        Long contentLength = Long.parseLong(request.getHeader(CONTENT_LENGTH));
+        // check if the length is within limit
+        if (contentLength > MAX_FILE_UPLOAD_SIZE) {
+            form.getErrorsEncountered().add("The file uploaded exceeds the "
+                    + "maximum upload size of 5MB.");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Populates the academic levels
+     * @param form
+     * @param dao 
+     */
+    public void populateAcademicLevels(BecomeTutorForm form, AcademicLevelDAO dao) {
+        if (form == null || dao == null) return;
+        
+        List<AcademicLevel> list = dao.getAllAcademicLevels();
+        form.setAcademicLevels(new TreeMap<Long, AcademicLevel>()); 
+        for (AcademicLevel level : list) {
+            form.getAcademicLevels().put(level.getId(), level);
+        }
     }
     
     /**
@@ -59,59 +127,76 @@ public class BecomeTutorControllerHelper extends GenericController {
      * @param request
      * @param form
      * @return 
+     * @throws org.apache.commons.fileupload.FileUploadException 
+     * @throws java.io.FileNotFoundException 
+     * @throws java.security.NoSuchAlgorithmException 
      */
     public BecomeTutorRequest createBecomeTutorRequestInstance(HttpServletRequest request, 
-            BecomeTutorForm form) {
-        
-        BecomeTutorRequest instance = new BecomeTutorRequest();
-
-        instance.setLastName(getParameterValue(request, "lastName"));
-        instance.setFirstNames(getParameterValue(request, "firstNames"));
-        
-        // resolve gender 
-        String genderId = getParameterValue(request, "gender");
-        for (Gender gender : form.getGender()) {
-            if (gender.getId().equalsIgnoreCase(genderId)) {
-                instance.setGender(gender);
-                break;
-            }
-        }
-        
-        // resolve citizenship
-        String citizenshipId = getParameterValue(request, "citizenship");
-        for (Citizenship citizenship : form.getCitizenships()) {
-            if (citizenship.getId() == Integer.parseInt(citizenshipId)) {
-                instance.setCitizenship(citizenship);
-                break;
-            }
-        }
-        
-        // resolve date of birth
-        String dateOfBirthString = getParameterValue(request, "dateOfBirth");
-        try {
-            Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd")
-                    .parse(dateOfBirthString);
+            BecomeTutorForm form) 
             
-            instance.setDateOfBirth(dateOfBirth);
+            throws Exception { 
+        
+        // if the request is not a multi-part then
+        // return null
+        /*if (ServletFileUpload.isMultipartContent(request)) {
+            LOG.warning("HTTP POST request is not multipart..."); 
+            return null;
+        }*/
+        
+        // create new instance of the 
+        BecomeTutorRequest item = new BecomeTutorRequest();
+        form.setBecomeTutorRequest(item);
+       
+        // set the ggreement to terms of service
+        item.setAgreedToTermsOfService(true);
+        // set the date submitted
+        item.setDateSubmitted(new Date());
+        
+        // initialise the suporting documents list
+        if (item.getSupportingDocuments() == null)
+            item.setSupportingDocuments(
+                    new ArrayList<BecomeTutorSupportingDocument>());
+        
+        // initialse the academic levels tutored before list
+        if (item.getAcademicLevelsTutoredBefore() == null)
+            item.setAcademicLevelsTutoredBefore(
+                    new ArrayList<AcademicLevelsTutoredBefore>()); 
+        
+        // create a factory for disk-based file items
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        // set factory constraints
+        factory.setSizeThreshold(FILE_SIZE_THRESHOLD);
+        
+        if (isWindowsOperationSystem()) {
+            String user = System.getProperty("user.name");
+            factory.setRepository(new File(WIN_FILE_REPOSITORY.replace("{0}", user)));
         }
-        catch (ParseException e) {
-            instance.setDateOfBirth(new Date());
+        
+        else 
+            factory.setRepository(new File(LINUX_FILE_REPOSITORY));
+        
+        // create a new file upload handler
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        
+        // set overall request size constraint
+        upload.setSizeMax(MAX_FILE_UPLOAD_SIZE);
+        // parse the request
+        List<FileItem> fileItems = upload.parseRequest(request);
+        // process all the files and form fields
+        Iterator iterator = fileItems.iterator();
+        
+        while (iterator.hasNext()) {
+            
+            FileItem fileItem = (FileItem)iterator.next();
+            if (fileItem.isFormField())
+                processFormField(fileItem, form);
+            else
+                processUploadedFile(fileItem, form);
+            
         }
         
-        instance.setIdentityNumber(getParameterValue(request, "idNumber"));
-        instance.setEmailAddress(getParameterValue(request, "emailAddress"));
-        instance.setContactNumber(getParameterValue(request, "contactNumber"));
-        instance.setStreetAddress(getParameterValue(request, "streetAddress"));
-        instance.setSuburb(getParameterValue(request, "suburb"));
-        instance.setCity(getParameterValue(request, "city"));
-        instance.setAreaCode(getParameterValue(request, "areaCode")); 
-        
-        instance.setAgreedToTermsOfService(true);
-        instance.setDateSubmitted(new Date());
-        
-        return instance;
+        return item;
     }
-      
     
     /**
      * Validates the personal information of the
@@ -298,5 +383,224 @@ public class BecomeTutorControllerHelper extends GenericController {
             form.getErrorsEncountered().add("The CAPTCHA Code is not correct");
         
         return isValid;
+    }
+
+    /**
+     * Process Uploaded File
+     * 
+     * @param item
+     * @param form
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws NoSuchAlgorithmException 
+     */
+    private void processUploadedFile(FileItem item, BecomeTutorForm form) 
+            throws Exception {
+        
+        String fieldName = item.getFieldName();
+        String fileName = item.getName();
+        String contentType = item.getContentType();
+        boolean isInMemory = item.isInMemory();
+        long sizeInBytes = item.getSize();
+        
+        // create supporting document instance
+        // or get existing if the list is not empty
+        BecomeTutorSupportingDocument document;
+        if (form.getSupportingDocuments().isEmpty()) {
+            document = new BecomeTutorSupportingDocument();
+            form.getSupportingDocuments().add(document);
+        }
+        
+        else {
+            document = form.getSupportingDocuments().get(0);
+        }
+        
+        // recreate a filename for this upload
+        if (fileName.indexOf(".pdf") > 0) 
+                fileName = fileName.replace(".pdf", "");
+            
+        fileName = SHA256Encryptor.computeSHA256(fileName, 
+                String.valueOf(System.currentTimeMillis()))
+                .toUpperCase();
+        
+        File file = null;
+        if (isWindowsOperationSystem()) {
+            String user = System.getProperty("user.name");
+            file = (new File(WIN_FILE_REPOSITORY.replace("{0}", user) 
+                    + "\\" + fileName));
+        }
+        
+        else {
+            file = new File(LINUX_FILE_REPOSITORY + "/" + fileName);
+        }
+        
+        // create the file
+        item.write(file);
+        
+        // read off the bytes of the file into an array
+        byte[] byteFile = new byte[(int)file.length()];
+        FileInputStream stream = new FileInputStream(file);
+        stream.read(byteFile);
+        
+        // save the file data into an object
+        document.setRequest(form.getBecomeTutorRequest());
+        document.setDocument(byteFile);
+        
+        // close the input stream
+        stream.close();
+        
+    }
+
+    /**
+     * Process the Form Field
+     * @param item
+     * @param form 
+     */
+    private void processFormField(FileItem item, BecomeTutorForm form) {
+        
+        String name = item.getFieldName();
+        String value = item.getString();
+        
+        BecomeTutorRequest request = form.getBecomeTutorRequest();
+        
+        if (value == null) value = "";
+        
+        // reCAPTCHA challenge field
+        if (name.equalsIgnoreCase("recaptcha_challenge_field")) 
+            form.setReCaptchaChallenge(value);
+        
+        // reCAPTCHA response field
+        if (name.equalsIgnoreCase("recaptcha_response_field"))
+            form.setReCaptchaResponse(value);
+        
+        // Last Name
+        if (name.equalsIgnoreCase("lastName")) 
+            request.setLastName(value.trim());
+        
+        // First Names
+        if (name.equalsIgnoreCase("firstNames")) 
+            request.setFirstNames(value.trim());
+        
+        // Gender
+        if (name.equalsIgnoreCase("gender")) {
+            for (Gender gender : form.getGender()) {
+                if (gender.getId().equalsIgnoreCase(value)) {
+                    request.setGender(gender);
+                    break;
+                }
+            }
+        }
+        
+        // Citizenship
+        if (name.equalsIgnoreCase("citizenship")) {
+            
+            for (Citizenship citizenship : form.getCitizenships()) {
+                if (citizenship.getId() == Integer.parseInt(value)) {
+                    request.setCitizenship(citizenship);
+                    break;
+                }
+            }
+        }
+        
+        // Date Of Birth
+        if (name.equalsIgnoreCase("dateOfBirth")) {
+            
+            try {
+                Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd")
+                        .parse(value);
+
+                request.setDateOfBirth(dateOfBirth);
+            }
+            catch (ParseException e) {
+                request.setDateOfBirth(new Date());
+            }
+        }
+        
+        // ID / Passport Number
+        if (name.equalsIgnoreCase("idNumber")) 
+            request.setIdentityNumber(value.trim());
+        
+        // Email Address
+        if (name.equalsIgnoreCase("emailAddress")) 
+            request.setEmailAddress(value.trim());
+        
+        // Contact Number
+        if (name.equalsIgnoreCase("contactNumber")) 
+            request.setContactNumber(value.trim());
+        
+        // Street Address
+        if (name.equalsIgnoreCase("streetAddress")) 
+            request.setStreetAddress(value.trim());
+        
+        // Suburb
+        if (name.equalsIgnoreCase("suburb")) 
+            request.setSuburb(value.trim());
+        
+        // City
+        if (name.equalsIgnoreCase("city")) 
+            request.setCity(value.trim());
+        
+        // Area Code
+        if (name.equalsIgnoreCase("areaCode")) 
+            request.setAreaCode(value.trim());
+        
+        // Tutored Before
+        if (name.equalsIgnoreCase("tutoredBefore")) {
+            if (value.isEmpty() || value.equalsIgnoreCase("No"))
+                request.setTutoredBefore(false);
+            else request.setTutoredBefore(true);
+        }
+        
+        // Academic Levels tutored before
+        if (name.startsWith("academicLevel_")) {
+            
+            Long id = Long.parseLong(value);
+            
+            AcademicLevelsTutoredBefore tutoredBefore = new AcademicLevelsTutoredBefore();
+            tutoredBefore.setAcademicLevel(form.getAcademicLevels().get(id));
+            tutoredBefore.setRequest(request);
+            
+            form.getAcademicLevelsTutoredBefore().add(tutoredBefore);
+            
+        }
+        
+        // Supporting Document Label
+        if (name.equalsIgnoreCase("supportingDocumentLabel")) {
+            
+            BecomeTutorSupportingDocument document;
+            
+            if (form.getSupportingDocuments().isEmpty()) {
+                document = new BecomeTutorSupportingDocument();
+                document.setLabel(value.trim());
+                form.getSupportingDocuments().add(document);
+            }
+            else {
+                document = form.getSupportingDocuments()
+                        .get(0);
+                document.setLabel(value.trim());
+            }
+                
+        }
+        
+        // Academic Levels tutored before
+        if (name.equalsIgnoreCase("motivation")) {
+            request.setMotivationalText(value);
+        }
+      
+    }
+    
+    /**
+     * Determines if the OS 
+     * is Windows
+     * 
+     * @return 
+     */
+    private boolean isWindowsOperationSystem() {
+        
+        String operatingSystemName = 
+                System.getProperty("os.name").toLowerCase();
+        return operatingSystemName.contains("windows");
+        
     }
 }

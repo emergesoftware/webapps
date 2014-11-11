@@ -1,15 +1,21 @@
 package za.co.emergelets.xplain2me.webapp.controller;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.emergelets.util.EmailSender;
+import za.co.emergelets.xplain2me.dao.AcademicLevelDAO;
+import za.co.emergelets.xplain2me.dao.AcademicLevelDAOImpl;
 import za.co.emergelets.xplain2me.dao.BecomeTutorRequestDAO;
 import za.co.emergelets.xplain2me.dao.BecomeTutorRequestDAOImpl;
 import za.co.emergelets.xplain2me.dao.CitizenshipDAO;
@@ -31,6 +37,7 @@ public class BecomeTutorController extends GenericController implements Serializ
     // data access objects
     private CitizenshipDAO citizenshipDAO;
     private GenderDAO genderDAO;
+    private AcademicLevelDAO academicLevelDAO;
     private BecomeTutorRequestDAO becomeTutorRequestDAO;
     
     public BecomeTutorController() {
@@ -40,6 +47,7 @@ public class BecomeTutorController extends GenericController implements Serializ
         citizenshipDAO = new CitizenshipDAOImpl();
         genderDAO = new GenderDAOImpl();
         becomeTutorRequestDAO = new BecomeTutorRequestDAOImpl();
+        academicLevelDAO = new AcademicLevelDAOImpl();
         
     }
     
@@ -53,6 +61,7 @@ public class BecomeTutorController extends GenericController implements Serializ
         BecomeTutorForm form = new BecomeTutorForm();
         helper.populateCitizenshipEntries(form, citizenshipDAO);
         helper.populateGenderEntries(form, genderDAO);
+        helper.populateAcademicLevels(form, academicLevelDAO);
         
         // save form to the session
         saveToSessionScope(request, form);
@@ -62,27 +71,37 @@ public class BecomeTutorController extends GenericController implements Serializ
     }
     
     @RequestMapping(value = "/become-a-tutor", method = RequestMethod.POST)
-    public ModelAndView handleBecomeTutorRequest(HttpServletRequest request) {
+    public ModelAndView handleBecomeTutorRequest(HttpServletRequest request) 
+            
+            throws Exception {
         
         // check if the form is in the session
-        BecomeTutorForm form = (BecomeTutorForm)getFromSessionScope(request, BecomeTutorForm.class);
+        BecomeTutorForm form = (BecomeTutorForm)getFromSessionScope(
+                request, BecomeTutorForm.class);
+        
         if (form == null) {
             LOG.warning("... no active session found ...");
             invalidateCurrentSession(request);
             return sendRedirect("/become-a-tutor?unauthorized-access=yes");
         }
         
-        // capture the reCAPTCHA data
-        form.setReCaptchaChallenge(request.getParameter("recaptcha_challenge_field"));
-        form.setReCaptchaResponse(request.getParameter("recaptcha_response_field"));
+        // check the maximum upload size
+        if (helper.validateHttpPostContentLength(request, form)) {
         
-        // retrieve the form data
-        form.setBecomeTutorRequest(helper.createBecomeTutorRequestInstance(request, form));
+            // retrieve the form data
+            form.setBecomeTutorRequest(helper.createBecomeTutorRequestInstance(request, form));
+            // save the form to the session
+            saveToSessionScope(request, form);
+            // send redirect to process this request
+            return sendRedirect("/process-tutor-job-application");
+        }
         
-        // save the form to the session
-        saveToSessionScope(request, form);
-        
-        return sendRedirect("/process-tutor-job-application");
+        else {
+            // save the form to the session
+            saveToSessionScope(request, form);
+            // return to the webpage
+            return createModelAndView("become-a-tutor");
+        }
         
     }
     
@@ -118,7 +137,10 @@ public class BecomeTutorController extends GenericController implements Serializ
             invalidateCurrentSession(request);
             
             // save the information to the database
-            becomeTutorRequestDAO.saveBecomeTutorRequest(form.getBecomeTutorRequest());
+            becomeTutorRequestDAO.saveBecomeTutorRequest(
+                    form.getBecomeTutorRequest(), 
+                    form.getAcademicLevelsTutoredBefore(), 
+                    form.getSupportingDocuments());
             
             // start a thread to send the receipt of tutor application
             // to the user

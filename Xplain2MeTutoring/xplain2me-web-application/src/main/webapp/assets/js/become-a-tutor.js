@@ -42,6 +42,17 @@ function trimElementValue(element) {
 }
 
 /**
+ * Ends with string function
+ * @param {type} str
+ * @param {type} suffix
+ * @returns {Boolean}
+ */
+function endsWith(str, suffix) {
+    return (str.indexOf(suffix, 
+            str.length - suffix.length) !== -1);
+}
+
+/**
 * Validates the form data before the
 * submission
 * 
@@ -169,6 +180,65 @@ function validateBecomeTutorForm(form) {
         trimElementValue(form.areaCode);
    }
    
+   // validate if the user selected to have tutored before
+   // that, at least one academic level is selected
+   
+   removeClass("academicLevelFormGroup", "has-error");
+   
+   if (form.tutoredBefore.value === "Yes") {
+       
+       var academicLevels = document.forms["becomeTutorForm"]
+                .getElementsByTagName("input");
+       
+       var atLeastOneAcademicLevelSelected = false;
+       
+       for (var i = 0; i < academicLevels.length; i++) {
+           if (academicLevels[i].type === "checkbox" &&
+                   academicLevels[i].checked) {
+               atLeastOneAcademicLevelSelected = true;
+               break;
+           }
+       }
+       
+       if (atLeastOneAcademicLevelSelected === false) {
+           errors += "<strong>Academic Levels Tutored: </strong> at least one " + 
+                   "academic level must be selected if you specified to have " + 
+                   "tutored before.<br/>";
+           addClass("academicLevelFormGroup", "has-error");
+       }
+  
+   }
+   
+   // check that, at least one supporting document is
+   // uploaded
+   /* removeClass("documentsFormGroup", "has-error");
+   var supportingDocumentLabels = document.getElementsByName("supportingDocumentLabel");
+   var supportingDocumentFiles = document.getElementsByName("supportingDocumentFile");
+   
+   for (var j = 0; j < supportingDocumentFiles.length; j++) {
+       if (supportingDocumentLabels[j].value.length === 0 || 
+               supportingDocumentFiles[j].value.length === 0 || 
+                endsWith(supportingDocumentFiles[j].value, ".pdf") === false) {
+           
+                errors += "<strong>Supporting documents: </strong> must submit at least " + 
+                        "one supporting document (i.e. Curriculum Vitae) in PDF format " + 
+                        "and give it a meaningful label.<br/>";
+                addClass("documentsFormGroup", "has-error");
+                
+               } 
+   } */
+   
+   // validate the motivation text
+   if (form.motivation.value === null || form.motivation.value.trim().length === 0) {
+        errors += "<strong>Motivational Text:</strong> please write some text to " + 
+                "motivate your interest.<br/>";
+        addClass("motivationFormGroup", "has-error");
+   }
+
+   else {
+        removeClass("motivationFormGroup", "has-error");
+   }
+   
    
    // validate if the reCPATCHA challenge was
    // attempted
@@ -207,3 +277,36 @@ function validateBecomeTutorForm(form) {
    return true;
 }
 
+function removeSupportingDocument(elementId) {
+    var row = document.getElementById(elementId);
+    if (row !== null)
+        $(row).remove();
+}
+
+function addAnotherSupportingDocument() {
+    
+    var date = new Date();
+    var elementId = date.getTime();
+    
+    var innerHTML = "<tr id='" + elementId + "'> " + 
+                    "        <td>" +
+                    "            <a href='#supportingDocumentsTable' class='close' " + 
+                    "                 onclick='removeSupportingDocument(\"" + elementId +"\")'" + 
+                    "                 style='font-weight: normal; text-transform: lowercase' " + 
+                    "                 title='Remove'>" + 
+                    "                  x" +
+                    "            </a><br/><br/>" +
+                    
+                    "            <input type='text' name='supportingDocumentLabel'" +
+                    "                  placeholder='Give this document a name'" +
+                    "                   class='form-control' maxlength='24'/><br/>" +
+                    
+                    "            <input type='file' name='supportingDocumentFile'" + 
+                    "                   value=''/><br/>" +
+                    "        </td>" +
+                    "    </tr>";
+    
+    var supportingDocumentsTable = document.getElementById("supportingDocumentsTable");
+    supportingDocumentsTable.innerHTML += innerHTML;
+    
+}

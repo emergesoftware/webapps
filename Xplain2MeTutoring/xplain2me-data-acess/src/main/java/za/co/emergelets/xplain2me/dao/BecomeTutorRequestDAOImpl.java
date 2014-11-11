@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package za.co.emergelets.xplain2me.dao;
 
 import java.util.ArrayList;
@@ -13,7 +7,9 @@ import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import za.co.emergelets.xplain2me.entity.AcademicLevelsTutoredBefore;
 import za.co.emergelets.xplain2me.entity.BecomeTutorRequest;
+import za.co.emergelets.xplain2me.entity.BecomeTutorSupportingDocument;
 
 /**
  *
@@ -71,7 +67,11 @@ public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
     }
 
     @Override
-    public BecomeTutorRequest saveBecomeTutorRequest(BecomeTutorRequest request) throws DataAccessException {
+    public BecomeTutorRequest saveBecomeTutorRequest(BecomeTutorRequest request, 
+            List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore, 
+            List<BecomeTutorSupportingDocument> documents) 
+            
+            throws DataAccessException {
         
         if (request == null) {
             LOG.warning("become a tutor request object is null"); 
@@ -87,6 +87,16 @@ public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
             
             session.save(request);
             session.persist(request);
+            
+            for (AcademicLevelsTutoredBefore item : academicLevelsTutoredBefore) {
+                session.save(item);
+                session.persist(item);
+            }
+            
+            for (BecomeTutorSupportingDocument item : documents) {
+                session.save(item);
+                session.persist(item);
+            }
             
             tx.commit();
             

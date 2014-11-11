@@ -16,10 +16,9 @@ public class GenerateSHA256 {
     
     public static void main(String... args) throws Exception {
         
-        String password = "washington123";
-        String salt = "89732621769187643987";
-        
-        System.out.println("HASH: " + SHA256Encryptor.computeSHA256(password, salt));
+        String operatingSystemName = System.getProperty("os.name")
+                .toLowerCase();
+        System.out.println("OS: " + operatingSystemName);
         
         
     }

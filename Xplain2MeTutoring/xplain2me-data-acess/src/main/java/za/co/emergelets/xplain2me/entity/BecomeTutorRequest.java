@@ -2,6 +2,7 @@ package za.co.emergelets.xplain2me.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,10 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @Table(name = "become_tutor_request")
@@ -71,6 +75,24 @@ public class BecomeTutorRequest implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "become_tutor_request_submitted", nullable = false)
     private Date dateSubmitted;
+    
+    @Column(name = "become_tutor_request_tutored_before", nullable = false)
+    private boolean tutoredBefore;
+    
+    @Column(name = "become_tutor_request_motivation_text", nullable = false)
+    private String motivationalText;
+    
+    @OneToMany(targetEntity = AcademicLevelsTutoredBefore.class, 
+            fetch = FetchType.EAGER, 
+            mappedBy = "request")
+    @NotFound(action = NotFoundAction.IGNORE)
+    private List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore;
+    
+    @OneToMany(targetEntity = BecomeTutorSupportingDocument.class, 
+            fetch = FetchType.LAZY, 
+            mappedBy = "request")
+    @NotFound(action = NotFoundAction.IGNORE)
+    private List<BecomeTutorSupportingDocument> supportingDocuments;
     
     public BecomeTutorRequest() {
     }
@@ -193,6 +215,38 @@ public class BecomeTutorRequest implements Serializable {
 
     public void setDateSubmitted(Date dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
+    }
+
+    public boolean isTutoredBefore() {
+        return tutoredBefore;
+    }
+
+    public void setTutoredBefore(boolean tutoredBefore) {
+        this.tutoredBefore = tutoredBefore;
+    }
+
+    public String getMotivationalText() {
+        return motivationalText;
+    }
+
+    public void setMotivationalText(String motivationalText) {
+        this.motivationalText = motivationalText;
+    }
+
+    public List<AcademicLevelsTutoredBefore> getAcademicLevelsTutoredBefore() {
+        return academicLevelsTutoredBefore;
+    }
+
+    public void setAcademicLevelsTutoredBefore(List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore) {
+        this.academicLevelsTutoredBefore = academicLevelsTutoredBefore;
+    }
+
+    public List<BecomeTutorSupportingDocument> getSupportingDocuments() {
+        return supportingDocuments;
+    }
+
+    public void setSupportingDocuments(List<BecomeTutorSupportingDocument> supportingDocuments) {
+        this.supportingDocuments = supportingDocuments;
     }
     
     
