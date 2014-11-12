@@ -65,8 +65,9 @@
                                         <br/>
                                         
                                         <h2>Our Rates</h2>
-                                        <p>We offer affordable rates to our clients.The more lessons the client buys, 
-                                            the cheaper the package.
+                                        <p>Different rates apply for different student levels and the more the lessons you purchase the 
+											less our rates are for you.For a quotation to be sent to you, fill in the information 
+											from the link below and submit.
                                         </p>
                                         
                                         <br/>
@@ -76,8 +77,9 @@
                                         <br/>
                                         <br/>
                                         <p>
-                                        <a href="#" color = "blue">Request a quote</a> 
-                                        for a quotation to be sent to you.</p>
+                                        <a href="http://tsepomaleka.dedicated.co.za:9000/xplain2me/quote-request" 
+											color = "blue">Request a quote</a> 
+											for a quotation to be sent to you.</p>
                                         
                                        <br/>
                                     </div>

@@ -14,6 +14,12 @@
         </a>
     </li>
     <li>
+        <a href="<%= request.getContextPath() %>/quote-request" title="Request a quote">
+            <span class="glyphicon glyphicon-credit-card"></span>
+            <span>&nbsp;Request a quote</span>
+        </a>
+    </li>
+    <li>
         <a href="<%= request.getContextPath() %>/become-a-tutor" title="Become a tutor">
             <span class="glyphicon glyphicon-user"></span>
             <span>&nbsp;Become a tutor</span>

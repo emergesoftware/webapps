@@ -100,18 +100,42 @@ function validateRequestQuoteForm(form) {
         removeClass("contactNumberFormGroup", "has-error");
         trimElementValue(form.contactNumber);
    }
-
-
-   // validate the city or town
-   if (form.cityOrTown.value === null || form.cityOrTown.value.length < 3) {
-       errors += "<strong>City / Town:</strong> value too short.<br/>";
-       addClass("cityOrTownFormGroup", "has-error");
+   
+   // validate the street address
+   if (form.streetAddress.value === null || form.streetAddress.value.trim().length === 0) {
+       errors += "<strong>Physical Address:</strong> value too short.<br/>";
+       addClass("streetAddressFormGroup", "has-error");
    }
 
    else {
-        removeClass("cityOrTownFormGroup", "has-error");
-        trimElementValue(form.suburb);
+        removeClass("streetAddressFormGroup", "has-error");
+        trimElementValue(form.streetAddress);
    }
+   
+   // correct the number of lessons required
+   if (form.numberOfLessonsRequired.value.trim().length === 0 || 
+           form.numberOfLessonsRequired.value < 1) {
+       form.numberOfLessonsRequired.value = 1;
+   }
+   
+    // validate if at least one subject has been
+    // selected
+    var atLeastOneSubjectSelected = false;
+    for (var i = 0; i < form.subjects.options.length; i++) {
+        if (form.subjects.options[i].selected === true) {
+            atLeastOneSubjectSelected = true;
+            break;
+        }
+    }
+
+    if (atLeastOneSubjectSelected === false) {
+        errors += "<strong>Subjects: </strong> must select at least one.<br/>";
+         addClass("subjectsFormGroup", "has-error");
+    }
+
+    else {
+         removeClass("subjectsFormGroup", "has-error");
+    }
    
    // validate if the reCPATCHA challenge was
    // attempted

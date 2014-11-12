@@ -20,7 +20,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import za.co.emergelets.util.CellphoneNumberValidator;
+import za.co.emergelets.util.CitizenshipType;
 import za.co.emergelets.util.EmailAddressValidator;
+import za.co.emergelets.util.ReCaptchaUtil;
 import za.co.emergelets.util.SHA256Encryptor;
 import za.co.emergelets.util.SouthAfricanIdentityTool;
 import za.co.emergelets.xplain2me.dao.AcademicLevelDAO;
@@ -204,8 +206,9 @@ public class BecomeTutorControllerHelper extends GenericController {
      * 
      * @param form
      * @return 
+     * @throws java.text.ParseException 
      */
-    public boolean validatePersonalInformation(BecomeTutorForm form) {
+    public boolean validatePersonalInformation(BecomeTutorForm form) throws ParseException {
         
         LOG.info("validationg the personal information for the "
                 + "tutor application form...");
@@ -243,12 +246,35 @@ public class BecomeTutorControllerHelper extends GenericController {
                     + "for South African citizen.");
         }
         
+        if (request.getCitizenship().getId() == Citizenship.SOUTH_AFRICAN && 
+            SouthAfricanIdentityTool.getCitizenship(request.getIdentityNumber()) == CitizenshipType.Other) {
+            
+            count++;
+            form.getErrorsEncountered().add("Your ID Number reflects that you are not "
+                    + "a South African citizen by birth - please rectify.");
+        }
+        
+        if (request.getCitizenship().getId() == Citizenship.SOUTH_AFRICAN && 
+                request.getDateOfBirth() != null) {
+            
+            Date date = SouthAfricanIdentityTool.getDateOfBirth(request.getIdentityNumber());
+            
+            if (date != null &&
+                    date.compareTo(request.getDateOfBirth()) != 0) {
+                count++;
+                form.getErrorsEncountered().add("Your ID Number does not match the Date of Birth "
+                        + "you have provided.");
+            }
+            
+        }
+        
         Date now = new Date();
         
         if (request.getDateOfBirth() == null || 
                 request.getDateOfBirth().after(now)) {
             count++;
-            form.getErrorsEncountered().add("Date of birth has invalid format. Use: YYYY-MM-DD");
+            form.getErrorsEncountered().add("Date of birth has invalid format. "
+                    + "Use: YYYY-MM-DD");
         }
         
         
@@ -327,6 +353,38 @@ public class BecomeTutorControllerHelper extends GenericController {
         return (count == 0);
     }
     
+    private boolean validateTutorPriorTutoringExperienceInformation(BecomeTutorForm form) {
+        
+        int count = 0;
+        
+        // get the tutor job request
+        BecomeTutorRequest request = form.getBecomeTutorRequest();
+        
+        // check if the user has tutored before
+        boolean tutoredBefore = request.isTutoredBefore();
+        
+        // if the user has tutored before, check that, at least
+        // one academic level tutored before has been selected
+        if (tutoredBefore) {
+            if (form.getAcademicLevelsTutoredBefore() == null || 
+                    form.getAcademicLevelsTutoredBefore().isEmpty()) {
+                count++;
+                form.getErrorsEncountered().add("You must select at least one academic "
+                        + "level you have tutored before.");
+            }
+        }
+        
+        // validate if the motivation text has been entered
+        if (request.getMotivationalText() == null || 
+                request.getMotivationalText().isEmpty()) {
+            count++;
+            form.getErrorsEncountered().add("You must enter some motivational text as to why you "
+                    + "think Xplain2Me Tutoring should consider you.");
+        }
+        
+        return (count == 0);
+    }
+    
     /**
      * Determines if tutor application is
      * completely unique
@@ -361,28 +419,13 @@ public class BecomeTutorControllerHelper extends GenericController {
      * @return 
      */
     public boolean verifyReCaptchaCode(HttpServletRequest request, BecomeTutorForm form) {
-        String remoteAddr = request.getRemoteAddr();
         
-        ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-        reCaptcha.setPrivateKey("6LfJjvsSAAAAAGO6AP2DK_l_v_B82jMHPKpXLMPh");
-
         String challenge = form.getReCaptchaChallenge();
         String uresponse = form.getReCaptchaResponse();
         
-        if ((challenge == null || challenge.isEmpty()) || 
-                (uresponse == null || uresponse.isEmpty())) {
-            form.getErrorsEncountered().add("The CATCHA code is not correct.");
-            return false;
-        }
-        
-        ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, 
-                challenge, uresponse);
-
-        boolean isValid = reCaptchaResponse.isValid();
-        if (isValid == false)
-            form.getErrorsEncountered().add("The CAPTCHA Code is not correct");
-        
-        return isValid;
+        return ReCaptchaUtil.verifyReCaptchaCode(request, challenge, 
+                uresponse, form.getErrorsEncountered());
+       
     }
 
     /**
@@ -398,11 +441,12 @@ public class BecomeTutorControllerHelper extends GenericController {
     private void processUploadedFile(FileItem item, BecomeTutorForm form) 
             throws Exception {
         
-        String fieldName = item.getFieldName();
-        String fileName = item.getName();
+        /* String fieldName = item.getFieldName();
         String contentType = item.getContentType();
         boolean isInMemory = item.isInMemory();
-        long sizeInBytes = item.getSize();
+        long sizeInBytes = item.getSize(); */
+        
+        String fileName = item.getName();
         
         // create supporting document instance
         // or get existing if the list is not empty
@@ -600,6 +644,7 @@ public class BecomeTutorControllerHelper extends GenericController {
         
         String operatingSystemName = 
                 System.getProperty("os.name").toLowerCase();
+        
         return operatingSystemName.contains("windows");
         
     }

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 import za.co.emergelets.util.EmailAddressValidator;
-import za.co.emergelets.xplain2me.dao.TutorRequestDAO;
+import za.co.emergelets.util.ReCaptchaUtil;
 import za.co.emergelets.xplain2me.entity.Subject;
 import za.co.emergelets.xplain2me.entity.TutorRequest;
 import za.co.emergelets.xplain2me.entity.TutorRequestSubject;
@@ -197,28 +197,11 @@ public class RequestTutorControllerHelper extends GenericController {
      */
     public boolean verifyReCaptchaCode(HttpServletRequest request, RequestTutorForm form) {
         
-        String remoteAddr = request.getRemoteAddr();
-        
-        ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-        reCaptcha.setPrivateKey("6LfJjvsSAAAAAGO6AP2DK_l_v_B82jMHPKpXLMPh");
-
         String challenge = form.getReCaptchaChallenge();
         String uresponse = form.getReCaptchaResponse();
         
-        if ((challenge == null || challenge.isEmpty()) || 
-                (uresponse == null || uresponse.isEmpty())) {
-            form.getErrorsEncountered().add("The CATCHA code is not correct.");
-            return false;
-        }
-        
-        ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, 
-                challenge, uresponse);
-
-        boolean isValid = reCaptchaResponse.isValid();
-        if (isValid == false)
-            form.getErrorsEncountered().add("The CAPTCHA Code is not correct");
-        
-        return isValid;
+        return ReCaptchaUtil.verifyReCaptchaCode(request, challenge, 
+                uresponse, form.getErrorsEncountered());
         
     }
     

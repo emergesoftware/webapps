@@ -1,14 +1,11 @@
 package za.co.emergelets.xplain2me.webapp.controller;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -106,7 +103,7 @@ public class BecomeTutorController extends GenericController implements Serializ
     }
     
     @RequestMapping(value = "/process-tutor-job-application", method = RequestMethod.GET)
-    public ModelAndView processTutorJobApplicationRequest(HttpServletRequest request) {
+    public ModelAndView processTutorJobApplicationRequest(HttpServletRequest request) throws ParseException {
         
         // get the form from the session
         BecomeTutorForm form = (BecomeTutorForm)getFromSessionScope(request,

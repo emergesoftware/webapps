@@ -198,7 +198,7 @@
                                 <% } %>
                             </select>
                         </div>
-                        <!-- Contact Number -->
+                        <!-- Subjects -->
                         <div id="subjectsFormGroup" class="form-group">
                             <label>Subjects:</label>
                             <p>

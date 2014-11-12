@@ -1,3 +1,4 @@
+<%@page import="za.co.emergelets.xplain2me.entity.Subject"%>
 <%@page import="za.co.emergelets.xplain2me.webapp.component.RequestQuoteForm"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -126,15 +127,15 @@
                            autocomplete="off"/>
                 </div>
                 
-                <!-- City / Town -->
+                <!-- Street Address -->
                 
-                <div id="cityOrTownFormGroup" class="form-group">
-                    <label>City / Town:</label>
-                    <input type="text" class="form-control" id="cityOrTown"
-                           name="cityOrTown" maxlength="64"
-                           placeholder="Enter the City / Town"
-                           value= "<%= (form.getCityOrTown() == null)
-                                   ? "" : form.getCityOrTown() %>"/>
+                <div id="streetFormGroup" class="form-group">
+                    <label>Physical Address:</label>
+                    <textarea class="form-control" id="streetAddress"
+                           name="streetAddress" rows="3"
+                           placeholder="Enter the Physical Address"
+                           style="resize: none"><%= (form.getStreetAddress() == null) ? "" : 
+                                form.getStreetAddress()  %></textarea>
                 </div>
                 
                 <!-- Province -->
@@ -146,7 +147,9 @@
                         <%
                             for (Long provinceId : form.getProvinces().keySet()) {
                                 %>
-                                <option value="<%= provinceId %>">
+                                <option value="<%= provinceId %>"
+                                        <%= (form.getProvince() != null &&
+                                                form.getProvince().getId() == provinceId) ? "selected" : "" %>>
                                     <%= form.getProvinces().get(provinceId).getDescription() %>
                                 </option>
                         <%
@@ -155,7 +158,7 @@
                     </select>
                 </div>
                 
-                <!-- Area Code -->
+                <!-- Academic Level -->
                 
                 <div id="academicLevelFormGroup" class="form-group">
                     <label>Academic Level:</label>
@@ -171,6 +174,38 @@
                                     }
                                 %>
                     </select>
+                </div>
+                    
+                <div id="subjectsFormGroup" class="form-group">
+                    <label>Subjects:</label>
+                    <p>
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <span class="text-muted">
+                            To select more than one, press <b>Ctrl</b> key
+                            together with your selection when you click.
+                        </span>
+                    </p>
+
+                    <select id="subjects" name="subjects"
+                            class="form-control" multiple="multiple"
+                            size="12">
+
+                        <% for (Subject subject : form.getSubjects().values()) { %>
+                            <option value="<%= subject.getId() %>">
+                                <%= subject.getName() %>
+                            </option>
+                        <% } %>
+                    </select>
+                </div>
+                    
+                 <!-- Number of Lessons Required -->
+                
+                <div id="numberOfLessonsRequiredFormGroup" class="form-group">
+                    <label>Number of Lessons Required:</label>
+                    <input type="text" class="form-control" id="numberOfLessonsRequired"
+                           name="numberOfLessonsRequired" maxlength="2"
+                           placeholder="Enter the Number of Lessons"
+                           value="<%= form.getNumberOfLessonsRequired() %>"/>
                 </div>
                 
                 <p>
@@ -228,6 +263,6 @@
             <%@include file="../jspf/template/default-footer.jspf" %> 
             
         </div>
-        
+         
     </body>
 </html>

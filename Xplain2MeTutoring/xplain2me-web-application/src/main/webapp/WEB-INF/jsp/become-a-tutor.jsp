@@ -27,12 +27,12 @@
         
         <%@include file="../jspf/template/default-header.jspf" %>
         
-        <script type="text/javascript" 
-            src="<%= request.getContextPath() %>/assets/js/become-a-tutor.js">
+        <link type="text/css" rel="stylesheet" href="<%= request.getContextPath() %>/assets/datepicker/css/datepicker.css" />
+        <script type="text/javascript" src="<%= request.getContextPath() %>/assets/datepicker/js/bootstrap-datepicker.js">
         </script>
         
-        <script type="text/javascript">
-            $("#motivation").attr("value", "");
+        <script type="text/javascript" 
+            src="<%= request.getContextPath() %>/assets/js/become-a-tutor.js">
         </script>
         
     </head>
@@ -173,11 +173,22 @@
 
                         <div id="dateOfBirthFormGroup" class="form-group">
                             <label>Date Of Birth:</label>
-                            <input type="text" class="form-control" id="dateOfBirth"
-                                   name="dateOfBirth" maxlength="10"
-                                   placeholder="Enter the Date of birth (YYYY-MM-DD)"
+                            <input type="text" class="form-control datepicker" id="dateOfBirth"
+                                   name="dateOfBirth" placeholder="Use Format: YYYY-MM-DD"
                                    value="<%= (dateOfbirth == null) ? "" : dateOfbirth %>"/> 
                         </div>
+                        
+                        <script type="text/javascript">
+                            
+                            $(document).ready(function(){
+                                $(".datepicker").datepicker({
+                                    format: "yyyy-mm-dd",
+                                    endDate: "01-01-2000",
+                                    autoclose : true
+                                });
+                            });
+                            
+                        </script>
 
                         <!-- Citizenship -->
 
@@ -219,7 +230,10 @@
                                         for (Gender gender : form.getGender()) {
                                 %>
 
-                                <option value="<%= gender.getId() %>">
+                                <option value="<%= gender.getId() %>"
+                                        <%= (form.getBecomeTutorRequest().getGender() != null
+                                          && form.getBecomeTutorRequest().getGender().getId() == gender.getId()) 
+                                        ? "" : "selected"%>>
                                     <%= gender.getDescription() %>
                                 </option>   
 
@@ -354,14 +368,16 @@
                             <div class="radio-inline" >
                                 <label style="font-weight: normal">
                                     <input type="radio" name="tutoredBefore"
-                                              value="Yes" checked="checked">
+                                              value="Yes"
+                                    <%= (form.getBecomeTutorRequest().isTutoredBefore()) ? "checked" : "" %>>
                                     Yes
                                 </label>
                             </div>
                             <div class="radio-inline" >
                                 <label style="font-weight: normal">
                                     <input type="radio" name="tutoredBefore"
-                                              value="No">
+                                              value="No"
+                                    <%= (!form.getBecomeTutorRequest().isTutoredBefore()) ? "checked" : "" %>>
                                     No
                                 </label>
                             </div>
@@ -438,20 +454,19 @@
                             <textarea class="form-control" id="motivation"
                                       name="motivation" rows="5"
                                       placeholder="Type your motivational text here"
-                                      style="resize: none">
-                            </textarea>
+                                      style="resize: none"><%= (form.getBecomeTutorRequest().getMotivationalText() == null) ? "" 
+                                        : form.getBecomeTutorRequest().getMotivationalText() %></textarea>
 
                         </div>
-
+                         
                         <hr/>
-                        <h3 class="text-primary">Finalise and submit</h3>
+                        <h3 class="text-primary">Almost Finished</h3>
                         <p class="text-muted">
                             You're almost done. Please complete the human-test
                             challenge and accept our Terms of Service.
                         </p>
                         <hr/>
                         
-                        <br/>
                         <p>
                             <strong>Complete this challenge - 
                                 this verifies that you are really human.

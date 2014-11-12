@@ -33,7 +33,7 @@
                                 
                                 <div style="width:600px; margin-bottom: 30px">
                                     
-                                   <h2>About Us</h2>
+                                   <h2>Rates</h2>
                                    
                                     <p>
                                         <strong>
@@ -60,7 +60,7 @@
 
                                     <p>
                                         <strong>
-                                            Perfomance Targets
+                                            Performance Targets
                                         </strong>
                                     </p>
                                     

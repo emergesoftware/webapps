@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import za.co.emergelets.xplain2me.entity.AcademicLevel;
 import za.co.emergelets.xplain2me.entity.Province;
+import za.co.emergelets.xplain2me.entity.Subject;
 
 @Component
 public class RequestQuoteForm implements Serializable {
@@ -16,18 +17,25 @@ public class RequestQuoteForm implements Serializable {
     private String lastName;
     private String contactNumber;
     private String emailAddress;
-    private String cityOrTown;
+    private String streetAddress;
     private Province province;
     private AcademicLevel academicLevel;
+    private int numberOfLessonsRequired;
+    private List<Subject> selectedSubjects;
     
     private Map<Long, AcademicLevel> academicLevels;
     private Map<Long, Province> provinces;
+    private Map<Long, Subject> subjects;
     
     private List<String> errorsEncountered;
     
     public RequestQuoteForm() {
+        
         this.academicLevels = new HashMap<>();
         this.provinces = new HashMap<>();
+        this.subjects = new HashMap<>();
+        
+        this.numberOfLessonsRequired = 5;
         
         this.errorsEncountered = new ArrayList<>();
     }
@@ -62,14 +70,6 @@ public class RequestQuoteForm implements Serializable {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
-    }
-
-    public String getCityOrTown() {
-        return cityOrTown;
-    }
-
-    public void setCityOrTown(String cityOrTown) {
-        this.cityOrTown = cityOrTown;
     }
 
     public Province getProvince() {
@@ -111,5 +111,38 @@ public class RequestQuoteForm implements Serializable {
     public void setErrorsEncountered(List<String> errorsEncountered) {
         this.errorsEncountered = errorsEncountered;
     }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+    }
+
+    public int getNumberOfLessonsRequired() {
+        return numberOfLessonsRequired;
+    }
+
+    public void setNumberOfLessonsRequired(int numberOfLessonsRequired) {
+        this.numberOfLessonsRequired = numberOfLessonsRequired;
+    }
+
+    public Map<Long, Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Map<Long, Subject> subjects) {
+        this.subjects = subjects;
+    }
+
+    public List<Subject> getSelectedSubjects() {
+        return selectedSubjects;
+    }
+
+    public void setSelectedSubjects(List<Subject> selectedSubjects) {
+        this.selectedSubjects = selectedSubjects;
+    }
+    
     
 }
