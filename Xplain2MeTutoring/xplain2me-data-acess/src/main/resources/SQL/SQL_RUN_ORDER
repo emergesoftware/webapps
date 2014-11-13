@@ -1,0 +1,18 @@
+This file contains information on the order in which the
+SQL files should be run:
+
+---------------------------
+PHASE: Alpha
+---------------------------
+
+1. create_database.sql
+2. insert_initial_data.sql
+3. create_become_tutor_request_table.sql
+
+---------------------------
+PHASE: Beta
+---------------------------
+
+4. alter_table_tutor_request_issue_1.sql
+5. create_academic_levels_tutored_table_issue_3.sql
+6. create_province_table_issue_6.sql

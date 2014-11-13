@@ -5,26 +5,32 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import za.co.emergelets.util.BooleanToText;
 import za.co.emergelets.util.CellphoneNumberValidator;
 import za.co.emergelets.util.CitizenshipType;
 import za.co.emergelets.util.EmailAddressValidator;
 import za.co.emergelets.util.ReCaptchaUtil;
 import za.co.emergelets.util.SHA256Encryptor;
 import za.co.emergelets.util.SouthAfricanIdentityTool;
+import za.co.emergelets.util.mail.EmailSender;
+import za.co.emergelets.util.mail.EmailTemplateFactory;
+import za.co.emergelets.util.mail.EmailTemplateType;
 import za.co.emergelets.xplain2me.dao.AcademicLevelDAO;
 import za.co.emergelets.xplain2me.dao.BecomeTutorRequestDAO;
 import za.co.emergelets.xplain2me.dao.CitizenshipDAO;
@@ -49,6 +55,144 @@ public class BecomeTutorControllerHelper extends GenericController {
     private static final String LINUX_FILE_REPOSITORY = "/tmp";
     
     public BecomeTutorControllerHelper() {
+    }
+    
+    /**
+     * Asynchronous thread to send an email to the 
+     * applicant on receipt of the 
+     * @param form
+     */
+    public void sendUserReceiptOfApplicationEmailAsync(final BecomeTutorForm form) {
+        
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                
+                String subject = null, 
+                        body = null;
+
+                if (form != null) {
+
+                    // resolve the first provided
+                    // first name
+                    String firstName = form.getBecomeTutorRequest()
+                            .getFirstNames().split(" ")[0];
+
+                    // set the subject
+                    subject = "Do not reply | Tutor Employment Request";
+
+                    // set the body of the email
+                    body = "\n" +
+                           "Howdy, " + firstName + "\n\n" +
+                           "Thank you for your interest in joining our team of passionate tutors. \n" +
+                           "We have received your request for a tutor employment application and we will be \n" +
+                           "in contact with you very soon. \n\n" + 
+                           "Do not hesitate to contact us - find our details from our\n" + 
+                           "website: http:" + "//" + "xplain2me.co.za/\n\n" + 
+                           "Yours truly, \n" +
+                           "Xplain2Me Tutoring Services\n\n";
+                    
+                    EmailSender email = new EmailSender();
+                    email.sendEmail(form.getBecomeTutorRequest().getEmailAddress(), 
+                            subject, body, false);
+
+                }
+
+            }
+        }).start();
+    }
+    
+    /**
+     * Sends an email to the app manager
+     * when a new tutor job application has
+     * been completed.
+     * 
+     * @param form 
+     */
+    public void sendTutorApplicationNotificationEmailAsync(final BecomeTutorForm form) {
+        
+        if (form == null) return;
+        
+        new Thread(
+                
+                new Runnable() {
+
+            @Override
+            public void run() {
+                
+                // date formatter
+                DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                
+                // the subject
+                String subject = "New Tutor Employment Application";
+                
+                // the job application object
+                BecomeTutorRequest request = form.getBecomeTutorRequest();
+                
+                // resolve academic levels tutored before
+                List<String> levelsTutoredBefore = new ArrayList<>();
+                for (AcademicLevelsTutoredBefore item : request.getAcademicLevelsTutoredBefore()) 
+                    levelsTutoredBefore.add(item.getAcademicLevel().getDescription());
+                
+                // set up values for injection
+                Map<String, Object> values = new HashMap<>();
+                values.put("date_completed", formatter.format(new Date()));
+                values.put("job_application_id", request.getId());
+                values.put("last_name", request.getLastName());
+                values.put("first_names", request.getFirstNames());
+                values.put("email_address", request.getEmailAddress());
+                values.put("contact_number", request.getContactNumber());
+                values.put("street_address", request.getStreetAddress());
+                values.put("suburb", request.getSuburb());
+                values.put("city", request.getCity());
+                values.put("area_code", request.getAreaCode());
+                values.put("id_number", request.getIdentityNumber());
+                values.put("date_of_birth", formatter.format(request.getDateOfBirth()));
+                values.put("citizenship", request.getCitizenship().getDescription());
+                values.put("tutored_before", BooleanToText.format(request.isTutoredBefore(),
+                        BooleanToText.YES_NO_FORMAT));
+                values.put("academic_levels_tutored_before", EmailTemplateFactory
+                        .constructHtmlListItemsFromList(levelsTutoredBefore, false));
+                values.put("motivation", request.getMotivationalText());
+                values.put("supporting_documents_attached", BooleanToText.format(
+                        !form.getSupportingDocuments().isEmpty(), 
+                        BooleanToText.YES_NO_FORMAT));
+                
+                // the body
+                String body = null;
+                try {
+                    
+                    body = EmailTemplateFactory.injectValuesIntoEmailTemplate(
+                            EmailTemplateFactory.getTemplateByType(
+                                    EmailTemplateType.NotifyNewTutorJobApplication), 
+                            values);
+                    
+                } catch (IOException ex) {
+                    
+                    LOG.log(Level.SEVERE, 
+                            "error while reading email template: {0}", ex.getMessage());
+                }
+                
+                // send email
+                EmailSender emailSender = new EmailSender();
+                
+                if (form.getEmailAttachments() == null || 
+                        form.getEmailAttachments().isEmpty()) {
+                    
+                    emailSender.sendEmail(EmailSender.APP_MANAGER_EMAIL_ADDRESS, 
+                            subject, body, true);
+                }
+                else {
+                    emailSender.sendEmailWithAttachments(EmailSender.APP_MANAGER_EMAIL_ADDRESS, 
+                        subject, body, form.getEmailAttachments(), true);
+                }
+                
+            }
+        }
+                
+        ).start();
+        
     }
     
     /**
@@ -163,6 +307,9 @@ public class BecomeTutorControllerHelper extends GenericController {
         if (item.getAcademicLevelsTutoredBefore() == null)
             item.setAcademicLevelsTutoredBefore(
                     new ArrayList<AcademicLevelsTutoredBefore>()); 
+        
+        // initialise the list of files
+        form.setEmailAttachments(new ArrayList<File>());
         
         // create a factory for disk-based file items
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -353,7 +500,13 @@ public class BecomeTutorControllerHelper extends GenericController {
         return (count == 0);
     }
     
-    private boolean validateTutorPriorTutoringExperienceInformation(BecomeTutorForm form) {
+    /**
+     * Validates the tutors prior experience
+     * 
+     * @param form
+     * @return 
+     */
+    public boolean validateTutorPriorTutoringExperienceInformation(BecomeTutorForm form) {
         
         int count = 0;
         
@@ -493,6 +646,9 @@ public class BecomeTutorControllerHelper extends GenericController {
         
         // close the input stream
         stream.close();
+        
+        // add file to the list of attachments
+        form.getEmailAttachments().add(file);
         
     }
 

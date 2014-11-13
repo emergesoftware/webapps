@@ -1,13 +1,20 @@
 package za.co.emergelets.xplain2me.webapp.controller.helper;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import za.co.emergelets.util.EmailAddressValidator;
-import za.co.emergelets.util.EmailSender;
 import za.co.emergelets.util.ReCaptchaUtil;
+import za.co.emergelets.util.mail.EmailSender;
+import za.co.emergelets.util.mail.EmailTemplateFactory;
+import za.co.emergelets.util.mail.EmailTemplateType;
 import za.co.emergelets.xplain2me.entity.Subject;
 import za.co.emergelets.xplain2me.webapp.component.RequestQuoteForm;
 import za.co.emergelets.xplain2me.webapp.controller.GenericController;
@@ -143,50 +150,60 @@ public class RequestQuoteControllerHelper extends GenericController {
      */
     public void sendQuoteRequestEmailAsync(final RequestQuoteForm form) {
         
-        try {
+        if (form == null) return;
         
             new Thread(
-                    new Runnable() {
+                new Runnable() {
 
                 @Override
                 public void run() {
                     
-                    String subject = "New Quote Request | Xplain2Me Tutoring";
-                    String sender = "wchigwaza@yahoo.com";
+                    try {
+                        // the subject
+                        String subject = "New Quote Request | Xplain2Me Tutoring";
 
-                    StringBuilder subjects = new StringBuilder();
-                    for (Subject item : form.getSelectedSubjects())
-                        subjects.append(" - ").append(item.getName()).append("\n");
-
-                    StringBuilder body = new StringBuilder();
-                    body.append("Howdy, \n\n")
-
-                        .append("Someone has requested a quote from you.\n")
-                        .append("Below are the details of this quote request:\n\n")
-
-                        .append("First Names: \t\t").append(form.getFirstNames()).append("\n")
-                        .append("Last Name: \t\t").append(form.getLastName()).append("\n")
-                        .append("Email Address: \t\t").append(form.getEmailAddress()).append("\n")
-                        .append("Contact Number: \t\t").append(form.getContactNumber()).append("\n")
-                        .append("Physical Address: \t\t").append(form.getStreetAddress()).append("\n")
-                        .append("Student Level: \t\t").append(form.getAcademicLevel().getDescription()).append("\n")
-                        .append("Subjects: \t\t").append(subjects.toString())
-                        .append("Number of Lessons: \t\t").append(form.getNumberOfLessonsRequired()).append("\n")
-                        .append("\n\n");
-
-                    EmailSender email = new EmailSender();
-                    email.sendEmail(sender, subject, body.toString());
+                        // resolve the subjects
+                        StringBuilder subjects = new StringBuilder();                    
+                        for (Subject item : form.getSelectedSubjects())
+                            subjects.append("<li>").append(item.getName()).append("</li>\n");
+                        
+                        // setup the current date
+                        String date = new SimpleDateFormat(
+                            "dd-MMM-yyyy HH:mm").format(new Date());
+                        
+                        // map values for injection into template
+                        Map<String, Object> values = new HashMap<>();
+                        values.put("date_completed", date);
+                        values.put("last_name", form.getLastName());
+                        values.put("first_names", form.getFirstNames());
+                        values.put("email_address", form.getEmailAddress());
+                        values.put("contact_number", form.getContactNumber());
+                        values.put("physical_address", form.getStreetAddress());
+                        values.put("province", form.getProvince().getDescription());
+                        values.put("academic_level", form.getAcademicLevel().getDescription());
+                        values.put("subjects", subjects.toString());
+                        values.put("number_of_lessons_required", form.getNumberOfLessonsRequired());
+                        
+                        // prepare html body
+                        String body = EmailTemplateFactory.injectValuesIntoEmailTemplate(
+                                EmailTemplateFactory.getTemplateByType(
+                                                    EmailTemplateType.NotifyNewQuoteRequest), 
+                                values);
+                               
+                        EmailSender email = new EmailSender();
+                        email.sendEmail(EmailSender.APP_MANAGER_EMAIL_ADDRESS, 
+                                subject, body, true);
+                    }
+                    
+                    catch (IOException e) {
+                        LOG.log(Level.SEVERE, "... could not send email, error: {0}",
+                                e.getMessage());
+                    }
+                    
                     
                 }
             }
-            ).start();
+        ).start();
             
-            
-        }
-        
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Error while sending email: {0}", e.getMessage()); 
-        }
-        
     }
 }

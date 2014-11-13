@@ -1,5 +1,6 @@
 package za.co.emergelets.xplain2me.webapp.component;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +39,8 @@ public class BecomeTutorForm implements Serializable {
     
     private List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore;
     private List<BecomeTutorSupportingDocument> supportingDocuments;
+    
+    private List<File> emailAttachments;
     
     public BecomeTutorForm() {
         this.citizenships = new ArrayList<>();
@@ -136,6 +139,14 @@ public class BecomeTutorForm implements Serializable {
 
     public void setSupportingDocuments(List<BecomeTutorSupportingDocument> supportingDocuments) {
         this.supportingDocuments = supportingDocuments;
+    }
+
+    public List<File> getEmailAttachments() {
+        return emailAttachments;
+    }
+
+    public void setEmailAttachments(List<File> emailAttachments) {
+        this.emailAttachments = emailAttachments;
     }
     
     

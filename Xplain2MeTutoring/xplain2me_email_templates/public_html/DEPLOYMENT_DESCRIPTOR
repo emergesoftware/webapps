@@ -1,0 +1,9 @@
+This file describes the instructions on how to deploy the
+files in this project.
+
+
+1. On Unix systems:
+Deploy the HTML files under public_html folder to: /root/email_templates
+
+2. On Windows:
+Deploy the HTML files under public_html folder to: C:\Users\${USER}\Temp\email_templates

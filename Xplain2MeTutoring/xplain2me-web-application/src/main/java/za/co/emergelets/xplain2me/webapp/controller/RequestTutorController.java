@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
-import za.co.emergelets.util.EmailSender;
+import za.co.emergelets.util.mail.EmailSender;
 import za.co.emergelets.xplain2me.dao.AcademicLevelDAO;
 import za.co.emergelets.xplain2me.dao.AcademicLevelDAOImpl;
 import za.co.emergelets.xplain2me.dao.SubjectDAO;
@@ -176,7 +176,7 @@ public class RequestTutorController extends GenericController {
             
             // start a thread to send the verification code
             // to the user
-            new Thread(new AsyncVerificationCodeNotifier(form)).start();
+            helper.sendUserVerificationCodeUsingEmailAsync(form);
             
             // return the page for the verification code
             return createModelAndView("request-a-tutor-verification");
@@ -267,11 +267,11 @@ public class RequestTutorController extends GenericController {
 
                 // start a thread to send an email to the 
                 // manager about this new request for a tutor
-                new Thread(new AsyncNewApplicantNotifier(form)).start();
+                helper.sendTutorRequestNotificationEmailAsync(form);
 
                 // start a thread to send an email to the applicant to
                 // confirm that the application was received
-                new Thread(new AsyncApplicationReceiptNotifier(form)).start();
+                helper.sendApplicantReceiptNotificationEmailAsync(form);
                 //}
                 
             }
@@ -291,201 +291,5 @@ public class RequestTutorController extends GenericController {
         return createModelAndView("request-a-tutor-submitted");
         
     }
-    
-    /**
-     * Sends an email with the verification code
-     * 
-     */
-    private class AsyncVerificationCodeNotifier implements Runnable {
-        
-        private RequestTutorForm form;
-        private EmailSender emailSender;
-        
-        private AsyncVerificationCodeNotifier(){
-            this.form = null;
-            this.emailSender = null;
-        }
-        
-        public AsyncVerificationCodeNotifier(RequestTutorForm form) {
-            this();
-            this.form = form;
-            this.emailSender = new EmailSender();
-        }
-        
-        @Override
-        public void run() {
-            
-            String subject = null, 
-                    body = null;
-            
-            if (this.form != null) {
-                
-                // resolve the first provided
-                // first name
-                String firstName = form.getTutorRequest()
-                        .getFirstNames().split(" ")[0];
-                
-                // set the subject
-                subject = "Do not reply | Verification Code | Xplain2Me Tutoring Services";
-                
-                // set the body of the email
-                body = "\n" +
-                       "Howdy, " + firstName + "\n\n" +
-                       "Thank you for your interest in our tutoring services. \n" +
-                       "In order to complete your request, we need to verify your \n" + 
-                       "email address. Please enter the verification code below \n" + 
-                       "back in the website to proceed within the next 5 minutes:\n\n" +
-                       "Verification Code: " + form.getVerificationCode() + "\n\n" + 
-                       "Yours truly, \n" +
-                       "Xplain2Me Tutoring Services\n\n";
-                
-                emailSender.sendEmail(form.getTutorRequest().getEmailAddress(), 
-                        subject, body);
-                
-            }
-            
-            
-        }
-        
-        
-    }
-    
-    
-    /**
-     * Asynchronous thread to send an email to the 
-     * applicant on receipt of the 
-     */
-    private class AsyncApplicationReceiptNotifier implements Runnable {
-        
-        private RequestTutorForm form;
-        private EmailSender emailSender;
-        
-        private AsyncApplicationReceiptNotifier() {
-            this.form = null;
-            this.emailSender = null;
-        }
-        
-        public AsyncApplicationReceiptNotifier(RequestTutorForm form) {
-            this();
-            this.form = form;
-            this.emailSender = new EmailSender();
-        }
-        
-        @Override
-        public void run() {
-            
-            String subject = null, 
-                    body = null;
-            
-            if (this.form != null) {
-                
-                // resolve the first provided
-                // first name
-                String firstName = form.getTutorRequest()
-                        .getFirstNames().split(" ")[0];
-                
-                // set the subject
-                subject = "Do not reply | Tutor Request | Xplain2Me Tutoring Services";
-                
-                // set the body of the email
-                body = "\n" +
-                       "Howdy, " + firstName + "\n\n" +
-                       "Thank you for your interest in our tutoring services. \n" +
-                       "We have received your request for a tutor and we will be \n" +
-                       "in contact very soon. \n\n" + 
-                       "Your reference number for this request is: " + form.getTutorRequest().getReferenceNumber() + "\n" + 
-                       "Use your reference number whenever communicating about your \n" +
-                       "tutor request application.\n\n" +
-                       "Do not hesitate to contact us - find our details from our\n" + 
-                       "website: http:" + "//" + "www." + "xplain2me.co.za/\n\n" + 
-                       "Yours truly, \n" +
-                       "Xplain2Me Tutoring Services\n\n";
-                
-                emailSender.sendEmail(form.getTutorRequest().getEmailAddress(), 
-                        subject, body);
-                
-            }
-            
-            
-            
-        }
-        
-    }
-    
-    /**
-     * Asynchronously sends an email to 
-     * the app manager about a new student
-     * or tutor request.
-     */
-    private class AsyncNewApplicantNotifier implements Runnable {
-        
-        private static final String SEND_TO = "wchigwaza@yahoo.com";
-        
-        private RequestTutorForm form;
-        private EmailSender emailSender;
-        
-        private AsyncNewApplicantNotifier(){
-            this.form = null;
-            this.emailSender = null;
-        }
-        
-        public AsyncNewApplicantNotifier(RequestTutorForm form) {
-            this.form = form;
-            this.emailSender = new EmailSender();
-        }
-        
-        @Override
-        public void run() {
-            
-            String subject = null,
-                   body = null;
-            
-            if (form != null) {
-                
-                // setup the current date
-                String date = new SimpleDateFormat(
-                        "dd-MMM-yyyy HH:mm").format(new Date());
-                
-                // resolve the gender
-                String gender = "Male";
-                if (form.getTutorRequest().isGender() == false)
-                    gender = "Female";
-                
-                // resolve the subjects
-                StringBuilder subjects = new StringBuilder();
-                for (TutorRequestSubject _subject : form.getTutorRequest().getSubjects()) {
-                    subjects.append(_subject.getSubject().getName() + "\n");
-                }
-                
-                // the subject
-                subject = "New Tutor Request | Xplain2Me Tutoring Services";
-                
-                // the message body
-                body = "\n" + 
-                       "Howdy, \n\n" + 
-                       "A new request for a tutor was completed on " + date + ".\n" +
-                       "Below are the details of this request:\n\n" + 
-                       "REFERENCE NUMBER: " + form.getTutorRequest().getReferenceNumber() + "\n\n" +
-                       "Last Name: " + form.getTutorRequest().getLastName().toUpperCase() + "\n" +
-                       "First Name(s): " + form.getTutorRequest().getFirstNames().toUpperCase() + "\n" + 
-                       "Gender: " + gender + "\n" +
-                       "Email Address: " + form.getTutorRequest().getEmailAddress() + "\n" + 
-                       "Contact Number: " + form.getTutorRequest().getContactNumber() + "\n" + 
-                       "Street Address: " + form.getTutorRequest().getPhysicalAddress().toUpperCase() + "\n" + 
-                       "Suburb: " + form.getTutorRequest().getSuburb().toUpperCase() + "\n" + 
-                       "City: " + form.getTutorRequest().getCity().toUpperCase() + "\n" + 
-                       "Area Code: " + form.getTutorRequest().getAreaCode() + "\n" + 
-                       "Academic Level: " + form.getTutorRequest().getGradeLevel().getDescription() + "\n" + 
-                       "Subject: " + subjects.toString() + "\n" + 
-                       "Learner problem areas and necessary additional information: " + 
-                            form.getTutorRequest().getAdditionalInformation() + "\n\n";
-                
-                emailSender.sendEmail(SEND_TO, subject, body);
-            }
-            
-            
-        }
-        
-    }
-    
+     
 }
