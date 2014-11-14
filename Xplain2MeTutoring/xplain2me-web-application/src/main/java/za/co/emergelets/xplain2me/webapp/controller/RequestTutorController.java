@@ -1,6 +1,5 @@
 package za.co.emergelets.xplain2me.webapp.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
-import za.co.emergelets.util.mail.EmailSender;
+import za.co.emergelets.util.NumericUtils;
+import za.co.emergelets.util.VerificationCodeGenerator;
 import za.co.emergelets.xplain2me.dao.AcademicLevelDAO;
 import za.co.emergelets.xplain2me.dao.AcademicLevelDAOImpl;
 import za.co.emergelets.xplain2me.dao.SubjectDAO;
@@ -25,7 +25,6 @@ import za.co.emergelets.xplain2me.dao.TutorRequestDAO;
 import za.co.emergelets.xplain2me.dao.TutorRequestDAOImpl;
 import za.co.emergelets.xplain2me.entity.AcademicLevel;
 import za.co.emergelets.xplain2me.entity.Subject;
-import za.co.emergelets.xplain2me.entity.TutorRequestSubject;
 import za.co.emergelets.xplain2me.webapp.component.RequestTutorForm;
 import za.co.emergelets.xplain2me.webapp.controller.helper.RequestTutorControllerHelper;
 
@@ -233,7 +232,8 @@ public class RequestTutorController extends GenericController {
         }
         
         // check the verification code parameter
-        if (verificationCode == null || verificationCode.length() != 9) {
+        if (verificationCode == null || verificationCode.length() != 
+                VerificationCodeGenerator.VERIFICATION_CODE_LENGTH) {
             
             form.getErrorsEncountered().add("The verification is too short.");
             // save to the session scope
@@ -246,14 +246,8 @@ public class RequestTutorController extends GenericController {
             
             // compare the verification code
             if ((Long.parseLong(verificationCode) == form.getVerificationCode() &&
-                RequestTutorControllerHelper.isNaN(verificationCode) == false)) {
+                NumericUtils.isNaN(verificationCode) == false)) {
                 
-                // check if this tutor request is completely unique
-                /*if (helper.isTutorRequestCompletelyUnique(tutorRequestDAO, form) == false) {
-                    return createModelAndView("request-a-tutor-submitted");
-                } 
-                
-                else { */
                 
                 // generate the date this was received
                 // and assign a temporary ref number
@@ -272,13 +266,13 @@ public class RequestTutorController extends GenericController {
                 // start a thread to send an email to the applicant to
                 // confirm that the application was received
                 helper.sendApplicantReceiptNotificationEmailAsync(form);
-                //}
+                
                 
             }
             
             else {
                 
-                form.getErrorsEncountered().add("The verification does not match.");
+                form.getErrorsEncountered().add("The verification code does not match.");
                 // save to the session scope
                 saveToSessionScope(request, form);
                 // return the page for the verification code

@@ -11,7 +11,7 @@ function validateVerificationCodeForm(form) {
    }
 
    if (form.verificationCode.value === null || 
-           form.verificationCode.value.length !== 9 || 
+           form.verificationCode.value.length !== 4 || 
            isNaN(form.verificationCode.value) === true) {
 
        $("#verificationCodeFormGroup").addClass("has-error");

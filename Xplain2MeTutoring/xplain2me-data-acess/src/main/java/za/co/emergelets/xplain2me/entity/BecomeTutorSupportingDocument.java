@@ -1,16 +1,15 @@
 package za.co.emergelets.xplain2me.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
+import java.io.Serializable;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-
-import java.io.Serializable;
-import javax.persistence.FetchType;
-import javax.persistence.GenerationType;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "become_tutor_supporting_documents")
@@ -31,6 +30,7 @@ public class BecomeTutorSupportingDocument implements Serializable {
     @OneToOne(targetEntity = BecomeTutorRequest.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "become_tutor_request_id", nullable = false)
     private BecomeTutorRequest request;
+    
     
     public BecomeTutorSupportingDocument(){
     }
@@ -66,6 +66,5 @@ public class BecomeTutorSupportingDocument implements Serializable {
     public void setRequest(BecomeTutorRequest request) {
         this.request = request;
     }
-    
-    
+
 }

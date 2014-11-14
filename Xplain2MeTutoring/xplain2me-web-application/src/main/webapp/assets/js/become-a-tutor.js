@@ -201,32 +201,33 @@ function validateBecomeTutorForm(form) {
        }
        
        if (atLeastOneAcademicLevelSelected === false) {
-           errors += "<strong>Academic Levels Tutored: </strong> at least one " + 
+            errors += "<strong>Academic Levels Tutored: </strong> at least one " + 
                    "academic level must be selected if you specified to have " + 
                    "tutored before.<br/>";
-           addClass("academicLevelFormGroup", "has-error");
+            addClass("academicLevelFormGroup", "has-error");
        }
   
    }
    
-   // check that, at least one supporting document is
-   // uploaded
-   /* removeClass("documentsFormGroup", "has-error");
-   var supportingDocumentLabels = document.getElementsByName("supportingDocumentLabel");
-   var supportingDocumentFiles = document.getElementsByName("supportingDocumentFile");
+    removeClass("documentsFormGroup", "has-error");
    
-   for (var j = 0; j < supportingDocumentFiles.length; j++) {
-       if (supportingDocumentLabels[j].value.length === 0 || 
-               supportingDocumentFiles[j].value.length === 0 || 
-                endsWith(supportingDocumentFiles[j].value, ".pdf") === false) {
-           
-                errors += "<strong>Supporting documents: </strong> must submit at least " + 
-                        "one supporting document (i.e. Curriculum Vitae) in PDF format " + 
-                        "and give it a meaningful label.<br/>";
-                addClass("documentsFormGroup", "has-error");
-                
-               } 
-   } */
+    // check that the CV is uploaded
+    if (form.curriculumVitaeFile.value === null || form.curriculumVitaeFile.value.length === 0) {
+        errors += "<strong>Curriculum Vitae: </strong> is required for upload.<br/>";
+        addClass("documentsFormGroup", "has-error");
+    }
+   
+    // check that the matric certificate is uploaded
+    if (form.matricCertificateFile.value === null || form.matricCertificateFile.value.length === 0) {
+        errors += "<strong>Copy of Matric Certificate: </strong> is required for upload.<br/>";
+        addClass("documentsFormGroup", "has-error");
+    }
+    
+    // check that the ID or passport is uploaded
+    if (form.copyOfIDorPassportFile.value === null || form.copyOfIDorPassportFile.value.length === 0) {
+        errors += "<strong>Copy of ID / Passport: </strong> is required for upload.<br/>";
+        addClass("documentsFormGroup", "has-error");
+    }
    
    // validate the motivation text
    if (form.motivation.value === null || form.motivation.value.trim().length === 0) {

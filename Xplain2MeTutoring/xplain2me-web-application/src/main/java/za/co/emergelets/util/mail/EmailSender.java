@@ -29,19 +29,20 @@ public class EmailSender {
     
     // the application manager email address
     public static final String APP_MANAGER_EMAIL_ADDRESS = 
-            //"wchigwaza@yahoo.com";
-            "tsepomaleka@gmail.com";
+           "washington@xplain2me.co.za";
     
     // the Gmail Email Server properties
     private static final Properties properties = new Properties();
     static {
         
-        LOG.info("... setting up Gmail properties ... ");
+        LOG.info("... setting up Email properties ... ");
         
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.host", "smtp.xplain2me.co.za");
+        
+        //properties.put("mail.smtp.auth", "true");
+        //properties.put("mail.smtp.starttls.enable", "true");
+        //properties.put("mail.smtp.host", "smtp.gmail.com");
+        //properties.put("mail.smtp.port", "587");
     }
     
     // email session
@@ -201,7 +202,7 @@ public class EmailSender {
      */
     private void beginEmailServerAuthentication() {
         
-        LOG.info("... initialising Gmail server authentication... ");
+        LOG.info("... initialising Email server authentication... ");
         
         session = Session.getInstance(properties,
             new javax.mail.Authenticator() {
@@ -214,10 +215,10 @@ public class EmailSender {
     }
     
     // the Gmail account username
-    private static final String USERNAME = "support@emergesoftware.co.za";
+    private static final String USERNAME = "noreply@xplain2me.co.za";
     //the Gmail email address
     private static final String FROM_EMAIL_ADDRESS = USERNAME;
     // the Gmail account password
-    private static final String PASSWORD = "ben10hasGrown";
+    private static final String PASSWORD = "PzRMHM18Wm0W";
     
 }

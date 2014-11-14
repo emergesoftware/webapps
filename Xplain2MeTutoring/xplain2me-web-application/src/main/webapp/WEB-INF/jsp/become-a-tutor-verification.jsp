@@ -4,12 +4,13 @@
     Author     : user
 --%>
 
-<%@page import="za.co.emergelets.xplain2me.webapp.component.RequestTutorForm"%>
+<%@page import="za.co.emergelets.xplain2me.webapp.component.BecomeTutorForm"%>
+
 <%
-    RequestTutorForm form = (RequestTutorForm)session
-            .getAttribute(RequestTutorForm.class.getName());
-    if (form == null || form.getTutorRequest() == null)
-        response.sendRedirect("/request-a-tutor");
+    BecomeTutorForm form = (BecomeTutorForm)session
+            .getAttribute(BecomeTutorForm.class.getName());
+    if (form == null || form.getBecomeTutorRequest() == null)
+        response.sendRedirect("/become-a-tutor");
 %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -21,12 +22,35 @@
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="-1">
         
-        <title>Request a Tutor | Xplain2Me Tutoring Services</title>
+        <title>Become a Tutor | Xplain2Me Tutoring Services</title>
         
         <%@include file="../jspf/template/default-header.jspf" %>
         
-        <script type="text/javascript" 
-        src="<%= request.getContextPath() %>/assets/js/request-a-tutor-verification.js"></script>
+        <script type="text/javascript">
+            
+            function validateVerificationCodeForm(form) {
+                
+                if (form === null) {
+                    form = document.getElementById("verificationCodeForm");
+                }
+
+                if (form.verificationCode.value === null || 
+                        form.verificationCode.value.length !== 4 || 
+                        isNaN(form.verificationCode.value) === true) {
+
+                    $("#verificationCodeFormGroup").addClass("has-error");
+                    return false;
+                }
+
+                else {
+
+                    $("#verificationCodeFormGroup").removeClass("has-error");
+                    return true;
+                }
+
+            }
+            
+        </script>
         
     </head>
     <body>
@@ -40,11 +64,12 @@
             <hr/>
             <p>
                 <span>We have sent you an email to </span>
-                <span><%= form.getTutorRequest().getEmailAddress() %>.</span>
+                <span><%= form.getBecomeTutorRequest().getEmailAddress() %>.</span>
                 <br/>
                 <span>Go to your email inbox to obtain the 4-digit verification code.</span>
                 <br/>
-                <span>You must do this in the next 5 minutes, or else the code will expire.</span>
+                <span>You must do this in the next 5 minutes, 
+                    or else the code will expire.</span>
             </p> 
            
             <%
@@ -64,7 +89,7 @@
             %>
             
             <form id="verificationCodeForm" name="verificationCodeForm"
-                  method="post" action="<%= request.getContextPath() %>/verify-tutor-request"
+                  method="post" action="<%= request.getContextPath() %>/verify-become-a-tutor-request"
                   onsubmit="return validateVerificationCodeForm(this)"
                   style="width:60%">
                 

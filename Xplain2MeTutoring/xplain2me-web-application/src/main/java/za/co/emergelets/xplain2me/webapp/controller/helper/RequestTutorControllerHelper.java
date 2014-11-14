@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import za.co.emergelets.util.EmailAddressValidator;
 import za.co.emergelets.util.ReCaptchaUtil;
+import za.co.emergelets.util.VerificationCodeGenerator;
 import za.co.emergelets.util.mail.EmailSender;
 import za.co.emergelets.util.mail.EmailTemplateFactory;
 import za.co.emergelets.util.mail.EmailTemplateType;
@@ -404,30 +405,9 @@ public class RequestTutorControllerHelper extends GenericController {
             return;
         }
         
-        Random random = new Random(System.currentTimeMillis());
-        form.setVerificationCode(100000000 + random.nextInt(899999999));
+        form.setVerificationCode(VerificationCodeGenerator.generateVerificationCode());
         form.setDateGeneratedVerificationCode(new Date());
         
-    }
-    
-    /**
-     * Checks if the string value is
-     * not a number or is.
-     * 
-     * @param value
-     * @return 
-     */
-    public static boolean isNaN(String value) {
-        if (value == null || value.isEmpty())
-            return true;
-        try {
-            Double.parseDouble(value);
-        }
-        catch (NumberFormatException e) {
-            return true;
-        }
-        
-        return false;
     }
     
 }

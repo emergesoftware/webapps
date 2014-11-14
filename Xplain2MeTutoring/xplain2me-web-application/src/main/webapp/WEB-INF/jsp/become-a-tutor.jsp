@@ -404,43 +404,87 @@
                         <div id="documentsFormGroup" class="form-group">
                             <label>Upload your supporting documents: </label>
 
-                            <table id="supportingDocumentsTable" class="table table-hover" 
+                            <table id="supportingDocumentsTable" class="table table-bordered" 
                                    border="0" width="100%">
                                 <tr>
-                                    <td>
-                                        <p class="text-muted">
-                                            <span class="glyphicon glyphicon-info-sign"></span>
-                                            <span>&nbsp;</span>
-                                            <span>Supporting documents can include but not limited to:</span><br/>
-                                            <span> - Curriculum Vitae</span><br/>
-                                            <span> - Academic Records</span><br/>
-                                            <span> - Letter of Recommendation</span><br/>
-                                        </p>
+                                    <td colspan="2">
                                         <p class="text-primary">
-                                            <span>The maximum upload size is 5MB. Please scan all your documents
-                                            as a single file. Alternatively, email your documents to:</span><br/>
-                                            <span><strong>documents@xplain2me.co.za</strong></span><br/>
-                                            <span>Please use your ID or Passport number as a reference.</span>
+                                            <span>The maximum upload size is 5MB for 
+                                                all your documents in total size. Only PDF format
+                                                is an acceptable file format.</span>
                                         </p>
-                                        
-                                        <input type="hidden" name="supportingDocumentLabel" 
-                                               value="Scanned Supporting Document"/>
-                                        
-                                        <label>Upload file:</label>
-                                        <input type="file" name="supportingDocumentFile" 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>
+                                            <span><strong>Curriculum Vitae:</strong></span><br/>
+                                            <span class="text-primary">This document is required.</span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <input type="file" id="curriculumVitaeFile" name="curriculumVitaeFile"
                                                value=""/>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>
+                                            <span><strong>Matric Certificate:</strong></span><br/>
+                                            <span class="text-primary">This document is required.</span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <input type="file" id="matricCertificateFile" name="matricCertificateFile"
+                                               value=""/>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>
+                                            <span><strong>Copy of ID or Passport:</strong></span><br/>
+                                            <span class="text-primary">This document is required.</span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <input type="file" id="copyOfIDorPassportFile" name="copyOfIDorPassportFile"
+                                               value=""/>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>
+                                            <span><strong>Copy of highest obtained qualification:</strong></span><br/>
+                                            <span class="text-primary">Upload only if you have obtained any 
+                                                other qualification after high school.</span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <input type="file" name="highestObtainedQualificationFile"
+                                               value=""/>
+                                        
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td>
+                                        <p>
+                                            <span><strong>Copy of latest academic transcripts:</strong></span><br/>
+                                            <span class="text-primary">Upload only if you have studied at a
+                                                tertiary institution for more than 6 months.</span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <input type="file" name="academicTranscriptsFile"
+                                               value=""/>
+                                        
                                     </td>
                                 </tr>
                             </table>
 
-                            <!--
-                            <div class="text-right">
-                                <input type="button" id="addAnotherSupportingDocumentButton"
-                                   class="btn btn-primary" value="Add Another Document" 
-                                   onclick="addAnotherSupportingDocument()"
-                                   ondblclick="return false"/>
-                            </div>
-                            -->
+                           
                         </div>
 
                         <br/>

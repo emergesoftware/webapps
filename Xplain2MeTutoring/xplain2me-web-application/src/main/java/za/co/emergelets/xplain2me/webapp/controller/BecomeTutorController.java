@@ -29,10 +29,10 @@ public class BecomeTutorController extends GenericController implements Serializ
     private final BecomeTutorControllerHelper helper;
     
     // data access objects
-    private CitizenshipDAO citizenshipDAO;
-    private GenderDAO genderDAO;
-    private AcademicLevelDAO academicLevelDAO;
-    private BecomeTutorRequestDAO becomeTutorRequestDAO;
+    private final CitizenshipDAO citizenshipDAO;
+    private final GenderDAO genderDAO;
+    private final AcademicLevelDAO academicLevelDAO;
+    private final BecomeTutorRequestDAO becomeTutorRequestDAO;
     
     public BecomeTutorController() {
         
@@ -100,7 +100,8 @@ public class BecomeTutorController extends GenericController implements Serializ
     }
     
     @RequestMapping(value = "/process-tutor-job-application", method = RequestMethod.GET)
-    public ModelAndView processTutorJobApplicationRequest(HttpServletRequest request) throws ParseException {
+    public ModelAndView processTutorJobApplicationRequest(HttpServletRequest request) 
+            throws ParseException {
         
         // get the form from the session
         BecomeTutorForm form = (BecomeTutorForm)getFromSessionScope(request,
@@ -110,13 +111,13 @@ public class BecomeTutorController extends GenericController implements Serializ
             
             LOG.warning("... invalid request ...");
             invalidateCurrentSession(request);
-            return sendRedirect("/become-a-tutor?error=yes");
+            return sendRedirect("/become-a-tutor");
         }
         
         // clear all errors - if any
         form.getErrorsEncountered().clear();
         
-        if (    // validate the reCATCHA challenge
+        if (// validate the reCATCHA challenge
                 helper.verifyReCaptchaCode(request, form) &&
                 // validate the personal information
                 helper.validatePersonalInformation(form) && 
@@ -125,30 +126,75 @@ public class BecomeTutorController extends GenericController implements Serializ
                 // validate the address information
                 helper.validateAddressInformation(form) &&
                 // validate the priort tutoring experience
-                helper.validateTutorPriorTutoringExperienceInformation(form) &&
-                // check if the tutor application 
-                helper.isTutorApplicationCompletelyUnique(becomeTutorRequestDAO, form)) {
+                helper.validateTutorPriorTutoringExperienceInformation(form)) {
+            
+            // generate a verification code for the user
+            helper.generateVerificationCode(form); 
+            
+            // send the verification 
+            helper.sendVerificationCodeToUserAsync(form);
+            
+            // save the session
+            saveToSessionScope(request, form);
+            
+            // return a view
+            return createModelAndView("become-a-tutor-verification");
+          
+        }
+        
+        else {
+            // save form to the session
+            saveToSessionScope(request, form);
+            
+            // return a view
+            return createModelAndView("become-a-tutor");
+        }
+    }
+    
+    
+    @RequestMapping(value = "/verify-become-a-tutor-request", method = RequestMethod.POST)
+    public ModelAndView verifyAndCompleteTutorJobApplicationRequest(HttpServletRequest request) {
+        
+        // get the form from the session
+        BecomeTutorForm form = (BecomeTutorForm)getFromSessionScope(request,
+                BecomeTutorForm.class);
+        if (form == null || 
+                form.getBecomeTutorRequest() == null) {
+            
+            LOG.warning("... invalid request ...");
+            invalidateCurrentSession(request);
+            return sendRedirect("/become-a-tutor");
+        }
+        
+        // clear all errors
+        form.getErrorsEncountered().clear();
+        
+        
+        if (// verify the verification code
+            helper.checkVerificationCode(request, form) &&
+            // check if the applicant is completely unique
+            helper.isTutorApplicationCompletelyUnique(becomeTutorRequestDAO, form)) {
             
             // invalidate the current sesison
             invalidateCurrentSession(request);
-            
+
             // save the information to the database
             becomeTutorRequestDAO.saveBecomeTutorRequest(
                     form.getBecomeTutorRequest(), 
                     form.getAcademicLevelsTutoredBefore(), 
                     form.getSupportingDocuments());
-            
+
             // start a thread to send the receipt of tutor application
             // to the user
             helper.sendUserReceiptOfApplicationEmailAsync(form);
-            
+
             // start a thread to send an email to the 
             // manager about this new request for a tutor
             helper.sendTutorApplicationNotificationEmailAsync(form);
-            
+
             // return the page for the results
             return createModelAndView("become-a-tutor-submitted");
-            
+
         }
         
         else {
@@ -157,10 +203,9 @@ public class BecomeTutorController extends GenericController implements Serializ
             saveToSessionScope(request, form);
             
             // return the page for the application
-            return createModelAndView("become-a-tutor");
+            return createModelAndView("become-a-tutor-verification");
+        
         }
+        
     }
-    
-    
-   
 }

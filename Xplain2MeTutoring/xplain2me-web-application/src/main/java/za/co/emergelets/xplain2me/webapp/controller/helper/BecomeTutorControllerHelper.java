@@ -21,13 +21,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
 import za.co.emergelets.util.BooleanToText;
 import za.co.emergelets.util.CellphoneNumberValidator;
 import za.co.emergelets.util.CitizenshipType;
 import za.co.emergelets.util.EmailAddressValidator;
 import za.co.emergelets.util.ReCaptchaUtil;
-import za.co.emergelets.util.SHA256Encryptor;
 import za.co.emergelets.util.SouthAfricanIdentityTool;
+import za.co.emergelets.util.VerificationCodeGenerator;
 import za.co.emergelets.util.mail.EmailSender;
 import za.co.emergelets.util.mail.EmailTemplateFactory;
 import za.co.emergelets.util.mail.EmailTemplateType;
@@ -55,6 +57,122 @@ public class BecomeTutorControllerHelper extends GenericController {
     private static final String LINUX_FILE_REPOSITORY = "/tmp";
     
     public BecomeTutorControllerHelper() {
+    }
+    
+    /**
+     * Verifies the window period for the 
+     * @param request
+     * @param form
+     * @return 
+     */
+    public boolean checkVerificationCode(HttpServletRequest request, BecomeTutorForm form) {
+        
+        int count = 0;
+        
+        // the current date + time
+        Date now = new Date();
+        
+        // get the verification code
+        String verificationCode = getParameterValue(request, "verificationCode");
+        
+        // check if the code has not yet expired
+        if (form.getDateGeneratedVerificationCode() == null || 
+                form.getVerificationCode() == 0 ||
+                Minutes.minutesBetween(new DateTime(form.getDateGeneratedVerificationCode()), 
+                        new DateTime(now)).getMinutes() > 5) {
+            count++;
+            form.getErrorsEncountered().add("The verification time window has expired.");
+            
+            form.setVerificationCode(0);
+            form.setDateGeneratedVerificationCode(null);
+            
+        }
+        
+        else {
+            // check if the user entered a correct code
+            if (Integer.parseInt(verificationCode) != form.getVerificationCode()) {
+                count++;
+                form.getErrorsEncountered().add("The verification code is incorrect.");
+            }
+        }
+        
+        return (count == 0);
+        
+    }
+    
+    /**
+     * Generates the verification code
+     * @param form 
+     */
+    public void generateVerificationCode(BecomeTutorForm form) {
+        
+        form.setVerificationCode(VerificationCodeGenerator.generateVerificationCode());
+        form.setDateGeneratedVerificationCode(new Date());
+        
+    }
+    
+    /**
+     * Sends the user a verification code
+     * @param form 
+     */
+    public void sendVerificationCodeToUserAsync(final BecomeTutorForm form) {
+        
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                
+                String subject = null, 
+                        body = null;
+
+                if (form != null) {
+
+                    // resolve the first provided
+                    // first name
+                    String firstName = form.getBecomeTutorRequest()
+                            .getFirstNames().split(" ")[0];
+
+                    // set the subject
+                    subject = "Do not reply | Tutor Employment Request";
+
+                    // set the body of the email
+                    body = "\n" +
+                           "Howdy, " + firstName + "\n\n" +
+                           "Thank you for your interest in joining our team of passionate tutors. \n" +
+                           "Please use this verification code within the next 5 minutes " + 
+                            "to complete your application: " +
+                            form.getVerificationCode() + "\n\n" +
+                           "Yours truly, \n" +
+                           "Xplain2Me Tutoring Services\n\n";
+                    
+                    EmailSender email = new EmailSender();
+                    email.sendEmail(form.getBecomeTutorRequest().getEmailAddress(), 
+                            subject, body, false);
+
+                }
+
+            }
+        }).start();
+        
+    }
+    
+    /**
+     * Deletes all the uploaded files from the file system
+     * 
+     * @param form 
+     */
+    public void deleteFilesUploadedToServer(final BecomeTutorForm form) {
+        
+        if (form.getEmailAttachments() != null &&
+                        form.getEmailAttachments().isEmpty() == false) {
+
+            for (File file : form.getEmailAttachments()) {
+                if (file.exists())
+                    file.delete();
+            }
+
+        }
+    
     }
     
     /**
@@ -132,7 +250,7 @@ public class BecomeTutorControllerHelper extends GenericController {
                 
                 // resolve academic levels tutored before
                 List<String> levelsTutoredBefore = new ArrayList<>();
-                for (AcademicLevelsTutoredBefore item : request.getAcademicLevelsTutoredBefore()) 
+                for (AcademicLevelsTutoredBefore item : form.getAcademicLevelsTutoredBefore()) 
                     levelsTutoredBefore.add(item.getAcademicLevel().getDescription());
                 
                 // set up values for injection
@@ -188,6 +306,9 @@ public class BecomeTutorControllerHelper extends GenericController {
                         subject, body, form.getEmailAttachments(), true);
                 }
                 
+                // remove all files after 
+                // sending email
+                deleteFilesUploadedToServer(form);
             }
         }
                 
@@ -218,8 +339,8 @@ public class BecomeTutorControllerHelper extends GenericController {
         Long contentLength = Long.parseLong(request.getHeader(CONTENT_LENGTH));
         // check if the length is within limit
         if (contentLength > MAX_FILE_UPLOAD_SIZE) {
-            form.getErrorsEncountered().add("The file uploaded exceeds the "
-                    + "maximum upload size of 5MB.");
+            form.getErrorsEncountered().add("The files uploaded exceed the "
+                    + "maximum upload size of 5MB in total size.");
             return false;
         }
         
@@ -282,13 +403,6 @@ public class BecomeTutorControllerHelper extends GenericController {
             
             throws Exception { 
         
-        // if the request is not a multi-part then
-        // return null
-        /*if (ServletFileUpload.isMultipartContent(request)) {
-            LOG.warning("HTTP POST request is not multipart..."); 
-            return null;
-        }*/
-        
         // create new instance of the 
         BecomeTutorRequest item = new BecomeTutorRequest();
         form.setBecomeTutorRequest(item);
@@ -337,6 +451,7 @@ public class BecomeTutorControllerHelper extends GenericController {
         while (iterator.hasNext()) {
             
             FileItem fileItem = (FileItem)iterator.next();
+            
             if (fileItem.isFormField())
                 processFormField(fileItem, form);
             else
@@ -594,32 +709,45 @@ public class BecomeTutorControllerHelper extends GenericController {
     private void processUploadedFile(FileItem item, BecomeTutorForm form) 
             throws Exception {
         
-        /* String fieldName = item.getFieldName();
-        String contentType = item.getContentType();
-        boolean isInMemory = item.isInMemory();
-        long sizeInBytes = item.getSize(); */
+        // check if file size is greater than 0kB
+        long contentSize = item.getSize();
+        if (contentSize == 0) {
+            LOG.warning("... file not attached ....");
+            return;
+        }
         
+        String fieldName = item.getFieldName();
         String fileName = item.getName();
         
-        // create supporting document instance
-        // or get existing if the list is not empty
-        BecomeTutorSupportingDocument document;
-        if (form.getSupportingDocuments().isEmpty()) {
-            document = new BecomeTutorSupportingDocument();
-            form.getSupportingDocuments().add(document);
+        // applicant ID Number
+        String identityNumber = form.getBecomeTutorRequest().getIdentityNumber();
+        String label = "";
+        
+        // resolve the filename and label
+        if (fieldName.equalsIgnoreCase("curriculumVitaeFile")) {
+            fileName = "Curriculum_Vitae_" + identityNumber + ".pdf";
+            label = "Curriculum Vitae";
         }
         
-        else {
-            document = form.getSupportingDocuments().get(0);
+        if (fieldName.equalsIgnoreCase("matricCertificateFile")) {
+            fileName = "Matric_Certificate_" + identityNumber + ".pdf";
+            label = "Matric Certificate";
         }
         
-        // recreate a filename for this upload
-        if (fileName.indexOf(".pdf") > 0) 
-                fileName = fileName.replace(".pdf", "");
-            
-        fileName = SHA256Encryptor.computeSHA256(fileName, 
-                String.valueOf(System.currentTimeMillis()))
-                .toUpperCase();
+        if (fieldName.equalsIgnoreCase("copyOfIDorPassportFile")) {
+            fileName = "ID_Passport_Copy_" + identityNumber + ".pdf";
+            label = "Identity / Passport Document";
+        }
+        
+        if (fieldName.equalsIgnoreCase("highestObtainedQualificationFile")) {
+            fileName = "Highest_Obtained_Qualification_" + identityNumber + ".pdf";
+            label = "Highest Obtained Qualification";
+        }
+        
+        if (fieldName.equalsIgnoreCase("academicTranscriptsFile")) {
+            fileName = "Academic_Transcripts_" + identityNumber + ".pdf";
+            label = "Academic Transcripts";
+        }
         
         File file = null;
         if (isWindowsOperationSystem()) {
@@ -640,9 +768,12 @@ public class BecomeTutorControllerHelper extends GenericController {
         FileInputStream stream = new FileInputStream(file);
         stream.read(byteFile);
         
-        // save the file data into an object
+        // save the file data into an object 
+        BecomeTutorSupportingDocument document = new BecomeTutorSupportingDocument();
         document.setRequest(form.getBecomeTutorRequest());
         document.setDocument(byteFile);
+        document.setLabel(label);
+        form.getSupportingDocuments().add(document);
         
         // close the input stream
         stream.close();
@@ -713,6 +844,8 @@ public class BecomeTutorControllerHelper extends GenericController {
                 request.setDateOfBirth(dateOfBirth);
             }
             catch (ParseException e) {
+                LOG.log(Level.SEVERE, " an error occured while parsing date of birth: {0}",
+                        e.getMessage());
                 request.setDateOfBirth(new Date());
             }
         }
@@ -763,24 +896,6 @@ public class BecomeTutorControllerHelper extends GenericController {
             
             form.getAcademicLevelsTutoredBefore().add(tutoredBefore);
             
-        }
-        
-        // Supporting Document Label
-        if (name.equalsIgnoreCase("supportingDocumentLabel")) {
-            
-            BecomeTutorSupportingDocument document;
-            
-            if (form.getSupportingDocuments().isEmpty()) {
-                document = new BecomeTutorSupportingDocument();
-                document.setLabel(value.trim());
-                form.getSupportingDocuments().add(document);
-            }
-            else {
-                document = form.getSupportingDocuments()
-                        .get(0);
-                document.setLabel(value.trim());
-            }
-                
         }
         
         // Academic Levels tutored before

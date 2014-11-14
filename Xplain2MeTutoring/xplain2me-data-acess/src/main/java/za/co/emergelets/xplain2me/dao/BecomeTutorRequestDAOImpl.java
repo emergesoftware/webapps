@@ -88,14 +88,27 @@ public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
             session.save(request);
             session.persist(request);
             
-            for (AcademicLevelsTutoredBefore item : academicLevelsTutoredBefore) {
-                session.save(item);
-                session.persist(item);
+            if (academicLevelsTutoredBefore != null &&
+                    academicLevelsTutoredBefore.isEmpty() == false) {
+                
+                for (AcademicLevelsTutoredBefore item : academicLevelsTutoredBefore) {
+                    
+                    if (item == null) continue;
+                    
+                    session.save(item);
+                    session.persist(item);
+                }
             }
             
-            for (BecomeTutorSupportingDocument item : documents) {
-                session.save(item);
-                session.persist(item);
+            if (documents != null && documents.isEmpty() == false) {
+                
+                for (BecomeTutorSupportingDocument item : documents) {
+                    
+                    if (item == null) continue;
+                    
+                    session.save(item);
+                    session.persist(item);
+                }
             }
             
             tx.commit();
@@ -105,7 +118,7 @@ public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
         }
         
         catch (HibernateException e) {
-            LOG.severe("error: " + e.getMessage());
+            LOG.log(Level.SEVERE, "error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         finally {

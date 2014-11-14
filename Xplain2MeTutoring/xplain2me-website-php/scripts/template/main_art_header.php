@@ -43,10 +43,13 @@
     </script>
     -->
     <div class="art-logo">
-        <h1 id="name-text" class="art-logo-name"><a href="#"> 
-                &nbsp;&nbsp;&nbsp;Xplain2me Tutoring <br>
+        <h1 id="name-text" class="art-logo-name">
+			<a href="#"> 
+                &nbsp;&nbsp;&nbsp;
+				<!--Xplain2me Tutoring <br> -->
+				<img src="http://media.xplain2me.co.za/images/logo_2.png" alt="logo" style="width:250px"/>
                 <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Simplify your learning"</h5>
-                </a>
+             </a>
         </h1>
         
         <div id="slogan-text" class="art-logo-text"></div>
