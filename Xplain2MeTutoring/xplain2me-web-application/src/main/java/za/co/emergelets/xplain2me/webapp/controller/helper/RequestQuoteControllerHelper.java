@@ -190,9 +190,12 @@ public class RequestQuoteControllerHelper extends GenericController {
                                                     EmailTemplateType.NotifyNewQuoteRequest), 
                                 values);
                                
-                        EmailSender email = new EmailSender();
-                        email.sendEmail(EmailSender.APP_MANAGER_EMAIL_ADDRESS, 
-                                subject, body, true);
+                        EmailSender emailSender = new EmailSender();
+                        emailSender.setToAddress(EmailSender.APP_MANAGER_EMAIL_ADDRESS);
+                        emailSender.setSubject(subject);
+                        emailSender.setHtmlBody(true);
+                        
+                        emailSender.sendEmail(body);
                     }
                     
                     catch (IOException e) {

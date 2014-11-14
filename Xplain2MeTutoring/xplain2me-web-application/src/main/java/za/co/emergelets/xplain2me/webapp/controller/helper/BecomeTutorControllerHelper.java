@@ -123,7 +123,7 @@ public class BecomeTutorControllerHelper extends GenericController {
             public void run() {
                 
                 String subject = null, 
-                        body = null;
+                        body = "";
 
                 if (form != null) {
 
@@ -135,19 +135,28 @@ public class BecomeTutorControllerHelper extends GenericController {
                     // set the subject
                     subject = "Do not reply | Tutor Employment Request";
 
-                    // set the body of the email
-                    body = "\n" +
-                           "Howdy, " + firstName + "\n\n" +
-                           "Thank you for your interest in joining our team of passionate tutors. \n" +
-                           "Please use this verification code within the next 5 minutes " + 
-                            "to complete your application: " +
-                            form.getVerificationCode() + "\n\n" +
-                           "Yours truly, \n" +
-                           "Xplain2Me Tutoring Services\n\n";
+                    // injection values
+                    Map<String, Object> values = new HashMap<>();
+                    values.put("name", firstName);
+                    values.put("verification_code", form.getVerificationCode());
+                    values.put("request_type", "- Tutor Employment Application");
                     
-                    EmailSender email = new EmailSender();
-                    email.sendEmail(form.getBecomeTutorRequest().getEmailAddress(), 
-                            subject, body, false);
+                    try {
+                        // set the body of the email
+                        body = EmailTemplateFactory.injectValuesIntoEmailTemplate(
+                                EmailTemplateFactory
+                                        .getTemplateByType(EmailTemplateType.SendUserVerificatioCode),
+                                values);
+                    } catch (IOException ex) {
+                        LOG.severe(" ... html template not found ... "); 
+                    }
+                    
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.setToAddress(form.getBecomeTutorRequest().getEmailAddress());
+                    emailSender.setSubject(subject);
+                    emailSender.setHtmlBody(true);
+                    
+                    emailSender.sendEmail(body);
 
                 }
 
@@ -211,9 +220,12 @@ public class BecomeTutorControllerHelper extends GenericController {
                            "Yours truly, \n" +
                            "Xplain2Me Tutoring Services\n\n";
                     
-                    EmailSender email = new EmailSender();
-                    email.sendEmail(form.getBecomeTutorRequest().getEmailAddress(), 
-                            subject, body, false);
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.setToAddress(form.getBecomeTutorRequest().getEmailAddress());
+                    emailSender.setSubject(subject);
+                    emailSender.setHtmlBody(false);
+                    
+                    emailSender.sendEmail(body);
 
                 }
 
@@ -294,16 +306,19 @@ public class BecomeTutorControllerHelper extends GenericController {
                 
                 // send email
                 EmailSender emailSender = new EmailSender();
+                emailSender.setToAddress(EmailSender.APP_MANAGER_EMAIL_ADDRESS);
+                emailSender.setSubject(subject);
+                emailSender.setHtmlBody(true);
                 
                 if (form.getEmailAttachments() == null || 
                         form.getEmailAttachments().isEmpty()) {
                     
-                    emailSender.sendEmail(EmailSender.APP_MANAGER_EMAIL_ADDRESS, 
-                            subject, body, true);
+                    emailSender.sendEmail(body);
                 }
                 else {
-                    emailSender.sendEmailWithAttachments(EmailSender.APP_MANAGER_EMAIL_ADDRESS, 
-                        subject, body, form.getEmailAttachments(), true);
+                    
+                    emailSender.setBccAddress(EmailSender.DOCUMENTS_EMAIL_ADDRESS);
+                    emailSender.sendEmailWithAttachments(body, form.getEmailAttachments());
                 }
                 
                 // remove all files after 

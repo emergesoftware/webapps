@@ -98,8 +98,10 @@ public class RequestTutorControllerHelper extends GenericController {
             
                     // send email
                     EmailSender emailSender = new EmailSender();
-                    emailSender.sendEmail(EmailSender.APP_MANAGER_EMAIL_ADDRESS, 
-                            subject, body, true);
+                    emailSender.setToAddress(EmailSender.APP_MANAGER_EMAIL_ADDRESS);
+                    emailSender.setSubject(subject);
+                    emailSender.setHtmlBody(true);
+                    emailSender.sendEmail(body);
                 }
             }
             ).start();
@@ -154,8 +156,11 @@ public class RequestTutorControllerHelper extends GenericController {
                                "Xplain2Me Tutoring Services\n\n";
 
                         EmailSender emailSender = new EmailSender();
-                        emailSender.sendEmail(form.getTutorRequest().getEmailAddress(), 
-                                subject, body, false);
+                        emailSender.setToAddress(form.getTutorRequest().getEmailAddress());
+                        emailSender.setSubject(subject);
+                        emailSender.setHtmlBody(false);
+                        
+                        emailSender.sendEmail(body);
                         
                     }
                 }
@@ -186,20 +191,31 @@ public class RequestTutorControllerHelper extends GenericController {
                 // set the subject
                 String subject = "Do not reply | Verification Code | Xplain2Me Tutoring Services";
                 
-                // set the body of the email
-                String body = "\n" +
-                       "Howdy, " + firstName + "\n\n" +
-                       "Thank you for your interest in our tutoring services. \n" +
-                       "In order to complete your request, we need to verify your \n" + 
-                       "email address. Please enter the verification code below \n" + 
-                       "back in the website to proceed within the next 5 minutes:\n\n" +
-                       "Verification Code: " + form.getVerificationCode() + "\n\n" + 
-                       "Yours truly, \n" +
-                       "Xplain2Me Tutoring Services\n\n";
+                // body
+                String body = "";
+                
+                // injection values
+                Map<String, Object> values = new HashMap<>();
+                values.put("name", firstName);
+                values.put("verification_code", form.getVerificationCode());
+                values.put("request_type", "- Request a tutor");
+
+                try {
+                    // set the body of the email
+                    body = EmailTemplateFactory.injectValuesIntoEmailTemplate(
+                            EmailTemplateFactory
+                                    .getTemplateByType(EmailTemplateType.SendUserVerificatioCode),
+                            values);
+                } catch (IOException ex) {
+                    LOG.severe(" ... html template not found ... "); 
+                }
                 
                 EmailSender emailSender = new EmailSender();
-                emailSender.sendEmail(form.getTutorRequest().getEmailAddress(), 
-                        subject, body, false);
+                emailSender.setToAddress(form.getTutorRequest().getEmailAddress());
+                emailSender.setSubject(subject);
+                emailSender.setHtmlBody(true);
+                
+                emailSender.sendEmail(body);
             }
         }
         

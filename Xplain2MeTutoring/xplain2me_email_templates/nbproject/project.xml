@@ -5,5 +5,8 @@
         <data xmlns="http://www.netbeans.org/ns/clientside-project/1">
             <name>xplain2me_email_templates</name>
         </data>
+        <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>website</word>
+        </spellchecker-wordlist>
     </configuration>
 </project>

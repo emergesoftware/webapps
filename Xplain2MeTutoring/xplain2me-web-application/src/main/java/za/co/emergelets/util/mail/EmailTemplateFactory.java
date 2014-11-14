@@ -119,22 +119,21 @@ public final class EmailTemplateFactory {
         
         switch (type) {
             
-            // Notifies app manager that there is a new tutor request 
-            // that has been completed
             case NotifyNewTutorRequest:
                 template = readTemplateFromHtmlFile("notify_new_tutor_request.html");
                 break;
             
-            // Notifies the app manager that there is a new request 
-            // for a quote
             case NotifyNewQuoteRequest:
                 template = readTemplateFromHtmlFile("notify_new_quote_request.html");
                 break;
             
-            // Notifies the app manager that there is a new
-            // tutor job application completed
             case NotifyNewTutorJobApplication:
                 template = readTemplateFromHtmlFile("notify_new_tutor_job_application.html");
+                break;
+                
+                
+            case SendUserVerificatioCode:
+                template = readTemplateFromHtmlFile("send_user_verification_code.html");
                 break;
         
         }
