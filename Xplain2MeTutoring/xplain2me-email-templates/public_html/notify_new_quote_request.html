@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style type="text/css">
+            
+            body {
+                font-family: 'Arial';
+                font-size: 14px;
+                display : block;
+            }
+            
+            table {
+                border-collapse: collapse;
+            }
+            
+            table tr {
+                margin-top: 5px;
+                border-bottom: 1px solid gray;
+            }
+            
+            table td {
+                padding: 5px;
+            }
+            
+        </style>
+        
+    </head>
+    <body>
+        <div>
+            <h3>Xplain2Me Tutoring Services</h3>
+            
+            <p>Howdy,</p>
+            
+            <p>
+                <span>A new request for a quote for rates has been completed on 
+                    <strong>{date_completed}</strong>.</span><br/>
+                <span>The details of the quote request are outlined here:</span><br/>
+                <br/>
+            </p>
+            
+            <table border="0" style="width: 600px">
+                <tr>
+                    <td><strong>Last Name:</strong></td>
+                    <td>{last_name}</td>
+                </tr>
+                <tr>
+                    <td><strong>First Names:</strong></td>
+                    <td>{first_names}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email Address:</strong></td>
+                    <td>{email_address}</td>
+                </tr>
+                <tr>
+                    <td><strong>Contact Number:</strong></td>
+                    <td>{contact_number}</td>
+                </tr>
+                <tr>
+                    <td><strong>Physical Address:</strong></td>
+                    <td>{physical_address}</td>
+                </tr>
+                <tr>
+                    <td><strong>Province:</strong></td>
+                    <td>{province}</td>
+                </tr>
+                <tr>
+                    <td><strong>Academic Level:</strong></td>
+                    <td>{academic_level}</td>
+                </tr>
+                <tr>
+                    <td><strong>Subjects:</strong></td>
+                    <td><ul>{subjects}</ul></td>
+                </tr>
+                <tr>
+                    <td><strong>Number of lessons required:</strong></td>
+                    <td>{number_of_lessons_required}</td>
+                </tr>
+            </table>
+            
+            <p>This email was computer generated and sent.</p>
+            
+        </div>
+    </body>
+</html>

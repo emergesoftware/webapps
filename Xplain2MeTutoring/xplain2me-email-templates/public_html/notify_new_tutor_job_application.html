@@ -14,7 +14,6 @@
             }
             
             table {
-                width: 400px;
                 border-collapse: collapse;
             }
             
@@ -37,13 +36,17 @@
             <p>Howdy,</p>
             
             <p>
-                <span>A new request for a tutor has been completed on 
+                <span>A new request for a tutor employment has been completed on 
                     <strong>{date_completed}</strong>.</span><br/>
-                <span>The details of the request are outlined here:</span><br/>
+                <span>The details of the job applicant are outlined here:</span><br/>
                 <br/>
             </p>
             
-            <table border="0" style="width: 400px">
+            <table border="0" style="width: 600px">
+                <tr>
+                    <td><strong>Job Application ID:</strong></td>
+                    <td>{job_application_id}</td>
+                </tr>
                 <tr>
                     <td><strong>Last Name:</strong></td>
                     <td>{last_name}</td>
@@ -51,10 +54,6 @@
                 <tr>
                     <td><strong>First Names:</strong></td>
                     <td>{first_names}</td>
-                </tr>
-                <tr>
-                    <td><strong>Gender:</strong></td>
-                    <td>{gender}</td>
                 </tr>
                 <tr>
                     <td><strong>Email Address:</strong></td>
@@ -68,8 +67,8 @@
                     <td><strong>Street Address:</strong></td>
                     <td>{street_address}</td>
                 </tr>
-                <tr>
-                    <td><strong>Suburb:</strong></td>
+                 <tr>
+                    <td><strong>Suburb or Town:</strong></td>
                     <td>{suburb}</td>
                 </tr>
                 <tr>
@@ -81,21 +80,36 @@
                     <td>{area_code}</td>
                 </tr>
                 <tr>
-                    <td><strong>Academic Level:</strong></td>
-                    <td>{academic_level}</td>
+                    <td><strong>ID / Passport Number:</strong></td>
+                    <td>{id_number}</td>
                 </tr>
                 <tr>
-                    <td><strong>Subjects:</strong></td>
-                    <td><ul>{subjects}</ul></td>
+                    <td><strong>Date Of Birth:</strong></td>
+                    <td>{date_of_birth}</td>
                 </tr>
                 <tr>
-                    <td><strong>Learner Problem Area and <br/>
-                            other additional information:</strong></td>
-                    <td>{additional_information}</td>
+                    <td><strong>Citizenship:</strong></td>
+                    <td>{citizenship}</td>
                 </tr>
                 <tr>
-                    <td><strong>Reference Number:</strong></td>
-                    <td>{reference_number}</td>
+                    <td><strong>Has Tutored Before:</strong></td>
+                    <td>{tutored_before}</td>
+                </tr>
+                <tr>
+                    <td><strong>Academic Levels Tutored Before:</strong></td>
+                    <td>{academic_levels_tutored_before}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <strong>Applicant motivation:</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">{motivation}</td>
+                </tr>
+                 <tr>
+                    <td><strong>Supporting Documents Attached:</strong></td>
+                    <td>{supporting_documents_attached}</td>
                 </tr>
             </table>
             

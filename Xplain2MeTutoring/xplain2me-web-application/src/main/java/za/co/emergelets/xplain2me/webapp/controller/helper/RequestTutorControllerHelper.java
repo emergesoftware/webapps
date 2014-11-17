@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import za.co.emergelets.util.EmailAddressValidator;
+import za.co.emergelets.util.mail.EmailAddressValidator;
 import za.co.emergelets.util.ReCaptchaUtil;
 import za.co.emergelets.util.VerificationCodeGenerator;
 import za.co.emergelets.util.mail.EmailSender;

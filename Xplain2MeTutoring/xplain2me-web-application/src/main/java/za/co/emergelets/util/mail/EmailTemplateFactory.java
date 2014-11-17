@@ -19,7 +19,8 @@ public final class EmailTemplateFactory {
         }
         
         else
-            TEMPLATES_DIRECTORY = "/root/email_templates/";
+            TEMPLATES_DIRECTORY = 
+                    "/home/tsepo/xplain2me/email-templates/";
     }
     
     /**

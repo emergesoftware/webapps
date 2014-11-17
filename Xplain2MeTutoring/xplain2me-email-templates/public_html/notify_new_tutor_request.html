@@ -14,7 +14,6 @@
             }
             
             table {
-                width: 400px;
                 border-collapse: collapse;
             }
             
@@ -37,13 +36,13 @@
             <p>Howdy,</p>
             
             <p>
-                <span>A new request for a quote for rates has been completed on 
+                <span>A new request for a tutor has been completed on 
                     <strong>{date_completed}</strong>.</span><br/>
-                <span>The details of the quote request are outlined here:</span><br/>
+                <span>The details of the request are outlined here:</span><br/>
                 <br/>
             </p>
             
-            <table border="0" style="width: 400px">
+            <table border="0" style="width: 600px">
                 <tr>
                     <td><strong>Last Name:</strong></td>
                     <td>{last_name}</td>
@@ -51,6 +50,10 @@
                 <tr>
                     <td><strong>First Names:</strong></td>
                     <td>{first_names}</td>
+                </tr>
+                <tr>
+                    <td><strong>Gender:</strong></td>
+                    <td>{gender}</td>
                 </tr>
                 <tr>
                     <td><strong>Email Address:</strong></td>
@@ -61,12 +64,20 @@
                     <td>{contact_number}</td>
                 </tr>
                 <tr>
-                    <td><strong>Physical Address:</strong></td>
-                    <td>{physical_address}</td>
+                    <td><strong>Street Address:</strong></td>
+                    <td>{street_address}</td>
                 </tr>
                 <tr>
-                    <td><strong>Province:</strong></td>
-                    <td>{province}</td>
+                    <td><strong>Suburb:</strong></td>
+                    <td>{suburb}</td>
+                </tr>
+                <tr>
+                    <td><strong>City:</strong></td>
+                    <td>{city}</td>
+                </tr>
+                <tr>
+                    <td><strong>Area Code:</strong></td>
+                    <td>{area_code}</td>
                 </tr>
                 <tr>
                     <td><strong>Academic Level:</strong></td>
@@ -77,8 +88,13 @@
                     <td><ul>{subjects}</ul></td>
                 </tr>
                 <tr>
-                    <td><strong>Number of lessons required:</strong></td>
-                    <td>{number_of_lessons_required}</td>
+                    <td><strong>Learner Problem Area and <br/>
+                            other additional information:</strong></td>
+                    <td>{additional_information}</td>
+                </tr>
+                <tr>
+                    <td><strong>Reference Number:</strong></td>
+                    <td>{reference_number}</td>
                 </tr>
             </table>
             
