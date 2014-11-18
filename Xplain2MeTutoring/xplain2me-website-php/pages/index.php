@@ -2,8 +2,6 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="generator" content="TextMate http://macromates.com/">
-	<meta name="author" content="Shepherd Siduli">
         
         <title>Xplain2Me | Welcome</title>
         
@@ -73,11 +71,8 @@
                                         <br/>
                                         <br/>
                                         <br/>
-                                        <br/>
-                                        <br/>
-                                        <br/>
                                         <p>
-                                        <a href="http://tsepomaleka.dedicated.co.za:9000/xplain2me/quote-request" 
+                                        <a href="http://portal.xplain2me.co.za:9000/xplain2me/quote-request" 
 											color = "blue">Request a quote</a> 
 											for a quotation to be sent to you.</p>
                                         

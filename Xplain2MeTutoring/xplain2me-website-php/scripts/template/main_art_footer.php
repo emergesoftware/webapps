@@ -11,10 +11,10 @@
             <p>
                 <span class="footer">
                     <strong>
-                        <a href="/pages/about.php">About us</a>
+                        <a href="/app/pages/about.php">About us</a>
                     </strong> | 
                     <strong>
-                        <a href="/pages/contact-us.php">Contact us</a> 
+                        <a href="/app/pages/contact-us.php">Contact us</a> 
                     </strong> |
                     <strong>
                         <a href="#">Sitemap</a>
