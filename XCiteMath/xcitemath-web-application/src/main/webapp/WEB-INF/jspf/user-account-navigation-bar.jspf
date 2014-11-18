@@ -1,0 +1,62 @@
+<%@ page pageEncoding="UTF-8" %>
+
+<nav class="navbar navbar-default navbar-fixed-top navigation-bar-fixed-bg" role="navigation">
+   <div class="navbar-header">
+       <a class="navbar-brand" href="#">
+           XciteMath
+       </a>
+   </div>
+   
+    <div>
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="#">
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                    &nbsp;About
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="glyphicon glyphicon-earphone"></i>
+                    &nbsp;Contact Us
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="glyphicon glyphicon-flag"></i>
+                    &nbsp;Register
+                </a>
+            </li>
+         </li>
+      </ul>
+    </div>
+    
+   <div>
+       
+        <form class="navbar-form navbar-right" role="search">
+            
+            <div class="form-group">
+               <input type="text" class="form-control" placeholder="Username"
+                      maxlength="24" id="usernameText" name="username"
+                      value="" autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+               <input type="password" class="form-control" placeholder="Password"
+                      maxlength="24" id="passwordText" name="password"
+                      value="">
+            </div>
+            
+            <button type="submit" class="btn btn-primary"
+                    style="margin-right: 5px">Log In</button>
+            
+            <br/>
+            
+            <a href="#" class="block-link">Forgot Password</a>
+            
+        </form> 
+       
+      
+   </div>
+    
+</nav>

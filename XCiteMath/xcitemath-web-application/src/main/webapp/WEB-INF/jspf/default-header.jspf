@@ -1,0 +1,18 @@
+<%@ page pageEncoding="UTF-8" %>
+
+<!-- The <META> tags -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap: Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+<!-- Optional Bootstrap theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css" />
+
+<!-- Responsive Slides CSS -->
+<link rel="stylesheet" 
+      href="<%= request.getContextPath() %>/assets/responsive-slides-1.0/css/responsiveslides.css" />
+
+<!-- Default CSS -->
+<link rel="stylesheet" href="<%= request.getContextPath() %>/assets/common-utilities/css/default.css" />

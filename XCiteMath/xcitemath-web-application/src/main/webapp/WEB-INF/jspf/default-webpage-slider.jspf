@@ -1,0 +1,13 @@
+<%@ page pageEncoding="UTF-8" %>
+
+<div class="default-slider" id="defaultSlider">
+    
+    <ul class="rslides">
+        <li><img src="<%= request.getContextPath() %>/assets/images/slider-images/1.jpg" alt=""></li>
+        <li><img src="<%= request.getContextPath() %>/assets/images/slider-images/2.jpg" alt=""></li>
+        <li><img src="<%= request.getContextPath() %>/assets/images/slider-images/3.jpg" alt=""></li>
+        <li><img src="<%= request.getContextPath() %>/assets/images/slider-images/4.jpg" alt=""></li>
+        <li><img src="<%= request.getContextPath() %>/assets/images/slider-images/5.jpg" alt=""></li>
+    </ul>
+    
+</div>

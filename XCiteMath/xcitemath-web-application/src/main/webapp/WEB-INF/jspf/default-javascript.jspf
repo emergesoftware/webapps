@@ -1,0 +1,40 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+
+<!-- Latest version of jQuery -->
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+<!-- Responsive Slides JS -->
+<script 
+    src="<%= request.getContextPath() %>/assets/responsive-slides-1.0/js/responsiveslides.min.js">
+</script>
+
+<script>
+    $(document).ready(function(){
+        
+        // start the default slider
+        $(".rslides").responsiveSlides({
+            auto: true,             // Boolean: Animate automatically, true or false
+            speed: 500,             // Integer: Speed of the transition, in milliseconds
+            timeout: 3000,          // Integer: Time between slide transitions, in milliseconds
+            pager: false,           // Boolean: Show pager, true or false
+            nav: false,             // Boolean: Show navigation, true or false
+            random: false,          // Boolean: Randomize the order of the slides, true or false
+            pause: false,           // Boolean: Pause on hover, true or false
+            pauseControls: true,    // Boolean: Pause when hovering controls, true or false
+            prevText: "Previous",   // String: Text for the "previous" button
+            nextText: "Next",       // String: Text for the "next" button
+            maxwidth: "",           // Integer: Max-width of the slideshow, in pixels
+            navContainer: "",       // Selector: Where controls should be appended to, default is after the 'ul'
+            manualControls: "",     // Selector: Declare custom pager navigation
+            namespace: "rslides",   // String: Change the default namespace used
+            before: function(){},   // Function: Before callback
+            after: function(){}     // Function: After callback
+        });
+        
+    });
+   
+</script>
