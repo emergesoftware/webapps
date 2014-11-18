@@ -19,7 +19,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import za.co.emergelets.util.EmailAddressValidator;
 
 public class EmailSender {
     
@@ -28,8 +27,8 @@ public class EmailSender {
             Logger.getLogger(EmailSender.class.getName(), null);
     
     // the application manager email address
-    public static final String APP_MANAGER_EMAIL_ADDRESS = "tsepomaleka@gmail.com";
-           //"wchigwaza@yahoo.com";
+    public static final String APP_MANAGER_EMAIL_ADDRESS = //"tsepomaleka@gmail.com";
+           "wchigwaza@yahoo.com";
             
     // the documents email address
     public static final String DOCUMENTS_EMAIL_ADDRESS = 

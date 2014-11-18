@@ -48,7 +48,8 @@
                 &nbsp;&nbsp;&nbsp;
 				<!--Xplain2me Tutoring <br> -->
 				<img src="http://media.xplain2me.co.za/images/logo_2.png" alt="logo" style="width:250px"/>
-                <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Simplify your learning"</h5>
+                <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Simplify your learning"</h5>
              </a>
         </h1>
         

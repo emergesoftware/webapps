@@ -26,7 +26,7 @@ import org.joda.time.Minutes;
 import za.co.emergelets.util.BooleanToText;
 import za.co.emergelets.util.CellphoneNumberValidator;
 import za.co.emergelets.util.CitizenshipType;
-import za.co.emergelets.util.EmailAddressValidator;
+import za.co.emergelets.util.mail.EmailAddressValidator;
 import za.co.emergelets.util.ReCaptchaUtil;
 import za.co.emergelets.util.SouthAfricanIdentityTool;
 import za.co.emergelets.util.VerificationCodeGenerator;
