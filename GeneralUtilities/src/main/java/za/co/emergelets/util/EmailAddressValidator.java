@@ -18,6 +18,11 @@ public final class EmailAddressValidator {
 	private static final String REGULAR_EXPRESSION = 
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9]+)*@" + 
 			"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	//Propose that you change that to this 
+	//^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|
+	//(?<!\.)\.)*)(?<!\.)@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$
+	//as per http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx
+	
 	
 	/**
 	 * Determines if the email address is valid
