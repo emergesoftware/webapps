@@ -9,7 +9,9 @@ import za.co.emergelets.xplain2me.webapp.component.BecomeTutorForm;
 public final class ReCaptchaUtil {
     
     public static final String RECAPTCHA_API_KEY = 
-            "6LfJjvsSAAAAAGO6AP2DK_l_v_B82jMHPKpXLMPh";
+            "6Lcc9v0SAAAAAJbb8OSE5AWCbzzCkhxcvdbc6kZq";
+    public static final String RECAPTCHA_JS_KEY = 
+            "6Lcc9v0SAAAAANB3hwUIZUAZDUC2rrLYGG8kChuj";
     
     /**
      * Verifies the reCAPTCHA Code

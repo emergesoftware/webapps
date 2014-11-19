@@ -247,20 +247,8 @@
                         <p>Complete this challenge - this verifies that you are really human.</p>
                         
                         <!-- reCAPTCHA snippets -->
-                        <script type="text/javascript"
-                            src="http://www.google.com/recaptcha/api/challenge?k=6LfJjvsSAAAAAJuEMZYXdAwjj1sx5nDAPZmmWVO7">
-                        </script>
+                        <%@include file="../jspf/template/re-captcha-code-snippet.jspf" %>
                         
-                        <noscript>
-                           <iframe src="http://www.google.com/recaptcha/api/noscript?k=6LfJjvsSAAAAAJuEMZYXdAwjj1sx5nDAPZmmWVO7"
-                               height="300" width="500" frameborder="0"></iframe><br>
-                           <textarea name="recaptcha_challenge_field" rows="3" cols="40">
-                           </textarea>
-                           <input type="hidden" name="recaptcha_response_field"
-                               value="manual_challenge">
-                        </noscript>
-                        
-                        <br/>
                         <hr/>
                         
                         <h3>Terms of Service agreement</h3>

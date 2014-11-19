@@ -2,7 +2,7 @@
 
 <ul id="nav-bar" class="nav nav-pills navbar-right">
     <li>
-        <a href="http://www.xplain2me.co.za" title="Visitor's Home">
+        <a href="http://www.xplain2me.co.za/app/pages/index.php" title="Visitor's Home">
             <span class="glyphicon glyphicon-home"></span>
             <span>&nbsp;Visitor's Home</span>
         </a>
