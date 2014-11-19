@@ -215,20 +215,7 @@
                 </p>
 
                 <!-- reCAPTCHA snippets -->
-                <script type="text/javascript"
-                    src="http://www.google.com/recaptcha/api/challenge?k=6LfJjvsSAAAAAJuEMZYXdAwjj1sx5nDAPZmmWVO7">
-                </script>
-
-                <noscript>
-                   <iframe src="http://www.google.com/recaptcha/api/noscript?k=6LfJjvsSAAAAAJuEMZYXdAwjj1sx5nDAPZmmWVO7"
-                       height="300" width="500" frameborder="0"></iframe><br>
-                   <textarea name="recaptcha_challenge_field" rows="3" cols="40">
-                   </textarea>
-                   <input type="hidden" name="recaptcha_response_field"
-                       value="manual_challenge">
-                </noscript>
-
-                <br/>
+                <%@include file="../jspf/template/re-captcha-code-snippet.jspf" %>
                 
                 <p>
                     <strong>Terms of

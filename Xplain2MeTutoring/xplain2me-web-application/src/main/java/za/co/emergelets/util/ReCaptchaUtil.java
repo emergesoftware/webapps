@@ -10,6 +10,8 @@ public final class ReCaptchaUtil {
     
     public static final String RECAPTCHA_API_KEY = 
             "6Lcc9v0SAAAAAJbb8OSE5AWCbzzCkhxcvdbc6kZq";
+    public static final String RECAPTCHA_JS_KEY = 
+            "6Lcc9v0SAAAAANB3hwUIZUAZDUC2rrLYGG8kChuj";
     
     /**
      * Verifies the reCAPTCHA Code
