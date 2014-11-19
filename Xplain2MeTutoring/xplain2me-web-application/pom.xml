@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>za.co.emergelets.xplain2me.data</groupId>
-            <artifactId>xplain2me-data-acess</artifactId>
+            <artifactId>xplain2me-data-access</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
