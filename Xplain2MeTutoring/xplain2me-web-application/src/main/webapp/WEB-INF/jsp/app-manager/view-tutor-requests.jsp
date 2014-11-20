@@ -23,7 +23,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Tutor Requests</title>
         
         <%@include file="../../jspf/template/default-manager-header.jspf" %>

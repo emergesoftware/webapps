@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import za.co.emergelets.xplain2me.entity.ProfileType;
 import za.co.emergelets.xplain2me.webapp.component.UserContext;
@@ -80,6 +81,29 @@ public class DefaultAuthenticationInterceptor extends HandlerInterceptorAdapter 
         
         return true;
     }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, 
+            Object handler, ModelAndView modelAndView) throws Exception {
+        
+        super.postHandle(request, response, handler, modelAndView);
+        
+        /*
+            modify the HTTP headers - for
+            security purposes to:
+        
+            Cache-Control: no-cache, no-store, must-revalidate
+            Pragma: no-cache
+            Expires: 0
+        */
+        
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache"); 
+        response.setHeader("Expires", "0");
+        
+    }
+    
+    
     
     /**
      * Determines if the user profile is allowed to
