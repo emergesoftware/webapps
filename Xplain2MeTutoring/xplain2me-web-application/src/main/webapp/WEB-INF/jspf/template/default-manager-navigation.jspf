@@ -44,7 +44,7 @@
             </li>
             
             <li>
-                <a href="<%= request.getContextPath() %>/portal/manager/tutor-requests/browse">
+                <a href="<%= request.getContextPath() %>/portal/manager/tutor-requests/view">
                     <i class="fa fa-tasks"></i> 
                     Tutor Requests
                 </a>

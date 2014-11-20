@@ -1,8 +1,10 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.TutorRequest;
 import za.co.emergelets.xplain2me.entity.TutorRequestSubject;
@@ -205,4 +207,33 @@ public class TutorRequestDAOImpl extends DefaultDataAccessObject implements Tuto
         }
     }
     */
+
+    @Override
+    public List<TutorRequest> getUnreadTutorRequests() throws DataAccessException {
+        
+        List<TutorRequest> list = null;
+        
+        try {
+            
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
+            
+            criteria = session.createCriteria(TutorRequest.class);
+            criteria.add(Restrictions.eq("received", false));
+            criteria.addOrder(Order.asc("id"));
+            list = criteria.list();
+            
+            return list;
+        }
+        
+        catch (HibernateException ex) {
+            LOG.log(Level.SEVERE, "Error: {0}", ex.getMessage()); 
+            throw new DataAccessException(ex);
+        }
+        
+        finally {
+            DataRepositoryUtility.close();
+        }
+        
+    }
 }

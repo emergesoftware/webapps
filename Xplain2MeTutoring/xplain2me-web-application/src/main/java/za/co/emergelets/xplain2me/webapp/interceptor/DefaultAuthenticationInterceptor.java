@@ -59,6 +59,7 @@ public class DefaultAuthenticationInterceptor extends HandlerInterceptorAdapter 
             LOG.warning("... no user session was found... "); 
             
             session.invalidate();
+            response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
         

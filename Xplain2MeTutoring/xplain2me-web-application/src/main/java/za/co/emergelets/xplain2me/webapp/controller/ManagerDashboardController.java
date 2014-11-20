@@ -1,4 +1,4 @@
-package za.co.emergelets.xplain2me.webapp.controller.manager;
+package za.co.emergelets.xplain2me.webapp.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
