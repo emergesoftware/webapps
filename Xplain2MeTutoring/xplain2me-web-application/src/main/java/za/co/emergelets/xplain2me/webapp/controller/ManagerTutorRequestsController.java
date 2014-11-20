@@ -109,4 +109,20 @@ public class ManagerTutorRequestsController extends GenericController {
         return createModelAndView("app-manager/view-tutor-requests");
     }
     
+    /**
+     * Shows all the details about this tutor request
+     * 
+     * @param request
+     * @param requestId
+     * @return 
+     */
+    @RequestMapping(value = "details", method = RequestMethod.GET, 
+            params = {"requestId"})
+    public ModelAndView displayMoreTutorRequestDetails(HttpServletRequest request,
+            @RequestParam(value = "requestId")String requestId) {
+        
+         // return a view
+        return createModelAndView("app-manager/view-tutor-requests");
+    }
+    
 }

@@ -199,7 +199,7 @@
                                             <div class="btn-group">
 
                                                 <button type="button" data-toggle="dropdown" 
-                                                        class="btn btn-default dropdown-toggle">
+                                                        class="btn btn-primary dropdown-toggle">
                                                     Action <span class="caret"></span>
                                                 </button>
 
@@ -208,6 +208,12 @@
                                                         <a  title="Mark This Request As Read" style="text-decoration: none"
                                                             href="<%=request.getContextPath() %>/portal/manager/tutor-requests/mark-as-read?requestId=<%= item.getId() %>">
                                                             Mark As Read
+                                                        </a>
+                                                    </li>
+                                                     <li>
+                                                        <a  title="Show more details" style="text-decoration: none"
+                                                            href="<%=request.getContextPath() %>/portal/manager/tutor-requests/details?requestId=<%= item.getId() %>">
+                                                            Show Details
                                                         </a>
                                                     </li>
                                                     <li>
