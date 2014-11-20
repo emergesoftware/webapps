@@ -6,11 +6,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <link type="text/css" rel="stylesheet" 
-              href="./assets/themes/dark-theme/bootstrap/css/bootstrap.min.css" />
+              href="/xplain2me/assets/themes/dark-theme/bootstrap/css/bootstrap.min.css" />
         <script type="text/javascript" 
-            src="./assets/themes/dark-theme/js/jquery-1.10.2.min.js"></script>
+            src="/xplain2me/assets/themes/dark-theme/js/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" 
-                src="./assets/themes/dark-theme/bootstrap/js/bootstrap.min.js">
+                src="/xplain2me/assets/themes/dark-theme/bootstrap/js/bootstrap.min.js">
+        </script>
+        
+        <script type="text/javascript">
+            $(document).ready(function(){
+                
+                // set up the email address
+                var link = document.getElementById("emailAddress");
+                $(link).attr("href", "info@xplain2me.co.za");
+                link.innerHTML = "info@xplain2me.co.za";
+                
+            });
         </script>
         
     </head>
@@ -23,9 +34,14 @@
             <div class="jumbotron">
                 <h1>Oops! Something went wrong...</h1>
                 <p>
-                    Looks like an error as occured while we were trying to 
+                    Looks like an error has occurred while we were trying to 
                     process your request or the resource you are trying to
                     access no longer exists.
+                </p>
+                <hr/>
+                <p class="text-warning" style="font-size: 80%">
+                    Please contact the web master or the site administrator should this
+                    persist at <a id="emailAddress" href="#" target="_blank"></a>.
                 </p>
                 <br/>
             </div>
