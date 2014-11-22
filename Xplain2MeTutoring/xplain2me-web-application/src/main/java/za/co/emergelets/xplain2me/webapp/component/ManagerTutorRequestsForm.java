@@ -24,6 +24,4 @@ public class ManagerTutorRequestsForm implements Serializable {
         this.unreadTutorRequests = unreadTutorRequests;
     }
     
-    
-    
 }

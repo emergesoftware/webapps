@@ -2,10 +2,13 @@ package za.co.emergelets.xplain2me.webapp.controller.helper;
 
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import za.co.emergelets.xplain2me.dao.SystemAuditManager;
 import za.co.emergelets.xplain2me.dao.TutorRequestDAO;
 import za.co.emergelets.xplain2me.dao.TutorRequestDAOImpl;
 import za.co.emergelets.xplain2me.entity.TutorRequest;
 import za.co.emergelets.xplain2me.webapp.component.ManagerTutorRequestsForm;
+import za.co.emergelets.xplain2me.webapp.component.UserContext;
 import za.co.emergelets.xplain2me.webapp.enumerations.TutorRequestsType;
 
 public class ManagerTutorRequestsControllerHelper {
@@ -26,6 +29,43 @@ public class ManagerTutorRequestsControllerHelper {
      */
     private void initialiseDataAccessObjects() {
         this.tutorRequestDAO = new TutorRequestDAOImpl();
+    }
+    
+    /**
+     * Marks the tutor request as being read
+     * 
+     * @param request
+     * @param id
+     * @param form
+     * @param context
+     * @return 
+     */
+    public boolean markTutorRequestAsRead(HttpServletRequest request, long id, 
+            ManagerTutorRequestsForm form, UserContext context) {
+        
+        if (id < 1 || form == null || context == null) 
+            return false;
+        
+        // get the unread request
+        TutorRequest item = form.getUnreadTutorRequests().get(id);
+        
+        if (item != null) {
+            
+            // update as being read
+            item.setReceived(true);
+            tutorRequestDAO.updateTutorRequest(item);
+            
+            // create an audit
+            SystemAuditManager.logAuditAsync(SystemAuditManager.MARK_TUTOR_REQUEST_AS_READ, 
+                    context.getPerson().getUser(), id, null, request.getRemoteAddr(), 
+                    request.getHeader("User-Agent"), 0, true);
+            
+            return true;
+            
+        }
+        else {
+            return false;
+        }
     }
     
     /**

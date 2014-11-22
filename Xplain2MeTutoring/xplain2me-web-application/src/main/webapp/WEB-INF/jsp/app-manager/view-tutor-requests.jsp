@@ -45,6 +45,10 @@
                 
                 <hr/>
                 
+                <%@include file="../../jspf/template/default_alert_block.jspf" %>
+                
+                <br/>
+                
                 <!-- START: search tutor requests -->
                 
                   <div class="panel panel-primary">

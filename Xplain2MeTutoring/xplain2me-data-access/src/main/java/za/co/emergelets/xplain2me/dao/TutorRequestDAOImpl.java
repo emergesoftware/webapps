@@ -236,4 +236,36 @@ public class TutorRequestDAOImpl extends DefaultDataAccessObject implements Tuto
         }
         
     }
+    
+    public TutorRequest updateTutorRequest(TutorRequest request) 
+            throws DataAccessException {
+        
+        if (request == null) {
+            LOG.warning("Request is not valid");
+            return null;
+        }
+        
+        try {
+            
+            factory = DataRepositoryUtility.configure(null);
+            session = factory.openSession();
+            
+            tx = session.beginTransaction();
+            session.update(request);
+            tx.commit();
+            
+            return request;
+        
+        }
+        
+        catch (HibernateException e) {
+            LOG.severe("Error: " + e.getMessage());
+            throw new DataAccessException(e);
+        }
+        
+        finally {
+            DataRepositoryUtility.close();
+        }
+        
+    }
 }
