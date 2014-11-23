@@ -14,5 +14,6 @@ public interface TutorRequestDAO {
     public List<TutorRequest> getUnreadTutorRequests() throws DataAccessException;
     
     public TutorRequest updateTutorRequest(TutorRequest request) throws DataAccessException;
+    public TutorRequest deleteTutorRequest(TutorRequest request) throws DataAccessException;
        
 }

@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import za.co.emergelets.xplain2me.entity.TutorRequest;
 
 @Component
-public class ManagerTutorRequestsForm implements Serializable {
+public class TutorRequestsManagementForm implements Serializable {
     
     // map for all unread tutor requests
     private Map<Long, TutorRequest> unreadTutorRequests;
     
-    public ManagerTutorRequestsForm() {
+    public TutorRequestsManagementForm() {
         this.unreadTutorRequests = new TreeMap<>();
     }
 

@@ -17,9 +17,6 @@ import za.co.emergelets.xplain2me.entity.User;
 
 public final class SystemAuditManager {
     
-    public static final long LOGIN_EVENT = 1000;
-    public static final long MARK_TUTOR_REQUEST_AS_READ = 1020;
-    
     private static final Logger LOG = 
             Logger.getLogger(SystemAuditManager.class.getName(), null);
     
