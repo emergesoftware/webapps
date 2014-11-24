@@ -1,16 +1,16 @@
 <%-- 
-    Document   : dashboard
+    Document   : view-tutor-requests
     Created on : 30 Sep 2014, 8:08:34 PM
-    Author     : user
+    Author     : tsepo maleka
 --%>
 
 <%@page import="za.co.emergelets.xplain2me.entity.TutorRequestSubject"%>
 <%@page import="za.co.emergelets.xplain2me.entity.TutorRequest"%>
-<%@page import="za.co.emergelets.xplain2me.webapp.component.ManagerTutorRequestsForm"%>
+<%@page import="za.co.emergelets.xplain2me.webapp.component.TutorRequestsManagementForm"%>
 <%
     // get the form
-    ManagerTutorRequestsForm form = (ManagerTutorRequestsForm)session
-            .getAttribute(ManagerTutorRequestsForm.class.getName());
+    TutorRequestsManagementForm form = (TutorRequestsManagementForm)session
+            .getAttribute(TutorRequestsManagementForm.class.getName());
     
     if (form == null) {
         response.sendRedirect("/logout");
@@ -44,6 +44,10 @@
                 </p>
                 
                 <hr/>
+                
+                <%@include file="../../jspf/template/default_alert_block.jspf" %>
+                
+                <br/>
                 
                 <!-- START: search tutor requests -->
                 

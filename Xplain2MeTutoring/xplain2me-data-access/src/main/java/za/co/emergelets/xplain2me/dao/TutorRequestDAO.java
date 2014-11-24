@@ -12,5 +12,8 @@ public interface TutorRequestDAO {
     public TutorRequest getTutorRequestByContactNumber(String contactNumber) throws DataAccessException;
     public TutorRequest saveTutorRequest(TutorRequest request) throws DataAccessException;
     public List<TutorRequest> getUnreadTutorRequests() throws DataAccessException;
+    
+    public TutorRequest updateTutorRequest(TutorRequest request) throws DataAccessException;
+    public TutorRequest deleteTutorRequest(TutorRequest request) throws DataAccessException;
        
 }

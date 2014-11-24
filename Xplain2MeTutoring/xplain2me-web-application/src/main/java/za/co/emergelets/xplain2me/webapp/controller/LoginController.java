@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.emergelets.util.SHA256Encryptor;
+import za.co.emergelets.xplain2me.dao.EventTypes;
 import za.co.emergelets.xplain2me.dao.PersonDAO;
 import za.co.emergelets.xplain2me.dao.PersonDAOImpl;
 import za.co.emergelets.xplain2me.dao.ProfileDAO;
@@ -217,7 +218,7 @@ public class LoginController extends GenericController {
             saveToSessionScope(request, context);
             
             // log the login audit async
-            SystemAuditManager.logAuditAsync(SystemAuditManager.LOGIN_EVENT, profile.getUser(), 0, 
+            SystemAuditManager.logAuditAsync(EventTypes.LOGIN_EVENT, profile.getUser(), 0, 
                     null, request.getRemoteAddr(), request.getHeader("User-Agent"), 0, true);
             
             // redirect to the appropriate page
