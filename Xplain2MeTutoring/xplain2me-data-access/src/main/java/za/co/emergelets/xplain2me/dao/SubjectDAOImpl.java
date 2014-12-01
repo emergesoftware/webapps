@@ -9,11 +9,11 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.Subject;
 
-public class SubjectDAOImpl extends DefaultDataAccessObject implements SubjectDAO {
+public class SubjectDAOImpl extends HibernateConnectionProvider implements SubjectDAO {
 
     private static final Logger LOG = 
             Logger.getLogger(SubjectDAOImpl.class.getName(), null);
-    
+   
     public SubjectDAOImpl() {
         super();
     }
@@ -27,11 +27,10 @@ public class SubjectDAOImpl extends DefaultDataAccessObject implements SubjectDA
         
         try {
             
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
+            session = getSessionFactory().openSession();
             
-            criteria = session.createCriteria(Subject.class);
-            criteria.add(Restrictions.eq("id", id));
+            criteria = session.createCriteria(Subject.class)
+                .add(Restrictions.eq("id", id));
             iterator = criteria.list().iterator();
             
             while (iterator.hasNext())
@@ -46,7 +45,7 @@ public class SubjectDAOImpl extends DefaultDataAccessObject implements SubjectDA
         }
         
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
     }
 
@@ -54,13 +53,10 @@ public class SubjectDAOImpl extends DefaultDataAccessObject implements SubjectDA
     public List<Subject> getAllSubjects() throws DataAccessException {
         try {
             
-            List<Subject> subjects = null;
+            session = getSessionFactory().openSession();
             
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
-            
-            criteria = session.createCriteria(Subject.class);
-            criteria.addOrder(Order.asc("name"));
+            criteria = session.createCriteria(Subject.class)
+                    .addOrder(Order.asc("name"));
             return criteria.list();
             
         }
@@ -71,7 +67,7 @@ public class SubjectDAOImpl extends DefaultDataAccessObject implements SubjectDA
         }
         
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
     }
 
@@ -79,12 +75,12 @@ public class SubjectDAOImpl extends DefaultDataAccessObject implements SubjectDA
     public List<Subject> searchSubjects(String keyword) throws DataAccessException {
         try {
             
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
+            session = getSessionFactory().openSession();
             
-            criteria = session.createCriteria(Subject.class);
-            criteria.add(Restrictions.ilike("name", keyword, MatchMode.ANYWHERE));
-            criteria.addOrder(Order.asc("name"));
+            criteria = session.createCriteria(Subject.class)
+                .add(Restrictions.ilike("name", keyword, MatchMode.ANYWHERE))
+                .addOrder(Order.asc("name"));
+            
             return criteria.list();
             
         }
@@ -95,7 +91,7 @@ public class SubjectDAOImpl extends DefaultDataAccessObject implements SubjectDA
         }
         
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
     }
     

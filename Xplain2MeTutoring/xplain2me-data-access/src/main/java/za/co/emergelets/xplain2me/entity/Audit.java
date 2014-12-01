@@ -17,24 +17,9 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "audit")
 public class Audit implements Serializable {
-    
-    /*
-    Table: audit
-    
-    Columns:    
-        audit_id int not null unique default nextval('audit_id_sequence'),
-        audit_timestamp timestamp without time zone not null default now(),
-        event_type int not null,
-        user_name varchar(32) not null,
-        audit_reference int not null default 0,
-        audit_xml text,
-        audit_ip_address varchar(256) not null default '127.0.0.1',
-        audit_authority_code int,
-        audit_authorised boolean not null default true
-    */
-    
+   
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "audit_id")
     private long id;
     
@@ -149,6 +134,20 @@ public class Audit implements Serializable {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    @Override
+    public String toString() {
+        return "Audit {" + "id=" + id + 
+                ", timestamp=" + timestamp + 
+                ", event=" + event + 
+                ", user=" + user + 
+                ", reference=" + reference + 
+                ", auditXml=" + auditXml + 
+                ", sourceIpAddress=" + sourceIpAddress + 
+                ", userAgent=" + userAgent + 
+                ", authorityCode=" + authorityCode + 
+                ", authorised=" + authorised + "}\n";
     }
     
     

@@ -1,0 +1,56 @@
+<%@page import="za.co.emergelets.xplain2me.webapp.component.AlertBlock"%>
+<%@ page pageEncoding="UTF-8" %>
+
+<%
+    AlertBlock alertBlock = null;
+    boolean hasAlertBlock = true;
+    
+    if ((alertBlock = (AlertBlock)request
+            .getAttribute(AlertBlock.class.getName())) == null) {
+        hasAlertBlock = false;
+    }
+    
+    if (!hasAlertBlock) {
+        %>
+        <div id="alertBlock" class="alert alert-info"
+             style="display:none"></div>
+    <%
+    }
+    
+    else {
+        
+        String cascadingStyle = null;
+        
+        if (alertBlock.getAlertBlockType() == AlertBlock.ALERT_BLOCK_ERROR)
+            cascadingStyle = "alert alert-danger";
+        else if (alertBlock.getAlertBlockType() == AlertBlock.ALERT_BLOCK_WARNING)
+            cascadingStyle = "alert alert-warning";
+        else 
+            cascadingStyle = "alert alert-info";
+        
+        %>
+            <div id="alertBlock" class="<%= cascadingStyle %>">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <p><strong>Alert message:</strong></p>
+                <span id="alertBlockMessages">
+                    <ul>
+                <%
+                    if (alertBlock.getAlertBlockMessages() != null && 
+                            alertBlock.getAlertBlockMessages().isEmpty() == false) {
+
+                        for (String message : alertBlock.getAlertBlockMessages()) {
+                            %>
+                            <li><%= message %></li>
+                    <%
+                        }
+
+                    }
+                %>
+                    </ul>
+                </span>
+            </div>
+        <%
+        
+    }
+%>
+

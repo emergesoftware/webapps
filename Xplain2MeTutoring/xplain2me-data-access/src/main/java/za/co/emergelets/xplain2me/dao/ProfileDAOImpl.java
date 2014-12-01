@@ -6,10 +6,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.Profile;
 
-public class ProfileDAOImpl extends DefaultDataAccessObject implements ProfileDAO {
+public class ProfileDAOImpl extends HibernateConnectionProvider implements ProfileDAO {
     
     private static final Logger LOG = 
             Logger.getLogger(ProfileDAOImpl.class.getName(), null);
+
     
     public ProfileDAOImpl() {
         super();
@@ -26,22 +27,21 @@ public class ProfileDAOImpl extends DefaultDataAccessObject implements ProfileDA
         
         try {
             
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
+            session = getSessionFactory().openSession();
             
-            criteria = session.createCriteria(Profile.class, "profile");
-            criteria.createAlias("profile.profileType", "profileType");
-            criteria.createAlias("profile.user", "user");
-            criteria.createAlias("user.role", "role");
+            criteria = session.createCriteria(Profile.class, "profile")
+                .createAlias("profile.profileType", "profileType")
+                .createAlias("profile.user", "user")
+                .createAlias("user.role", "role")
             
-            criteria.add(Restrictions.eq("profile.verified", true));
-            criteria.add(Restrictions.eq("profileType.active", true));
-            criteria.add(Restrictions.eq("user.active", true));
-            criteria.add(Restrictions.eq("role.active", true));
-            criteria.add(Restrictions.eq("role.allowedLogin", true));
+                .add(Restrictions.eq("profile.verified", true))
+                .add(Restrictions.eq("profileType.active", true))
+                .add(Restrictions.eq("user.active", true))
+                .add(Restrictions.eq("role.active", true))
+                .add(Restrictions.eq("role.allowedLogin", true))
             
-            criteria.add(Restrictions.eq("user.username", username));
-            criteria.add(Restrictions.eq("user.password", password));
+                .add(Restrictions.eq("user.username", username))
+                .add(Restrictions.eq("user.password", password));
             
             iterator = criteria.list().iterator();
             
@@ -57,7 +57,7 @@ public class ProfileDAOImpl extends DefaultDataAccessObject implements ProfileDA
         }
         
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
         
     }

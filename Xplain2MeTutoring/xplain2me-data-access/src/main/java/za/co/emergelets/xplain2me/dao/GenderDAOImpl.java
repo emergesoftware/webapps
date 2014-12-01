@@ -7,11 +7,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import za.co.emergelets.xplain2me.entity.Gender;
 
-public class GenderDAOImpl extends DefaultDataAccessObject implements GenderDAO {
+public class GenderDAOImpl extends HibernateConnectionProvider implements GenderDAO {
 
     private static final Logger LOG = Logger
             .getLogger(GenderDAOImpl.class.getName(), null);
-    
+   
     public GenderDAOImpl() {
         super();
     }
@@ -21,11 +21,10 @@ public class GenderDAOImpl extends DefaultDataAccessObject implements GenderDAO 
         
         try {
             
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
+            session = getSessionFactory().openSession(); 
             
-            criteria = session.createCriteria(Gender.class);
-            criteria.addOrder(Order.asc("id"));
+            criteria = session.createCriteria(Gender.class)
+                .addOrder(Order.asc("id"));
             return criteria.list();
         }
         
@@ -34,7 +33,7 @@ public class GenderDAOImpl extends DefaultDataAccessObject implements GenderDAO 
             throw new DataAccessException(e);
         }
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
     }
     

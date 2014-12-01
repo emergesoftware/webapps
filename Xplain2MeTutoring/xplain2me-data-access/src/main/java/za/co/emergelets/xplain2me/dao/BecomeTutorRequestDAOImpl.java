@@ -5,17 +5,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import za.co.emergelets.data.transformation.DataTransformerTool;
 import za.co.emergelets.xplain2me.entity.AcademicLevelsTutoredBefore;
 import za.co.emergelets.xplain2me.entity.BecomeTutorRequest;
 import za.co.emergelets.xplain2me.entity.BecomeTutorSupportingDocument;
 
-/**
- *
- * @author user
- */
-public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
+public class BecomeTutorRequestDAOImpl extends HibernateConnectionProvider
                                         implements BecomeTutorRequestDAO {
 
     private static final Logger LOG = 
@@ -38,17 +36,16 @@ public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
         }
         
         try {
-            
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
+
+            session = getSessionFactory().openSession(); 
             
             List<Criterion> criterion = new ArrayList<>();
             criterion.add(Restrictions.eq("emailAddress", request.getEmailAddress()));
             criterion.add(Restrictions.eq("contactNumber", request.getContactNumber()));
             criterion.add(Restrictions.eq("identityNumber", request.getIdentityNumber()));
             
-            criteria = session.createCriteria(BecomeTutorRequest.class);
-            criteria.add(Restrictions.or(criterion.toArray(
+            criteria = session.createCriteria(BecomeTutorRequest.class)
+                .add(Restrictions.or(criterion.toArray(
                     new Criterion[criterion.size()])));
             
             return criteria.list().isEmpty();
@@ -61,7 +58,7 @@ public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
         }
         
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
         
     }
@@ -80,10 +77,11 @@ public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
         
         try {
             
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
+            DataTransformerTool.transformStringValuesToUpperCase(request);
             
-            tx = session.beginTransaction();
+            session = getSessionFactory().openSession(); 
+            
+            Transaction tx = session.beginTransaction();
             
             session.save(request);
             session.persist(request);
@@ -118,11 +116,12 @@ public class BecomeTutorRequestDAOImpl extends DefaultDataAccessObject
         }
         
         catch (HibernateException e) {
+            rollback(transaction);
             LOG.log(Level.SEVERE, "error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
     }
     

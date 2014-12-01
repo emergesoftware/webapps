@@ -1,13 +1,15 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.Person;
 
-public class PersonDAOImpl extends DefaultDataAccessObject implements PersonDAO {
+public class PersonDAOImpl extends HibernateConnectionProvider implements PersonDAO {
     
-    private static Logger LOG = Logger.getLogger(PersonDAOImpl.class.getName(), null);
+    private static final Logger LOG = Logger
+            .getLogger(PersonDAOImpl.class.getName(), null);
     
     public PersonDAOImpl(){
         super();
@@ -23,12 +25,12 @@ public class PersonDAOImpl extends DefaultDataAccessObject implements PersonDAO 
         
         try {
             
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
             
-            criteria = session.createCriteria(Person.class, "person");
-            criteria.createAlias("user", "user");
-            criteria.add(Restrictions.eq("user.username", username));
+            session = getSessionFactory().openSession();
+            
+            criteria = session.createCriteria(Person.class, "person")
+                    .createAlias("user", "user")
+                    .add(Restrictions.eq("user.username", username));
             iterator = criteria.list().iterator();
             
             while (iterator.hasNext())
@@ -39,12 +41,12 @@ public class PersonDAOImpl extends DefaultDataAccessObject implements PersonDAO 
         }
         
         catch (HibernateException e) {
-            LOG.severe("Error: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
         
     }

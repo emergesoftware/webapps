@@ -16,19 +16,6 @@ import javax.persistence.TemporalType;
 @Table(name = "users")
 public class User implements Serializable {
     
-    /*
-    
-    Table: users
-    
-    Columns:
-        user_name varchar(24) not null unique,
-        user_password text not null,
-        user_active boolean not null default false,
-        user_added timstamp without time zone not null default now(),
-        user_deactivated timestamp without time zone,
-        user_role_id int not null
-    */
-    
     @Id
     @Column(name = "user_name", nullable = false, unique = true)
     private String username;

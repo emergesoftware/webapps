@@ -1,11 +1,12 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.UserSalt;
 
-public class UserSaltDAOImpl extends DefaultDataAccessObject implements UserSaltDAO {
+public class UserSaltDAOImpl extends HibernateConnectionProvider implements UserSaltDAO {
 
     private static final Logger LOG = 
             Logger.getLogger(UserSaltDAOImpl.class.getName(), null);
@@ -24,12 +25,11 @@ public class UserSaltDAOImpl extends DefaultDataAccessObject implements UserSalt
         
         try {
             
-            factory = DataRepositoryUtility.configure(null);
-            session = factory.openSession();
+            session = getSessionFactory().openSession();
             
-            criteria = session.createCriteria(UserSalt.class);
-            criteria.createAlias("user", "user");
-            criteria.add(Restrictions.eq("user.username", username));
+            criteria = session.createCriteria(UserSalt.class)
+                .createAlias("user", "user")
+                .add(Restrictions.eq("user.username", username));
             
             iterator = criteria.list().iterator();
             
@@ -41,12 +41,12 @@ public class UserSaltDAOImpl extends DefaultDataAccessObject implements UserSalt
         }
         
         catch (HibernateException e) {
-            LOG.severe("Error: " + e.getMessage());
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         
         finally {
-            DataRepositoryUtility.close();
+            closeConnection();
         }
     }
     

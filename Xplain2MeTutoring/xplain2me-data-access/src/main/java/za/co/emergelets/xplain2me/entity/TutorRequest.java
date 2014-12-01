@@ -55,7 +55,6 @@ public class TutorRequest implements Serializable {
     @Column(name = "tutor_request_area_code")
     private String areaCode;
     
-    //Academic Information
     @OneToOne(targetEntity = AcademicLevel.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "academic_level_id", nullable = false)
     private AcademicLevel gradeLevel;
@@ -253,6 +252,11 @@ public class TutorRequest implements Serializable {
 
     public void setReferenceNumber(String referenceNumber) {
         this.referenceNumber = referenceNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "TutorRequest{" + "id=" + id + ", firstNames=" + firstNames + ", lastName=" + lastName + ", gender=" + gender + ", emailAddress=" + emailAddress + ", contactNumber=" + contactNumber + ", physicalAddress=" + physicalAddress + ", city=" + city + ", suburb=" + suburb + ", areaCode=" + areaCode + ", gradeLevel=" + gradeLevel + ", subjects=" + subjects + ", additionalInformation=" + additionalInformation + ", agreeToTermsOfService=" + agreeToTermsOfService + ", received=" + received + ", dateReceived=" + dateReceived + ", referenceNumber=" + referenceNumber + '}';
     }
     
     

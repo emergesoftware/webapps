@@ -1,0 +1,10 @@
+<%@ page pageEncoding="UTF-8" %>
+       
+<!-- Bootstrap: Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://bootswatch.com/cosmo/bootstrap.min.css" />
+
+<!-- Latest version of jQuery -->
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
