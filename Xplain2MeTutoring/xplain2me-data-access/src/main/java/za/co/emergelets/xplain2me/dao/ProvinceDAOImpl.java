@@ -1,16 +1,27 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import za.co.emergelets.xplain2me.entity.Province;
 
-public class ProvinceDAOImpl extends HibernateConnectionProvider implements ProvinceDAO {
+public class ProvinceDAOImpl implements ProvinceDAO {
 
     private static final Logger LOG = 
             Logger.getLogger(ProvinceDAOImpl.class.getName(), null);
+    
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
     
     public ProvinceDAOImpl() {
         super();
@@ -20,7 +31,8 @@ public class ProvinceDAOImpl extends HibernateConnectionProvider implements Prov
     public List<Province> getAllProvinces() throws DataAccessException {
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession();
             
             criteria = session.createCriteria(Province.class)
                 .addOrder(Order.asc("id"));
@@ -32,7 +44,7 @@ public class ProvinceDAOImpl extends HibernateConnectionProvider implements Prov
             throw new DataAccessException(e);
         }
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
     

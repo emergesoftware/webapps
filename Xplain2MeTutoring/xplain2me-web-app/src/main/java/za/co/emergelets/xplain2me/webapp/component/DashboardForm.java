@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import za.co.emergelets.xplain2me.entity.Audit;
 
 @Component
-public class ManagerDashboardForm implements Serializable {
+public class DashboardForm implements Serializable {
     
     // the new tutor requests
     private List<Audit> auditTrail;
     
-    public ManagerDashboardForm() {
+    public DashboardForm() {
         this.auditTrail = new ArrayList<>();
     }
 

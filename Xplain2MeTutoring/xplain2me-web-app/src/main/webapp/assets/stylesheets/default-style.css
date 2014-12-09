@@ -1,14 +1,19 @@
 html, body { 
-    font-family: 'Lato', sans-serif;  
-    
     background-image: url('../images/background001.png');
     background-repeat: repeat;
     background-attachment: scroll;
-    
-    color: black;
 }
 
-.container {
+#wrapper {
+    
+    background-color: transparent;
+    background-image: url('../images/background002.png');
+    background-repeat: repeat;
+    background-attachment: scroll;
+    margin-top: 60px;
+}
+
+#content {
     
     width: 900px;
     margin: 0px auto;
@@ -19,6 +24,7 @@ html, body {
     box-shadow: 0 9px 0px 0px transparent, 0 -9px 0px 0px transparent, 12px 0 15px -4px #888888, -12px 0 15px -4px #888888;
     
 }
+
 
 #banner {
     

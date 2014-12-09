@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+
+	<!-- user manager can access only manager section -->
+	<role rolename="manager-gui" />
+	<user username="manager" password="8to0much" roles="manager-gui" />
+
+	<!-- user admin can access manager and admin section both -->
+	<role rolename="admin-gui" />
+	<user username="admin" password="8to0much" roles="manager-gui,admin-gui" />
+
+	<!-- user can only access tomcat through the script -->
+	<role rolename="manager-script"/>
+	<user username="tomcat" password="tomcat" roles="manager-script"/>
+
+</tomcat-users>

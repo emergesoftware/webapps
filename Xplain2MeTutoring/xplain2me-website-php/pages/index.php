@@ -72,7 +72,7 @@
                                         <br/>
                                         <br/>
                                         <p>
-                                        <a href="http://portal.xplain2me.co.za:9000/xplain2me/quote-request" 
+                                        <a href="http://portal.xplain2me.co.za/xplain2me/quote-request" 
 											color = "blue">Request a quote</a> 
 											for a quotation to be sent to you.</p>
                                         

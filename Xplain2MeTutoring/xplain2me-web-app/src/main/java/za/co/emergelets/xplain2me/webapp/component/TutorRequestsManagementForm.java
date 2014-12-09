@@ -17,12 +17,28 @@ public class TutorRequestsManagementForm implements Serializable {
     // list of latest audits
     private List<Audit> auditTrail;
     
+    // search data
+    private String searchKeyword;
+    private int searchType;
+    private Map<Long, TutorRequest> searchResults;
+    
     public TutorRequestsManagementForm() {
-        this.unreadTutorRequests = new TreeMap<>();
-        this.auditTrail = new ArrayList<>();
+        resetForm();
+    }
+    
+    public final void resetForm() {
+        this.auditTrail = null;
+        this.unreadTutorRequests = null;
+        
+        this.searchKeyword = null;
+        this.searchType = 0;
+        this.searchResults = null;
     }
 
     public Map<Long, TutorRequest> getUnreadTutorRequests() {
+        if (unreadTutorRequests == null)
+            unreadTutorRequests = new TreeMap<>();
+            
         return unreadTutorRequests;
     }
 
@@ -31,11 +47,43 @@ public class TutorRequestsManagementForm implements Serializable {
     }
 
     public List<Audit> getAuditTrail() {
+        if (auditTrail == null)
+            auditTrail = new ArrayList<>();
+            
         return auditTrail;
     }
 
     public void setAuditTrail(List<Audit> auditTrail) {
         this.auditTrail = auditTrail;
     }
+
+    public String getSearchKeyword() {
+        return searchKeyword;
+    }
+
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
+    }
+
+    public int getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(int searchType) {
+        this.searchType = searchType;
+    }
+
+    public Map<Long, TutorRequest> getSearchResults() {
+        if (searchResults == null)
+            searchResults = new TreeMap<>();
+            
+        return searchResults;
+    }
+
+    public void setSearchResults(Map<Long, TutorRequest> searchResults) {
+        this.searchResults = searchResults;
+    }
+    
+    
     
 }

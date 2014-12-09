@@ -1,19 +1,30 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.Subject;
 
-public class SubjectDAOImpl extends HibernateConnectionProvider implements SubjectDAO {
+public class SubjectDAOImpl implements SubjectDAO {
 
     private static final Logger LOG = 
             Logger.getLogger(SubjectDAOImpl.class.getName(), null);
    
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
+    
     public SubjectDAOImpl() {
         super();
     }
@@ -27,7 +38,8 @@ public class SubjectDAOImpl extends HibernateConnectionProvider implements Subje
         
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession();
             
             criteria = session.createCriteria(Subject.class)
                 .add(Restrictions.eq("id", id));
@@ -45,7 +57,7 @@ public class SubjectDAOImpl extends HibernateConnectionProvider implements Subje
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
 
@@ -53,7 +65,8 @@ public class SubjectDAOImpl extends HibernateConnectionProvider implements Subje
     public List<Subject> getAllSubjects() throws DataAccessException {
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession();
             
             criteria = session.createCriteria(Subject.class)
                     .addOrder(Order.asc("name"));
@@ -67,7 +80,7 @@ public class SubjectDAOImpl extends HibernateConnectionProvider implements Subje
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
 
@@ -75,7 +88,8 @@ public class SubjectDAOImpl extends HibernateConnectionProvider implements Subje
     public List<Subject> searchSubjects(String keyword) throws DataAccessException {
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession();
             
             criteria = session.createCriteria(Subject.class)
                 .add(Restrictions.ilike("name", keyword, MatchMode.ANYWHERE))
@@ -91,7 +105,7 @@ public class SubjectDAOImpl extends HibernateConnectionProvider implements Subje
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
     

@@ -44,35 +44,36 @@
             
             <%@include file="../jspf/template/default-nav-bar.jspf" %>
             
+                    
             <h3>Become a tutor</h3>
             <p class="text-muted">
                 Thanks for your interest in joining our wonderful, vibrant, driven
                 and passionate tutors. To join, please fill in the form below
                 and we will get back to you shortly. Good luck.
             </p>
-            
+
             <hr/>
-            
+
             <form id="becomeTutorForm" name="becomeTutorForm" role="form"
                   action="<%= request.getContextPath() %>/become-a-tutor"
                   method="post" onsubmit="return validateBecomeTutorForm(this)"
                   enctype="multipart/form-data">
-                
+
                 <%
-                    
+
                     boolean errorsEncountered = false;
-                    
+
                     // Check if there are any errors encountered
                     if (form.getErrorsEncountered() != null && 
                             form.getErrorsEncountered().isEmpty() == false) {
-                            
+
                         errorsEncountered = true;
                     }
                 %>
-                
+
                 <div id="alertBlock" class="alert alert-danger" role="alert"
                     <%= (!errorsEncountered) ? "style=\"display:none\"" : "" %>>
-                    
+
                     <%
                         if (errorsEncountered) {
                             %>
@@ -85,15 +86,15 @@
                             }
                         }
                     %>
-                    
+
                 </div>
-                     
+
                 <br/>
                 <p class="text-primary">
                     <strong>Note:&nbsp;</strong>
                     All fields are mandatory.
                 </p>
-                
+
                 <!-- The Navigation Tabs -->
                 <ul id="tabs" class="nav nav-tabs">
                     <li class="active">
@@ -115,23 +116,23 @@
                         </a>
                     </li>
                 </ul>
-                
+
                 <!-- All Tabs -->
                 <div id="tabContent" class="tab-content">
-                    
+
                     <!-- first tab content -->
                     <div class="tab-pane fade active in" id="firstTab" style="width:60%">
                         <br/>
-                        
+
                         <h3 class="text-primary">Personal Information</h3>
                         <p class="text-muted">
                             Fill in your personal information.
                             All fields are mandatory.
                         </p>
                         <hr/>
-                        
+
                         <!-- Last Name -->
-                
+
                         <div id="lastNameFormGroup" class="form-group">
                             <label>Last Name:</label>
                             <input type="text" class="form-control" id="lastName"
@@ -151,7 +152,7 @@
                                    value="<%= (form.getBecomeTutorRequest().getFirstNames() == null) 
                                            ? "" : form.getBecomeTutorRequest().getFirstNames() %>"/>
                         </div>
-                
+
                          <!-- ID / Passport -->
 
                         <div id="idNumberFormGroup" class="form-group">
@@ -177,9 +178,9 @@
                                    name="dateOfBirth" placeholder="Use Format: YYYY-MM-DD"
                                    value="<%= (dateOfbirth == null) ? "" : dateOfbirth %>"/> 
                         </div>
-                        
+
                         <script type="text/javascript">
-                            
+
                             $(document).ready(function(){
                                 $(".datepicker").datepicker({
                                     format: "yyyy-mm-dd",
@@ -187,7 +188,7 @@
                                     autoclose : true
                                 });
                             });
-                            
+
                         </script>
 
                         <!-- Citizenship -->
@@ -244,7 +245,7 @@
 
                             </select>
                         </div>    
-                    
+
                         <hr/>
                         <p class="text-primary">
                             <span class="glyphicon glyphicon-arrow-right"></span>
@@ -252,23 +253,23 @@
                             <span>Now, move onto the 2nd tab to fill in your 
                                 contact and address information.</span>
                         </p>
-                                
+
                         <br/>
                         <br/>
                     </div>
                     <!-- first tab content ends -->
-                    
+
                     <!-- second tab content -->
                     <div class="tab-pane fade" id="secondTab" style="width:60%">
                         <br/>
-                        
+
                         <h3 class="text-primary">Contact Information</h3>
                         <p class="text-muted">
                             Fill in your contact and address information.
                             All fields are mandatory.
                         </p>
                         <hr/>
-                        
+
                         <!-- Email Address -->
 
                         <div id="emailAddressFormGroup" class="form-group">
@@ -332,7 +333,7 @@
                                    value="<%= (form.getBecomeTutorRequest().getAreaCode() == null) 
                                    ? "" : form.getBecomeTutorRequest().getAreaCode() %>"/>
                         </div>
-                        
+
                         <hr/>
                         <p class="text-primary">
                             <span class="glyphicon glyphicon-arrow-right"></span>
@@ -341,17 +342,17 @@
                                 experience in tutoring and submit 
                                 supporting documents.</span>
                         </p>
-                        
+
                         <br/>
                         <br/>
-                        
+
                     </div>
                     <!-- second tab content ends -->
-                    
+
                     <!-- third tab content -->
                     <div class="tab-pane fade" id="thirdTab" style="width:60%">
                         <br/>
-                        
+
                         <h3 class="text-primary">Prior Tutoring Experience</h3>
                         <p class="text-muted">
                             Tell us about your previous tutoring experience and
@@ -359,7 +360,7 @@
                             All fields are mandatory.
                         </p>
                         <hr/>
-                        
+
                         <!-- Have You Tutored Before -->
 
                         <div id="tutoredBeforeFormGroup" class="form-group">
@@ -425,7 +426,7 @@
                                     <td>
                                         <input type="file" id="curriculumVitaeFile" name="curriculumVitaeFile"
                                                value=""/>
-                                        
+
                                     </td>
                                 </tr>
                                 <tr>
@@ -438,7 +439,7 @@
                                     <td>
                                         <input type="file" id="matricCertificateFile" name="matricCertificateFile"
                                                value=""/>
-                                        
+
                                     </td>
                                 </tr>
                                 <tr>
@@ -451,7 +452,7 @@
                                     <td>
                                         <input type="file" id="copyOfIDorPassportFile" name="copyOfIDorPassportFile"
                                                value=""/>
-                                        
+
                                     </td>
                                 </tr>
                                 <tr>
@@ -465,7 +466,7 @@
                                     <td>
                                         <input type="file" name="highestObtainedQualificationFile"
                                                value=""/>
-                                        
+
                                     </td>
                                 </tr>
                                  <tr>
@@ -479,12 +480,12 @@
                                     <td>
                                         <input type="file" name="academicTranscriptsFile"
                                                value=""/>
-                                        
+
                                     </td>
                                 </tr>
                             </table>
 
-                           
+
                         </div>
 
                         <br/>
@@ -502,7 +503,7 @@
                                         : form.getBecomeTutorRequest().getMotivationalText() %></textarea>
 
                         </div>
-                         
+
                         <hr/>
                         <h3 class="text-primary">Almost Finished</h3>
                         <p class="text-muted">
@@ -510,7 +511,7 @@
                             challenge and accept our Terms of Service.
                         </p>
                         <hr/>
-                        
+
                         <p>
                             <strong>Complete this challenge - 
                                 this verifies that you are really human.
@@ -545,15 +546,15 @@
                         <input type="submit" id="submit"
                                name="becomeTutorSubmit" class="btn btn-primary"
                                value="Become a Tutor"/>
-                        
+
                         <br/>
                         <br/>
-                        
+
                     </div>
                     <!-- third tab content ends -->
-                    
+
                 </div>
-                  
+
                 <br/>
                 <br/>
             </form>

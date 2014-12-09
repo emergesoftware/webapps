@@ -19,10 +19,11 @@
 
     <mvc:resources mapping="/assets/**" location="/assets/*" />
     
-    <context:component-scan base-package="za.co.emergelets.xplain2me.webapp.controller"/>
+    <context:component-scan base-package="za.co.emergelets.xplain2me.webapp.controller.helper"/>
     <context:component-scan base-package="za.co.emergelets.xplain2me.webapp.component"/>
     <context:component-scan base-package="za.co.emergelets.xplain2me.webapp.interceptor"/>
-    <context:component-scan base-package="za.co.emergelets.xplain2me.webapp.controller.helper"/>
+    <context:component-scan base-package="za.co.emergelets.xplain2me.webapp.controller"/>
+    
     
     <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
 

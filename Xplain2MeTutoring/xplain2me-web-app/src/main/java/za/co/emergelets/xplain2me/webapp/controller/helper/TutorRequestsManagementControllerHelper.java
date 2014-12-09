@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 import za.co.emergelets.xplain2me.dao.AuditDAO;
 import za.co.emergelets.xplain2me.dao.AuditDAOImpl;
 import za.co.emergelets.xplain2me.dao.EventTypes;
@@ -13,11 +14,14 @@ import za.co.emergelets.xplain2me.dao.TutorRequestDAO;
 import za.co.emergelets.xplain2me.dao.TutorRequestDAOImpl;
 import za.co.emergelets.xplain2me.entity.Audit;
 import za.co.emergelets.xplain2me.entity.TutorRequest;
+import za.co.emergelets.xplain2me.webapp.component.AlertBlock;
 import za.co.emergelets.xplain2me.webapp.component.TutorRequestsManagementForm;
 import za.co.emergelets.xplain2me.webapp.component.UserContext;
+import za.co.emergelets.xplain2me.webapp.controller.GenericController;
 import za.co.emergelets.xplain2me.webapp.enumerations.TutorRequestsType;
 
-public class TutorRequestsManagementControllerHelper {
+@Component
+public class TutorRequestsManagementControllerHelper extends GenericController {
    
     // the logger 
     private static final Logger LOG = 
@@ -29,6 +33,94 @@ public class TutorRequestsManagementControllerHelper {
     
     public TutorRequestsManagementControllerHelper() {
         initialiseDataAccessObjects();
+    }
+    
+    /**
+     * Resolves any ALERT parameters
+     * @param request 
+     */
+    public void resolveAnyAlertParameters(HttpServletRequest request) {
+        
+        AlertBlock alertBlock = null;
+        String alert = getParameterValue(request, "alert");
+        
+        if (alert != null && alert.isEmpty() == false) {
+            
+            // create an alert block
+            alertBlock = new AlertBlock();
+            
+            // if the request id was invalid
+            if (alert.equals("invalid-tutor-request")) {
+                
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_WARNING);
+                alertBlock.getAlertBlockMessages().add("Invalid ID for a tutor request, "
+                        + "please try again.");
+                
+            }
+            
+            // if the request was marked as read successfully
+            if (alert.equals("request-marked-as-read")) {
+                
+                String referenceNumber = getParameterValue(request, "reference-number");
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
+                
+                if (referenceNumber == null)
+                    alertBlock.getAlertBlockMessages().add("Tutor Request has been "
+                            + "marked as read successfully.");
+                else
+                    alertBlock.getAlertBlockMessages().add("Tutor Request (" + referenceNumber
+                            + ") has been marked as read successfully.");
+            }
+            
+            // if the request could not be marked as read
+            if (alert.equals("request-not-marked-as-read")) {
+                
+                String referenceNumber = getParameterValue(request, "reference-number");
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_WARNING);
+                
+                if (referenceNumber == null)
+                     alertBlock.getAlertBlockMessages().add("Tutor request could not be "
+                             + "marked as read.");
+                else
+                    alertBlock.getAlertBlockMessages().add("Tutor request (" + referenceNumber
+                            + ") could not be marked as read.");
+                
+            }
+            
+            // if the tutor request was deleted successfully
+            if (alert.equals("tutor-request-deleted")) {
+                
+                String referenceNumber = getParameterValue(request, "reference-number");
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
+                
+                if (referenceNumber == null)
+                    alertBlock.getAlertBlockMessages().add("Tutor Request has been deleted "
+                            + "successfully.");
+                else
+                    alertBlock.getAlertBlockMessages().add("Tutor Request (" + referenceNumber
+                            + ") has been deleted successfully.");
+            }
+            
+            // if the request could not be deleted
+            if (alert.equals("request-not-deleted")) {
+                
+                String referenceNumber = getParameterValue(request, "reference-number");
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_WARNING);
+                
+                if (referenceNumber == null)
+                    alertBlock.getAlertBlockMessages().add("Tutor request could not be deleted.");
+                else
+                    alertBlock.getAlertBlockMessages().add("Tutor request (" 
+                            + referenceNumber
+                            + ") could not be deleted.");
+                
+            }
+            
+            // save the alert block to the
+            // request sope
+            saveToRequestScope(request, alertBlock);
+            
+        }
     }
     
     /**

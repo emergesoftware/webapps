@@ -46,6 +46,38 @@
                 <div class="row">
                     
                     <div class="col-md-12">
+                        
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Actions:
+                                </h3>
+                            </div>
+                            
+                            <div class="panel-body">
+
+                                <a  title="Mark This Request As Read" 
+                                    class="btn btn-primary btn-sm"
+                                    href="<%=request.getContextPath() %>/portal/tutor-requests/mark-as-read?requestId=<%= tutorRequest.getId() %>">
+                                    <span class="glyphicon glyphicon-bookmark"></span>
+                                    <span>&nbsp;Mark As Read</span>
+                                </a>
+
+                                <a title="Remove this request" 
+                                   class="btn btn-primary btn-sm"
+                                    href="<%=request.getContextPath() %>/portal/tutor-requests/remove?requestId=<%= tutorRequest.getId() %>">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                    <span>&nbsp;Remove</span>
+                                </a>
+                            
+                        </div>
+                            
+                        </div>
+                        
+                        
+                    </div>
+                    
+                    <div class="col-md-12">
                         <!-- START: search tutor requests -->
                         <div class="panel panel-primary">
 
@@ -82,20 +114,56 @@
                                     </tr>
                                     <tr>
                                         <td><strong>Email Address</strong></td>
-                                        <td><%= tutorRequest.getEmailAddress() %></td>
+                                        <td>
+                                            <span><%= tutorRequest.getEmailAddress() %></span>
+                                            <span>&nbsp;&nbsp;</span>
+                                            <span>
+                                                <a title="Send requestee an email" href="mailto:<%= tutorRequest.getEmailAddress() %>"
+                                                   class="btn btn-primary btn-sm" target="_blank">
+                                                    <span class="glyphicon glyphicon-envelope"></span>
+                                                    <span>&nbsp;Email</span>
+                                                </a>
+                                            </span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><strong>Contact Number</strong></td>
-                                        <td><%= tutorRequest.getContactNumber() %></td>
+                                        <td>
+                                            <span><%= tutorRequest.getContactNumber() %></span>
+                                            <span>&nbsp;&nbsp;</span>
+                                            <span>
+                                                <a title="Call the requestee" href="tel:<%= ("27" + tutorRequest.getContactNumber().substring(1)) %>"
+                                                   class="btn btn-primary btn-sm" target="_blank">
+                                                    <span class="glyphicon glyphicon-earphone"></span>
+                                                    <span>&nbsp;Call</span>
+                                                </a>
+                                            </span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><strong>Physical Address</strong></td>
-                                        <td><%= 
+                                        <td>
+                                            <%= 
                                                 tutorRequest.getPhysicalAddress() + "<br/>" +
                                                 tutorRequest.getSuburb() + "<br/>" +
                                                 tutorRequest.getCity() + "<br/>" + 
                                                 tutorRequest.getAreaCode()
-                                        %></td>
+                                            %>
+                                            <br/><br/>
+                                            
+                                            <%
+                                                String googleMapsUrl = "http://maps.google.com/?q=" + 
+                                                        tutorRequest.getPhysicalAddress() + ", " + 
+                                                        tutorRequest.getSuburb() + ", " + 
+                                                        tutorRequest.getCity();
+                                            %>
+                                            
+                                            <a title="Find on map" href="<%= googleMapsUrl %>"
+                                                class="btn btn-primary btn-sm" target="_blank">
+                                                 <span class="glyphicon glyphicon-map-marker"></span>
+                                                 <span>&nbsp;Locate</span>
+                                             </a>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><strong>Academic Level</strong></td>

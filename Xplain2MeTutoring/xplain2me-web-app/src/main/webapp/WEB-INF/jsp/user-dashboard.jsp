@@ -1,13 +1,15 @@
-<%@page import="za.co.emergelets.xplain2me.webapp.component.ManagerDashboardForm"%>
+
+<%@page import="za.co.emergelets.xplain2me.webapp.component.DashboardForm"%>
 <%@page import="za.co.emergelets.util.DateTimeUtils"%>
 <%@page import="za.co.emergelets.xplain2me.entity.Audit"%>
 <%
     // get the form
-    ManagerDashboardForm form = (ManagerDashboardForm)session.getAttribute(
-            ManagerDashboardForm.class.getName());
+    DashboardForm form = (DashboardForm)session.getAttribute(
+            DashboardForm.class.getName());
     
     if (form == null) {
-        response.sendRedirect(request.getContextPath() + "/logout");
+        response.sendRedirect(request.getContextPath() 
+                + RequestMappings.DASHBOARD_OVERVIEW);
         return;
     }
 %>
@@ -74,7 +76,7 @@
                                             <th>Event Code</th>
                                             <th>Description</th>
                                             <th>Reference #</th>
-                                            <th>Source</th>
+                                            <th>Source IP Address</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -89,7 +91,7 @@
                                                     <td><%= audit.getEvent().getType() %></td>
                                                     <td><%= audit.getEvent().getShortDescription() %></td>
                                                     <td><%= audit.getReference() %></td>
-                                                    <td><%= audit.getUserAgent() %></td>
+                                                    <td><%= audit.getSourceIpAddress() %></td>
                                                 </tr>
 
                                         <%

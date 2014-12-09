@@ -22,3 +22,4 @@ PHASE 2: Alpha
 ---------------------------
 
 7. create_new_tutor_request_events_issue_11_and_12.sql
+8. create_user_profile_url_permissions_table.sql

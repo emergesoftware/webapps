@@ -1,21 +1,24 @@
 package za.co.emergelets.xplain2me.webapp.controller.helper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 import za.co.emergelets.xplain2me.dao.AuditDAO;
 import za.co.emergelets.xplain2me.dao.AuditDAOImpl;
 import za.co.emergelets.xplain2me.entity.Audit;
-import za.co.emergelets.xplain2me.webapp.component.ManagerDashboardForm;
+import za.co.emergelets.xplain2me.webapp.component.DashboardForm;
 
-public class ManagerDashboardControllerHelper {
+@Component
+public class DashboardControllerHelper implements Serializable {
     
     private final AuditDAO auditDAO;
     
-    public ManagerDashboardControllerHelper() {
+    public DashboardControllerHelper() {
         this.auditDAO = new AuditDAOImpl();
     }
     
-    public void populateRecentAuditTrailByUser(ManagerDashboardForm form, 
+    public void populateRecentAuditTrailByUser(DashboardForm form, 
             String username, int limit) {
         if (username == null || limit < 1) {
             return;

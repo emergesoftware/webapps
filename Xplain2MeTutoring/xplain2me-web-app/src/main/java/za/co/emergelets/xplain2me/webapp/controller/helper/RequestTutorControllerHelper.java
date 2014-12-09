@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 import za.co.emergelets.util.mail.EmailAddressValidator;
 import za.co.emergelets.util.ReCaptchaUtil;
 import za.co.emergelets.util.VerificationCodeGenerator;
@@ -22,6 +23,7 @@ import za.co.emergelets.xplain2me.entity.TutorRequestSubject;
 import za.co.emergelets.xplain2me.webapp.component.RequestTutorForm;
 import za.co.emergelets.xplain2me.webapp.controller.GenericController;
 
+@Component
 public class RequestTutorControllerHelper extends GenericController {
     
     private static final Logger LOG = 

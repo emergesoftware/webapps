@@ -1,16 +1,26 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.Profile;
 
-public class ProfileDAOImpl extends HibernateConnectionProvider implements ProfileDAO {
+public class ProfileDAOImpl implements ProfileDAO {
     
     private static final Logger LOG = 
             Logger.getLogger(ProfileDAOImpl.class.getName(), null);
 
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
     
     public ProfileDAOImpl() {
         super();
@@ -27,7 +37,8 @@ public class ProfileDAOImpl extends HibernateConnectionProvider implements Profi
         
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession();
             
             criteria = session.createCriteria(Profile.class, "profile")
                 .createAlias("profile.profileType", "profileType")
@@ -57,7 +68,7 @@ public class ProfileDAOImpl extends HibernateConnectionProvider implements Profi
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
         
     }

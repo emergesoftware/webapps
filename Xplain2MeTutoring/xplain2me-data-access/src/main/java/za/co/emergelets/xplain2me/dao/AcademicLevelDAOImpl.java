@@ -1,22 +1,30 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.AcademicLevel;
 
-public class AcademicLevelDAOImpl extends HibernateConnectionProvider
-                    implements AcademicLevelDAO {
+public class AcademicLevelDAOImpl implements AcademicLevelDAO {
     
     private static final Logger LOG = 
             Logger.getLogger(AcademicLevelDAOImpl.class.getName(), null);
     
-          
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
+    
     public AcademicLevelDAOImpl() {
-        super();
     }
     
     @Override
@@ -29,7 +37,7 @@ public class AcademicLevelDAOImpl extends HibernateConnectionProvider
         
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             criteria = session.createCriteria(AcademicLevel.class)
                 .add(Restrictions.eq("id", id));
@@ -49,7 +57,7 @@ public class AcademicLevelDAOImpl extends HibernateConnectionProvider
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
         
     }
@@ -58,7 +66,7 @@ public class AcademicLevelDAOImpl extends HibernateConnectionProvider
     public List<AcademicLevel> getAllAcademicLevels() throws DataAccessException {
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             criteria = session.createCriteria(AcademicLevel.class)
                 .addOrder(Order.asc("id"));
@@ -73,7 +81,7 @@ public class AcademicLevelDAOImpl extends HibernateConnectionProvider
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
     

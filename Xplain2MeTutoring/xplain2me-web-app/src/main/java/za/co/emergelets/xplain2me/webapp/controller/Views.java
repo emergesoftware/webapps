@@ -3,7 +3,7 @@ package za.co.emergelets.xplain2me.webapp.controller;
 public interface Views {
     
     // APP MANAGER SPECIFIC
-    public static final String APP_MANAGER_DASHBOARD = "app-manager-dashboard";
+    public static final String USER_DASHBOARD = "user-dashboard";
     
     // TUTOR JOB APPLICATION FOR GUESTS
     public static final String BECOME_A_TUTOR_SUBMITTED = "become-a-tutor-submitted";
@@ -28,5 +28,9 @@ public interface Views {
     // MANAGE TUTOR REQUESTS MADE BY GUESTS
     public static final String MANAGE_TUTOR_REQUESTS = "manage-tutor-requests";
     public static final String VIEW_TUTOR_REQUEST_DETAILS = "view-tutor-request-details";
+    public static final String SEARCH_TUTOR_REQUESTS = "search-tutor-requests";
+    
+    // ERROR VIEWS
+    public static final String GENERIC_ERROR_PAGE = "generic-error-page";
     
 }

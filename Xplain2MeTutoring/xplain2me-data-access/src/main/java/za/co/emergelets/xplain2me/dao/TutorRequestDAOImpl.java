@@ -1,20 +1,30 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.data.transformation.DataTransformerTool;
 import za.co.emergelets.xplain2me.entity.TutorRequest;
 import za.co.emergelets.xplain2me.entity.TutorRequestSubject;
 
-public class TutorRequestDAOImpl extends HibernateConnectionProvider
-                                implements TutorRequestDAO {
+public class TutorRequestDAOImpl implements TutorRequestDAO {
 
     private static final Logger LOG = Logger.getLogger(
             TutorRequestDAOImpl.class.getName(), null);
+    
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
    
     public TutorRequestDAOImpl() {
         super();
@@ -31,7 +41,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
             
             LOG.log(Level.INFO, "... get tutor request by id = {0}", id); 
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             criteria = session.createCriteria(TutorRequest.class, "tutorRequest")
                        .add(Restrictions.eq("tutorRequest.id", id));
@@ -50,7 +60,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
         
     }
@@ -65,7 +75,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
             
             LOG.log(Level.INFO, "... get tutor request by email address = {0}", emailAddress); 
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             criteria = session.createCriteria(TutorRequest.class)
                 .add(Restrictions.eq("emailAddress", emailAddress));
@@ -83,7 +93,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
         }
         
         finally {
-           closeConnection();
+           HibernateConnectionProvider.closeConnection(session);
         }
     }
 
@@ -99,7 +109,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
             LOG.log(Level.INFO, "... get tutor request by contact number = {0}", 
                     contactNumber); 
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             criteria = session.createCriteria(TutorRequest.class)
                 .add(Restrictions.eq("contactNumber", contactNumber));
@@ -117,7 +127,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
 
@@ -134,7 +144,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
             
             LOG.info("... save new tutor request "); 
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             // begin the transaction
             transaction = session.beginTransaction();
@@ -165,14 +175,14 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
         
         catch (HibernateException e) {
             
-            rollback(transaction);
+            HibernateConnectionProvider.rollback(transaction);
             
             LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
 
@@ -182,7 +192,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
         
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             criteria = session.createCriteria(TutorRequest.class)
                 .add(Restrictions.eq("received", false))
@@ -197,7 +207,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
         
     }
@@ -214,7 +224,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
             
             LOG.info(" ... updating tutor request entity ...");
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.merge(request);
             transaction.commit();
@@ -224,14 +234,14 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
         
         catch (HibernateException e) {
             
-            rollback(transaction);
+            HibernateConnectionProvider.rollback(transaction);
             
             LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
         
     }
@@ -248,7 +258,7 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
             
             LOG.log(Level.INFO, " ... deleting tutor request: {0} ...", request.getId()); 
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             
             List<TutorRequestSubject> tutorRequestSubjects = 
@@ -272,14 +282,14 @@ public class TutorRequestDAOImpl extends HibernateConnectionProvider
         
         catch (HibernateException e) {
             
-            rollback(transaction);
+            HibernateConnectionProvider.rollback(transaction);
             
             LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
         
     }

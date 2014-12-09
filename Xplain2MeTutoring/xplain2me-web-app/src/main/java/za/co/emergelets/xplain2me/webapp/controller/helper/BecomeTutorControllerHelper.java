@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -23,6 +24,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
+import org.springframework.stereotype.Component;
 import za.co.emergelets.util.BooleanToText;
 import za.co.emergelets.util.CellphoneNumberValidator;
 import za.co.emergelets.util.CitizenshipType;
@@ -46,7 +48,8 @@ import za.co.emergelets.xplain2me.entity.Gender;
 import za.co.emergelets.xplain2me.webapp.component.BecomeTutorForm;
 import za.co.emergelets.xplain2me.webapp.controller.GenericController;
 
-public class BecomeTutorControllerHelper extends GenericController {
+@Component
+public class BecomeTutorControllerHelper extends GenericController implements Serializable {
     
     private static final Logger LOG = 
             Logger.getLogger(BecomeTutorControllerHelper.class.getName(), null);

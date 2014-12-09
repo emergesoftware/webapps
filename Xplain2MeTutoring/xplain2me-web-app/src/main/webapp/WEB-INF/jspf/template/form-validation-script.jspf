@@ -1,0 +1,14 @@
+<%-- 
+    DOCUMENTATION FOR THE JQUERY VALIDATION SCRIPT CAN BE FOUND AT:
+    http://formvalidator.net/
+
+--%>
+<%@ page pageEncoding="UTF-8" %>
+
+<script type="text/javascript" 
+    src="http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
+<script> 
+    $(document).ready(function() {
+        $.validate(); 
+    });
+</script>

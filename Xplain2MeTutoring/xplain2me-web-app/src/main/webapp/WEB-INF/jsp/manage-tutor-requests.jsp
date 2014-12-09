@@ -15,8 +15,7 @@
             .getAttribute(TutorRequestsManagementForm.class.getName());
     
     if (form == null) {
-        response.sendRedirect("/logout");
-        return;
+        form = new TutorRequestsManagementForm();
     }
 %>
 
@@ -32,8 +31,6 @@
     </head>
     <body>
         
-      
-        
         <div id="wrapper">
             
             <%@include file="../jspf/template/default-manager-navigation.jspf" %>
@@ -45,8 +42,6 @@
                 <hr/>
                 
                 <%@include file="../jspf/template/default-alert-block.jspf" %>
-                
-                <br/>
                 
                 <div class="row">
                     <div class="col-md-12">
@@ -153,27 +148,31 @@
 
                                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                                                             <li>
-                                                                <a  ark This Request As Read" style=coration: none"
-                                                                    href="<%=request.getContextPath() %>/portal/manager/tutor-requests/mark-as-read?requestId=<%= item.getId() %>">
-                                                                    Mark As Read
+                                                                <a  title="Mark This Request As Read"
+                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/mark-as-read?requestId=<%= item.getId() %>">
+                                                                    <span class="glyphicon glyphicon-bookmark"></span>
+                                                                    &nbsp;Mark As Read
                                                                 </a>
                                                             </li>
                                                              <li>
-                                                                <a  title="Show more details" style="text-decoration: none"
-                                                                    href="<%=request.getContextPath() %>/portal/manager/tutor-requests/details?requestId=<%= item.getId() %>">
-                                                                    Show Details
+                                                                <a  title="Show more details"
+                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/details?requestId=<%= item.getId() %>">
+                                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                                    &nbsp;Show Details
                                                                 </a>
                                                             </li>
                                                             <li>
                                                                 <a title="Send requestee an email" href="mailto:<%= item.getEmailAddress() %>"
-                                                                   target="_blank" style="text-decoration: none">
-                                                                    Compose Email
+                                                                   target="_blank">
+                                                                    <span class="glyphicon glyphicon-envelope"></span>
+                                                                    &nbsp;Compose Email
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a title="Remove this request" style="text-decoration: none"
-                                                                    href="<%=request.getContextPath() %>/portal/manager/tutor-requests/remove?requestId=<%= item.getId() %>">
-                                                                    Remove
+                                                                <a title="Remove this request"
+                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/remove?requestId=<%= item.getId() %>">
+                                                                    <span class="glyphicon glyphicon-bookmark"></span>
+                                                                    &nbsp;Remove
                                                                 </a>
                                                             </li>
                                                         </ul>
@@ -202,49 +201,7 @@
                         
                 <div class="row">
                     
-                    <div class="col-md-6">
-                        <!-- START: search tutor requests -->
-                        <div class="panel panel-primary">
-
-                            <div class="panel-heading">
-                               <h3 class="panel-title">Search Tutor Requests</h3>
-                            </div>
-
-                            <div class="panel-body">
-                                
-                                <br/>
-                                <form role="form" method="get" 
-                                      action="<%=request.getContextPath() %>/portal/manager/tutor-requests/search">
-                                    <div class="form-group">
-                                        
-                                        <label>Search keyword:</label>
-                                        <input type="text" maxlength="24" name="searchKeyword"
-                                               id="searchKeyword" placeholder="Enter the keyword"
-                                               class="form-control"/>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Search Type:</label>
-                                        <select id="searchType" name="searchType" class="form-control">
-                                            <optgroup label="Pick search type by">
-                                                <option value="1">Reference Number</option>
-                                                <option value="2">Request ID</option>
-                                                <option value="3">Email Address</option>
-                                                <option value="4">Contact Number</option>
-                                            </optgroup>
-                                        </select>
-                                    </div>
-
-                                    <input type="submit" value="Search" 
-                                           class="btn btn-primary form-control" />
-                                </form>
-
-                            </div>
-                        </div>
-                        <!-- END: search using keyword -->
-                    </div>
-                    
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <!-- START: previous tutor requests audits -->
                         <div class="panel panel-primary">
 

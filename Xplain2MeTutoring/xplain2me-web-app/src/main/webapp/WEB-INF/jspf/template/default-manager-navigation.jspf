@@ -1,4 +1,11 @@
 <%-- Something to begin the page --%>
+<%@page import="za.co.emergelets.xplain2me.webapp.controller.RequestMappings"%>
+<%@page import="java.util.TreeSet"%>
+<%@page import="java.util.Set"%>
+<%@page import="za.co.emergelets.util.BucketMap"%>
+<%@page import="za.co.emergelets.xplain2me.entity.MenuItem"%>
+<%@page import="za.co.emergelets.xplain2me.entity.ProfileTypeUrlPermissions"%>
+<%@page import="java.util.List"%>
 <%@page import="za.co.emergelets.xplain2me.webapp.component.UserContext"%>
 
 <%
@@ -13,6 +20,10 @@
     // build the person's name
     String personFullName = (context.getPerson().getFirstNames().split(" ")[0] + " " + 
             context.getPerson().getLastName());
+    
+    // the profile type description
+    String profileTypeDescription = context.getProfile().getProfileType()
+            .getDescription().toUpperCase();
     
 %>
 
@@ -30,12 +41,12 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" 
-               href="<%= request.getContextPath() %>/portal/manager/dashboard/browse">
-                <span style="display: block">
+               href="<%= request.getContextPath() %>/portal/dashboard/overview">
+                <span style="display: block; font-size: 90%">
                     <strong>XPLAIN2ME TUTORING</strong>
                 </span>
-                <span style="display: block; font-size: 85%">
-                    Manager Panel
+                <span style="display: block; font-size: 70%">
+                    <%= profileTypeDescription.replace("PROFILE", "") %> PANEL 
                 </span>
             </a>
         </div>
@@ -44,50 +55,66 @@
         
         <ul id="active" class="nav navbar-nav side-nav">
             
-            <li>
-                <a href="<%= request.getContextPath() %>/portal/manager/dashboard/browse">
-                    <i class="fa fa-bullseye"></i>
-                    Dashboard
-                </a>
-            </li>
-            
-            <li>
-                <a href="<%= request.getContextPath() %>/portal/manager/tutor-requests/view">
-                    <i class="fa fa-tasks"></i> 
-                    Tutor Requests
-                </a>
-            </li>
-            
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right navbar-user">
-            
-            <li class="dropdown user-dropdown">
+            <%
+                List<ProfileTypeUrlPermissions> permittedUrls = 
+                        context.getProfileTypeUrlPermissions();
+                
+                BucketMap<String, MenuItem> navBar = new BucketMap<String, MenuItem>();
+                String category = null;
+                MenuItem menuItem = null;
+                
+                for (ProfileTypeUrlPermissions permission : permittedUrls) {
+                    
+                    category = permission.getMenuItem().getCategory().getDescription();
+                    menuItem = permission.getMenuItem();
+                    
+                    if (menuItem.isLoadOntoPanel()) {
+                        navBar.put(category, menuItem);
+                    }
+                }
+                
+                TreeSet<String> categories = 
+                        new TreeSet<String>(navBar.keySet());
+                
+                for (String key : categories) {
+                    
+                    List<MenuItem> menuItems = navBar.get(key);
+                    
+            %>
+                
+            <li class="dropdown">
+                
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-user"></i> 
-                    <span><%= personFullName %></span>
+                    <span><%= key %></span> 
                     <b class="caret"></b>
                 </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-user"></i> 
-                            Profile
-                        </a>
-                    </li>
-                    <li class="divider"></li>
                     
+                <ul class="dropdown-menu">
+                <%
+                    for (MenuItem item : menuItems) {
+                        String href = request.getContextPath() + item.getRelativeUrl();
+                        String title = item.getTitle();
+                %>
+                
                     <li>
-                        <a href="<%= request.getContextPath() %>/logout">
-                            <i class="fa fa-power-off"></i> 
-                            Log Out
-                        </a>
+                        <a href="<%= href %>"
+                           <%= (item.isOpensOnNewWindow()) ? "target='_blank'" : "" %>
+                           title="<%= title %>">
+                            <%= item.getDescription() %>
+                        </a> 
                     </li>
-
+                    
+                 <%
+                    }
+                 %>
                 </ul>
             </li>
             
+            <%
+                }
+            %>
         </ul>
+        
     </div>
 </nav>
 

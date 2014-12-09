@@ -1,15 +1,26 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.UserSalt;
 
-public class UserSaltDAOImpl extends HibernateConnectionProvider implements UserSaltDAO {
+public class UserSaltDAOImpl implements UserSaltDAO {
 
     private static final Logger LOG = 
             Logger.getLogger(UserSaltDAOImpl.class.getName(), null);
+    
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
     
     public UserSaltDAOImpl() {
         super();
@@ -25,7 +36,7 @@ public class UserSaltDAOImpl extends HibernateConnectionProvider implements User
         
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             criteria = session.createCriteria(UserSalt.class)
                 .createAlias("user", "user")
@@ -46,7 +57,7 @@ public class UserSaltDAOImpl extends HibernateConnectionProvider implements User
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
     

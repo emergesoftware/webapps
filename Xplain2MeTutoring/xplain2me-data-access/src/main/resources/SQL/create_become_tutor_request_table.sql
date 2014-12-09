@@ -16,7 +16,7 @@ create table if not exists become_tutor_request (
     citizenship_id int(11) not null,
     gender_id varchar(1) not null,
     agreed_to_terms_of_service boolean not null default 0,
-    become_tutor_request_submitted timestamp default current_timestamp not null,
+    become_tutor_request_submitted timestamp not null,
     
     primary key (become_tutor_request_id),
     foreign key (citizenship_id) references citizenship(citizenship_id),

@@ -10,8 +10,7 @@
             .getAttribute(LoginForm.class.getName());
     
     if (form == null) {
-        response.sendRedirect("/login");
-        return;
+        form = new LoginForm();
     }
     
 %>
@@ -30,6 +29,9 @@
 
         <!-- Bootstrap: Latest compiled and minified CSS -->
         <link rel="stylesheet" href="http://bootswatch.com/cosmo/bootstrap.min.css" />
+
+        <!-- Bootstrap Glyphicons -->
+        <link type="text/css" rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" />
 
         <!-- Latest version of jQuery -->
         <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -66,7 +68,6 @@
             </p>
             
             <form role="form" id="loginForm" name="loginForm" method="post"
-                action="<%= request.getContextPath() + "/login" %>"
                 onsubmit="return validateLoginForm(this)"
                 style="width:60%">
                 
@@ -139,6 +140,11 @@
                     name="loginButton" class="btn btn-primary"
                     value="Login"/>
                
+                <a href="<%= request.getContextPath() %>/index"
+                   class="btn btn-default">
+                    Go Back
+                </a>
+                
             </form>
                             
             <br/>

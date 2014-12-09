@@ -1,10 +1,14 @@
 package za.co.emergelets.xplain2me.dao;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -13,18 +17,23 @@ import za.co.emergelets.xplain2me.entity.AcademicLevelsTutoredBefore;
 import za.co.emergelets.xplain2me.entity.BecomeTutorRequest;
 import za.co.emergelets.xplain2me.entity.BecomeTutorSupportingDocument;
 
-public class BecomeTutorRequestDAOImpl extends HibernateConnectionProvider
-                                        implements BecomeTutorRequestDAO {
+public class BecomeTutorRequestDAOImpl implements BecomeTutorRequestDAO {
 
     private static final Logger LOG = 
             Logger.getLogger(BecomeTutorRequestDAOImpl.class.getName(), null);
     
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
+    
     public BecomeTutorRequestDAOImpl() {
-        super();
     }
     
     @Override
-    public boolean isTutorApplicationUnique(BecomeTutorRequest request) throws DataAccessException {
+    public boolean isTutorApplicationUnique(BecomeTutorRequest request) 
+            throws DataAccessException {
         
         if (request == null || 
                 (request.getContactNumber() == null || request.getContactNumber().isEmpty()) || 
@@ -37,7 +46,8 @@ public class BecomeTutorRequestDAOImpl extends HibernateConnectionProvider
         
         try {
 
-            session = getSessionFactory().openSession(); 
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
             
             List<Criterion> criterion = new ArrayList<>();
             criterion.add(Restrictions.eq("emailAddress", request.getEmailAddress()));
@@ -58,7 +68,7 @@ public class BecomeTutorRequestDAOImpl extends HibernateConnectionProvider
         }
         
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
         
     }
@@ -79,7 +89,8 @@ public class BecomeTutorRequestDAOImpl extends HibernateConnectionProvider
             
             DataTransformerTool.transformStringValuesToUpperCase(request);
             
-            session = getSessionFactory().openSession(); 
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
             
             Transaction tx = session.beginTransaction();
             
@@ -116,12 +127,13 @@ public class BecomeTutorRequestDAOImpl extends HibernateConnectionProvider
         }
         
         catch (HibernateException e) {
-            rollback(transaction);
+            HibernateConnectionProvider.rollback(transaction);
+            
             LOG.log(Level.SEVERE, "error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
     

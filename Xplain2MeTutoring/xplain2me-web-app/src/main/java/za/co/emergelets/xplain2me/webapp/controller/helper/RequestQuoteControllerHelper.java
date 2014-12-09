@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 import za.co.emergelets.util.mail.EmailAddressValidator;
 import za.co.emergelets.util.ReCaptchaUtil;
 import za.co.emergelets.util.mail.EmailSender;
@@ -19,7 +20,7 @@ import za.co.emergelets.xplain2me.entity.Subject;
 import za.co.emergelets.xplain2me.webapp.component.RequestQuoteForm;
 import za.co.emergelets.xplain2me.webapp.controller.GenericController;
 
-
+@Component
 public class RequestQuoteControllerHelper extends GenericController {
     
     private static final Logger LOG = 

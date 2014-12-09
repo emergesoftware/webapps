@@ -1,0 +1,1 @@
+curl -T "/home/tsepo/xplain2me/tmp/war-archives/xplain2me-web-app-1.0-SNAPSHOT.war" "http://tomcat:tomcat@localhost/manager/text/deploy?path=xplain2me&update=true"

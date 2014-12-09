@@ -1,10 +1,7 @@
 package za.co.emergelets.xplain2me.dao;
 
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.Query;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,12 +13,7 @@ import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.service.spi.Stoppable;
 
-/**
- * Hibernate connection provider
- * class
- * 
- */
-public abstract class HibernateConnectionProvider {
+public final class HibernateConnectionProvider {
     
     // The Logger
     private static final Logger LOG = 
@@ -33,22 +25,6 @@ public abstract class HibernateConnectionProvider {
     static {
         createSessionFactory();
     }
-  
-    protected Session session;
-    protected Criteria criteria;
-    protected Transaction transaction;
-    protected Iterator iterator;
-    protected Query query;
-    
-    /**
-     * Constructor
-     */
-    protected HibernateConnectionProvider() {
-        this.session = null;
-        this.criteria = null;
-        this.iterator = null;
-        this.query = null;
-    }
     
     /**
      * Gets the current instance of the
@@ -56,7 +32,7 @@ public abstract class HibernateConnectionProvider {
      * 
      * @return 
      */
-    protected final SessionFactory getSessionFactory() {
+    public static SessionFactory getSessionFactory() {
         try {
             
             if (sessionFactory == null)
@@ -79,7 +55,6 @@ public abstract class HibernateConnectionProvider {
      */
     private static void createSessionFactory() {
         
-        
         Configuration configuration = new Configuration().configure();
         StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties()).build();
@@ -91,9 +66,10 @@ public abstract class HibernateConnectionProvider {
      * Closes the current connection or
      * actively open session.
      * 
+     * @param session
      * @return 
      */
-    protected final boolean closeConnection() {
+    public static boolean closeConnection(Session session) {
         
         if (session != null && session.isOpen()) {
             LOG.info(" ... closing the current session [SUCCESS] ...");
@@ -114,7 +90,7 @@ public abstract class HibernateConnectionProvider {
      * 
      * @return 
      */
-    protected final boolean destroyConnectionPools() {
+    public static boolean destroyConnectionPools() {
         LOG.info(" ... closing connection pool ...");
        
         try {
@@ -145,7 +121,7 @@ public abstract class HibernateConnectionProvider {
      * 
      * @param transaction 
      */
-    protected final void rollback(Transaction transaction) {
+    public static void rollback(Transaction transaction) {
         try {
             if (transaction != null)
                 transaction.rollback();

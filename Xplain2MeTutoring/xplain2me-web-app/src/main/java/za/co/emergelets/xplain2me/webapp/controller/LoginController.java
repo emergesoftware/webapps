@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,8 @@ import za.co.emergelets.xplain2me.dao.PersonDAO;
 import za.co.emergelets.xplain2me.dao.PersonDAOImpl;
 import za.co.emergelets.xplain2me.dao.ProfileDAO;
 import za.co.emergelets.xplain2me.dao.ProfileDAOImpl;
+import za.co.emergelets.xplain2me.dao.ProfileTypeUrlPermissionsDAO;
+import za.co.emergelets.xplain2me.dao.ProfileTypeUrlPermissionsDAOImpl;
 import za.co.emergelets.xplain2me.dao.SystemAuditManager;
 import za.co.emergelets.xplain2me.dao.UserSaltDAO;
 import za.co.emergelets.xplain2me.dao.UserSaltDAOImpl;
@@ -33,17 +36,19 @@ public class LoginController extends GenericController {
     private final UserSaltDAO userSaltDAO;
     private final ProfileDAO profileDAO;
     private final PersonDAO personDAO;
+    private final ProfileTypeUrlPermissionsDAO profileTypeUrlPermissionsDAO;
     
     // the controller helper class
-    private final LoginControllerHelper helper;
+    @Autowired
+    private LoginControllerHelper helper;
     
     public LoginController() {
         
         this.userSaltDAO = new UserSaltDAOImpl();
         this.profileDAO = new ProfileDAOImpl();
         this.personDAO = new PersonDAOImpl();
+        this.profileTypeUrlPermissionsDAO = new ProfileTypeUrlPermissionsDAOImpl();
         
-        this.helper = new LoginControllerHelper();
     }
     
     /**
@@ -62,7 +67,7 @@ public class LoginController extends GenericController {
                 && userContext.getProfile() != null) {
             
             removeFromSessionScope(request, LoginForm.class);
-            return helper.redirectToRelevantDashboardPage(userContext.getProfile());
+            return helper.redirectToRelevantDashboardPage();
             
         }
         
@@ -214,6 +219,13 @@ public class LoginController extends GenericController {
             // get the person details
             context.setPerson(personDAO.getPerson(profile.getUser().getUsername()));
             
+            // get the permitted urls
+            context.setProfileTypeUrlPermissions(profileTypeUrlPermissionsDAO
+                    .getUserProfileUrlPermissions(context.getProfile().getProfileType()));
+            
+            // build the user allowed urls
+            helper.buildUserAllowedUrlsList(context);
+            
             // save the context to the session
             saveToSessionScope(request, context);
             
@@ -222,7 +234,7 @@ public class LoginController extends GenericController {
                     null, request.getRemoteAddr(), request.getHeader("User-Agent"), 0, true);
             
             // redirect to the appropriate page
-            return helper.redirectToRelevantDashboardPage(profile);
+            return helper.redirectToRelevantDashboardPage();
                 
         }
         

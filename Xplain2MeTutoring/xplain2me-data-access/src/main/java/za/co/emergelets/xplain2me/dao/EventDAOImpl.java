@@ -1,19 +1,28 @@
 package za.co.emergelets.xplain2me.dao;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.Event;
 
-public class EventDAOImpl extends HibernateConnectionProvider implements EventDAO {
+public class EventDAOImpl implements EventDAO {
     
     private static final Logger LOG = 
             Logger.getLogger(EventDAOImpl.class.getName(), null);
     
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
     
     public EventDAOImpl() {
-        super();
     }
 
     @Override
@@ -27,7 +36,8 @@ public class EventDAOImpl extends HibernateConnectionProvider implements EventDA
         
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession();
             
             criteria = session.createCriteria(Event.class)
                     .add(Restrictions.eq("type", type));
@@ -45,7 +55,7 @@ public class EventDAOImpl extends HibernateConnectionProvider implements EventDA
             throw new DataAccessException(e);
         }
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
     

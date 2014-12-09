@@ -8,17 +8,18 @@
 <!-- Bootstrap: Latest compiled and minified CSS -->
 <link rel="stylesheet" href="http://bootswatch.com/cosmo/bootstrap.min.css" />
 
-<style type="text/css">
-    #page-wrapper {
-        margin-top: 60px;
-    }
-</style>
+<!-- Custom CSS -->
+<link type="text/css" rel="stylesheet" href="<%= request.getContextPath() %>/assets/stylesheets/default-style.css" />
 
 <!-- Latest version of jQuery -->
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 
+<!-- Bootstrap Glyphicons -->
+<link type="text/css" rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" />
+
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
 
 <!-- force reload on back press -->
 <script type="text/javascript">

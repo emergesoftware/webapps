@@ -3,6 +3,7 @@ package za.co.emergelets.xplain2me.webapp.controller;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,33 +31,30 @@ public class TutorRequestsManagementController extends GenericController {
     public static final int SEARCH_BY_EMAIL_ADDRESS = 3;
     public static final int SEARCH_BY_CONTACT_NUMBER = 4;
     
-    // the user context
-    private UserContext context;
-    // the controller form
-    private TutorRequestsManagementForm form;
-    // alert block
-    private AlertBlock alertBlock;
     // the helper class
-    private final TutorRequestsManagementControllerHelper helper;
+    @Autowired
+    private TutorRequestsManagementControllerHelper helper;
     
     /**
      * Constructor
      */
     public TutorRequestsManagementController() {
-        helper = new TutorRequestsManagementControllerHelper();
     }
     
     /**
-     * Displays the main tutor requests page
+     * DISPLAYS THE TUTOR REQUESTS THAT
+     * HAVE NOT BEEN READ OR ATTENDED YET
+     * 
      * @param request
      * @return 
      */
-    @RequestMapping(value = RequestMappings.TUTOR_REQUESTS_MANAGEMENT_VIEW, 
+    @RequestMapping(value = RequestMappings.TUTOR_REQUESTS_MANAGEMENT_UNREAD, 
             method = RequestMethod.GET)
-    public ModelAndView displayTutorRequestsManagementPage(HttpServletRequest request) {
+    public ModelAndView showUnreadTutorRequests(HttpServletRequest request) {
         
         // get the form from the session
-        form = (TutorRequestsManagementForm)getFromSessionScope(request,
+        TutorRequestsManagementForm form = (TutorRequestsManagementForm)
+                getFromSessionScope(request,
                 TutorRequestsManagementForm.class);
         
         // if form is null from session
@@ -64,94 +62,15 @@ public class TutorRequestsManagementController extends GenericController {
             form = new TutorRequestsManagementForm();
         }
         
-        // get the tutor management audit
-        // trail for this user
-        context = (UserContext)getFromSessionScope(request, UserContext.class);
-        helper.populateLatestAuditsByUser(context, form);
-        
         // check for the alert parameter
-        String alert = getParameterValue(request, "alert");
-        if (alert != null && alert.isEmpty() == false) {
-            
-            // create an alert block
-            alertBlock = new AlertBlock();
-            
-            // if the request id was invalid
-            if (alert.equals("invalid-tutor-request")) {
-                
-                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_WARNING);
-                alertBlock.getAlertBlockMessages().add("Invalid ID for a tutor request, "
-                        + "please try again.");
-                
-            }
-            
-            // if the request was marked as read successfully
-            if (alert.equals("request-marked-as-read")) {
-                
-                String referenceNumber = getParameterValue(request, "reference-number");
-                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
-                
-                if (referenceNumber == null)
-                    alertBlock.getAlertBlockMessages().add("Tutor Request has been "
-                            + "marked as read successfully.");
-                else
-                    alertBlock.getAlertBlockMessages().add("Tutor Request (" + referenceNumber
-                            + ") has been marked as read successfully.");
-            }
-            
-            // if the request could not be marked as read
-            if (alert.equals("request-not-marked-as-read")) {
-                
-                String referenceNumber = getParameterValue(request, "reference-number");
-                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_WARNING);
-                
-                if (referenceNumber == null)
-                     alertBlock.getAlertBlockMessages().add("Tutor request could not be "
-                             + "marked as read.");
-                else
-                    alertBlock.getAlertBlockMessages().add("Tutor request (" + referenceNumber
-                            + ") could not be marked as read.");
-                
-            }
-            
-            // if the tutor request was deleted successfully
-            if (alert.equals("tutor-request-deleted")) {
-                
-                String referenceNumber = getParameterValue(request, "reference-number");
-                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
-                
-                if (referenceNumber == null)
-                    alertBlock.getAlertBlockMessages().add("Tutor Request has been deleted "
-                            + "successfully.");
-                else
-                    alertBlock.getAlertBlockMessages().add("Tutor Request (" + referenceNumber
-                            + ") has been deleted successfully.");
-            }
-            
-            // if the request could not be deleted
-            if (alert.equals("request-not-deleted")) {
-                
-                String referenceNumber = getParameterValue(request, "reference-number");
-                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_WARNING);
-                
-                if (referenceNumber == null)
-                    alertBlock.getAlertBlockMessages().add("Tutor request could not be deleted.");
-                else
-                    alertBlock.getAlertBlockMessages().add("Tutor request (" 
-                            + referenceNumber
-                            + ") could not be deleted.");
-                
-            }
-            
-            // save the alert block to the
-            // request sope
-            saveToRequestScope(request, alertBlock);
-            
-        }
-        
+        helper.resolveAnyAlertParameters(request);
         
         // load all unread tutor requests
         helper.populateTutorRequestsByType(TutorRequestsType.Unread, form); 
+        
+        // populate the latest tutor management audits
+        UserContext context = (UserContext)getFromSessionScope(request, UserContext.class);
+        helper.populateLatestAuditsByUser(context, form);
         
         // save form to session scope
         saveToSessionScope(request, form);
@@ -161,23 +80,32 @@ public class TutorRequestsManagementController extends GenericController {
     }
     
     /**
-     * Searches for the tutor requests using 
-     * the specified keyword and the search type
+     * SHOWS THE PAGE FOR SEARCHING FOR AN
+     * EXISTING TUTOR REQUEST
+     * 
      * @param request
-     * @param searchKeyword
-     * @param searchType
      * @return 
      */
     @RequestMapping(value = RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH, 
-            method = RequestMethod.GET, 
-            params = {"searchKeyword", "searchType"})
-    public ModelAndView searchTutorRequestByKeyword(HttpServletRequest request, 
-            @RequestParam(value = "searchKeyword")String searchKeyword, 
-            @RequestParam(value = "searchType")String searchType) {
+            method = RequestMethod.GET)
+    public ModelAndView showSearchTutorRequestsPage(HttpServletRequest request) {
         
+        // get the form from the session
+        TutorRequestsManagementForm form = (TutorRequestsManagementForm)
+                getFromSessionScope(request,
+                TutorRequestsManagementForm.class);
         
+        // if form is null from session
+        if (form == null) {
+            form = new TutorRequestsManagementForm();
+        }
+        else form.resetForm();
         
-        return createModelAndView(Views.MANAGE_TUTOR_REQUESTS);
+        // save the form to the session scope
+        saveToSessionScope(request, form);
+        
+        // return a view
+        return createModelAndView(Views.SEARCH_TUTOR_REQUESTS);
     }
     
     /**
@@ -195,7 +123,8 @@ public class TutorRequestsManagementController extends GenericController {
             @RequestParam(value = "requestId")String requestId) {
         
         // check for the form in the session
-        form = (TutorRequestsManagementForm)getFromSessionScope(request, 
+        TutorRequestsManagementForm form = (TutorRequestsManagementForm)
+                getFromSessionScope(request, 
                 TutorRequestsManagementForm.class);
         
         if (form == null) {
@@ -210,13 +139,14 @@ public class TutorRequestsManagementController extends GenericController {
         if (NumericUtils.isNaN(requestId) || Integer.parseInt(requestId) < 1) {
             
             LOG.warning(" the request ID is invalid ...");
-            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_VIEW 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_UNREAD 
                     + "?alert=invalid-tutor-request");
             
         }
         
         // get the user context
-        context = (UserContext)getFromSessionScope(request, UserContext.class);
+        UserContext context = (UserContext)getFromSessionScope(
+                request, UserContext.class);
         
         // mark this request as being read
         String referenceNumber = form.getUnreadTutorRequests()
@@ -237,7 +167,7 @@ public class TutorRequestsManagementController extends GenericController {
                     true);
             
             LOG.warning(" the request was marked as read ...");
-            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_VIEW 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_UNREAD 
                     + "?alert=request-marked-as-read"
                     + "&reference-number=" + referenceNumber);
         }
@@ -245,7 +175,7 @@ public class TutorRequestsManagementController extends GenericController {
         else {
             
             LOG.warning(" the request could not be marked as read ...");
-            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_VIEW 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_UNREAD 
                     + "?alert=request-not-marked-as-read"
                     + "&reference-number=" + referenceNumber);
             
@@ -266,7 +196,7 @@ public class TutorRequestsManagementController extends GenericController {
             @RequestParam(value = "requestId")String requestId) {
         
         // check for the form in the session
-        form = (TutorRequestsManagementForm)
+        TutorRequestsManagementForm form = (TutorRequestsManagementForm)
                 getFromSessionScope(request, TutorRequestsManagementForm.class);
         
         if (form == null) {
@@ -281,12 +211,12 @@ public class TutorRequestsManagementController extends GenericController {
         if (NumericUtils.isNaN(requestId) || Integer.parseInt(requestId) < 1) {
             
             LOG.warning(" the request ID is invalid ...");
-            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_VIEW 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_UNREAD 
                     + "?alert=invalid-tutor-request");
         }
         
         // get the user context
-        context = (UserContext)getFromSessionScope(request, UserContext.class);
+        UserContext context = (UserContext)getFromSessionScope(request, UserContext.class);
         
         String referenceNumber = form.getUnreadTutorRequests()
                 .get(Long.parseLong(requestId)).getReferenceNumber();
@@ -306,7 +236,7 @@ public class TutorRequestsManagementController extends GenericController {
                     true);
             
             LOG.warning(" request was deleted ");
-            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_VIEW 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_UNREAD 
                     + "?alert=tutor-request-deleted" 
                     + "&reference-number=" + referenceNumber);
         
@@ -315,7 +245,7 @@ public class TutorRequestsManagementController extends GenericController {
         else {
             
             LOG.warning(" request could not be deleted ");
-            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_VIEW 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_UNREAD 
                     + "?alert=request-not-deleted" 
                     + "&reference-number=" + referenceNumber);
             
@@ -336,7 +266,7 @@ public class TutorRequestsManagementController extends GenericController {
             @RequestParam(value = "requestId")String requestId) {
         
          // check for the form in the session
-        form = (TutorRequestsManagementForm)
+        TutorRequestsManagementForm form = (TutorRequestsManagementForm)
                 getFromSessionScope(request, TutorRequestsManagementForm.class);
         
         if (form == null) {
@@ -350,7 +280,7 @@ public class TutorRequestsManagementController extends GenericController {
         if (NumericUtils.isNaN(requestId) || Integer.parseInt(requestId) < 1) {
             
             LOG.warning(" the request ID is invalid ...");
-            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_VIEW 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_UNREAD 
                     + "?alert=invalid-tutor-request");
         }
         
@@ -358,6 +288,7 @@ public class TutorRequestsManagementController extends GenericController {
         TutorRequest tutorRequest = helper
                 .getTutorRequestById(Long.parseLong(requestId));
         
+        AlertBlock alertBlock = null;
         
         if (tutorRequest == null) {
             
@@ -383,5 +314,6 @@ public class TutorRequestsManagementController extends GenericController {
         // return a view
         return createModelAndView(Views.VIEW_TUTOR_REQUEST_DETAILS);
     }
+    
     
 }

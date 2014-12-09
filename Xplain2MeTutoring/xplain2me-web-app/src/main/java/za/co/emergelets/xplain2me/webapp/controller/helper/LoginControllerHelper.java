@@ -1,14 +1,18 @@
 package za.co.emergelets.xplain2me.webapp.controller.helper;
 
 import java.util.ArrayList;
+import java.util.List;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.emergelets.xplain2me.dao.UserSaltDAO;
-import za.co.emergelets.xplain2me.entity.Profile;
-import za.co.emergelets.xplain2me.entity.ProfileType;
+import za.co.emergelets.xplain2me.entity.ProfileTypeUrlPermissions;
 import za.co.emergelets.xplain2me.entity.UserSalt;
 import za.co.emergelets.xplain2me.webapp.component.LoginForm;
+import za.co.emergelets.xplain2me.webapp.component.UserContext;
 import za.co.emergelets.xplain2me.webapp.controller.GenericController;
+import za.co.emergelets.xplain2me.webapp.controller.RequestMappings;
 
+@Component
 public class LoginControllerHelper extends GenericController {
     
     public LoginControllerHelper() {
@@ -79,28 +83,36 @@ public class LoginControllerHelper extends GenericController {
     /**
      * Redirects to the relevant dashboard page
      * 
-     * @param profile
      * @return 
      */
-    public ModelAndView redirectToRelevantDashboardPage(Profile profile) {  
+    public ModelAndView redirectToRelevantDashboardPage() {  
         
-        String redirectUrl = null;
-            
-        if (profile.getProfileType().getId() == ProfileType.DEFAULT_PROFILE)
-            redirectUrl = "/portal/admin/dashboard/browse";
-
-        else if (profile.getProfileType().getId() == ProfileType.APP_MANAGER_PROFILE)
-            redirectUrl = "/portal/manager/dashboard/browse";
-
-        else if (profile.getProfileType().getId() == ProfileType.TUTOR_PROFILE)
-            redirectUrl = "/portal/tutor/dashboard/browse";
-
-        else if (profile.getProfileType().getId() == ProfileType.STUDENT_PROFILE)
-            redirectUrl = "/portal/student/dashboard/browse";
-
-        else
-            redirectUrl = "/index";
-
+        String redirectUrl = RequestMappings.DASHBOARD_OVERVIEW;
         return sendRedirect(redirectUrl);
+    }
+    
+    /**
+     * PREPARES A LIST OF URLS THAT THE CURRENT
+     * LOGGED IN USER IS ALLOWED TO ACCESS IN THE
+     * WEB APPLICATION.
+     * 
+     * @param context 
+     */
+    public void buildUserAllowedUrlsList(UserContext context) {
+        
+        List<ProfileTypeUrlPermissions> permissions = 
+                context.getProfileTypeUrlPermissions();
+        
+        if (permissions != null && permissions.isEmpty() == false) {
+            
+            List<String> allowedUrls = new ArrayList<>();
+            
+            for (ProfileTypeUrlPermissions permission : permissions) {
+                allowedUrls.add(permission.getMenuItem().getRelativeUrl());
+            }
+            
+            context.setPermittedUrls(allowedUrls);
+        }
+        
     }
 }

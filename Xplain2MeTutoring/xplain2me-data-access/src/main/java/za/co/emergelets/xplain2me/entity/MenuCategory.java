@@ -9,17 +9,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "menu_category")
 public class MenuCategory implements Serializable {
-    /*
-    
-    Table: menu_category
-    
-    Columns:
-        menu_category_id int not null unique,
-        menu_category_desc text not null unique,
-        menu_category_active boolean not null default true,
-        menu_category_icon_url text
-    
-    */
     
     @Id
     @Column(name = "menu_category_id", unique = true, nullable = false)
@@ -28,12 +17,12 @@ public class MenuCategory implements Serializable {
     @Column(name = "menu_category_desc", nullable = false, unique = true)
     private String description;
     
-    @Column(name = "menu_category_active", nullable = false)
-    private boolean active;
+    @Column(name = "menu_category_glyphicon_css", nullable = false)
+    private String glyphiconCssClass;
     
-    @Column(name = "menu_category_icon_url")
-    private String iconUrl;
-    
+    @Column(name = "menu_category_load_onto_panel", nullable = false)
+    private boolean loadOntoPanel;
+  
     public MenuCategory() {
     }
 
@@ -53,21 +42,20 @@ public class MenuCategory implements Serializable {
         this.description = description;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getGlyphiconCssClass() {
+        return glyphiconCssClass;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setGlyphiconCssClass(String glyphiconCssClass) {
+        this.glyphiconCssClass = glyphiconCssClass;
     }
 
-    public String getIconUrl() {
-        return iconUrl;
+    public boolean isLoadOntoPanel() {
+        return loadOntoPanel;
     }
 
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
+    public void setLoadOntoPanel(boolean loadOntoPanel) {
+        this.loadOntoPanel = loadOntoPanel;
     }
-    
     
 }

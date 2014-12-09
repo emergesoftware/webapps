@@ -1,26 +1,38 @@
 package za.co.emergelets.xplain2me.dao;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.xplain2me.entity.Audit;
 
-public class AuditDAOImpl extends HibernateConnectionProvider implements AuditDAO {
+public class AuditDAOImpl implements AuditDAO {
     
     private static final Logger LOG = 
             Logger.getLogger(AuditDAOImpl.class.getName(), null);
     
+    protected Session session;
+    protected Criteria criteria;
+    protected Transaction transaction;
+    protected Iterator iterator;
+    protected Query query;
+    
     public AuditDAOImpl() {
-        super();
     }
 
     @Override
-    public List<Audit> getLatestAuditTrailByUserLimited(String username, int limit) throws DataAccessException {
+    public List<Audit> getLatestAuditTrailByUserLimited(String username, 
+            int limit) throws DataAccessException {
+        
        if (username == null || username.isEmpty() || 
                limit <= 0) {
            LOG.warning("... invalid params found, aborting... ");
@@ -29,7 +41,7 @@ public class AuditDAOImpl extends HibernateConnectionProvider implements AuditDA
        
        try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             
             criteria = session.createCriteria(Audit.class, "audit")
                        .createAlias("audit.user", "user")
@@ -45,7 +57,7 @@ public class AuditDAOImpl extends HibernateConnectionProvider implements AuditDA
             throw new DataAccessException(e);
         }
         finally {
-           closeConnection();
+           HibernateConnectionProvider.closeConnection(session);
         }
     }
 
@@ -61,7 +73,7 @@ public class AuditDAOImpl extends HibernateConnectionProvider implements AuditDA
         
         try {
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.save(audit);
             session.persist(audit);
@@ -75,11 +87,14 @@ public class AuditDAOImpl extends HibernateConnectionProvider implements AuditDA
         }
         
         catch (HibernateException e) {
+            
+            HibernateConnectionProvider.rollback(transaction);
+            
             LOG.log(Level.SEVERE, " ... error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
     }
 
@@ -104,7 +119,8 @@ public class AuditDAOImpl extends HibernateConnectionProvider implements AuditDA
                     "audit trail containing " + eventTypes.toString() + 
                     " by user " + username + " ... ");
             
-            session = getSessionFactory().openSession();
+            session = HibernateConnectionProvider.getSessionFactory()
+                    .openSession();
             
             List<Criterion> eventTypeCriterion = new ArrayList<>();
             for (Long eventType : eventTypes) {
@@ -131,7 +147,7 @@ public class AuditDAOImpl extends HibernateConnectionProvider implements AuditDA
             throw new DataAccessException(e);
         }
         finally {
-            closeConnection();
+            HibernateConnectionProvider.closeConnection(session);
         }
         
     }

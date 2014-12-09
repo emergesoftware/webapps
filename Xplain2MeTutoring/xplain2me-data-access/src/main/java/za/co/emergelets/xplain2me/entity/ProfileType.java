@@ -15,15 +15,6 @@ public class ProfileType implements Serializable {
     public static final int TUTOR_PROFILE = 102;
     public static final int STUDENT_PROFILE = 103;
     
-    /*
-    Table: profile_type
-    
-    Columns:
-        profile_type_id int not null unique,
-        profile_type_desc varchar(64) not null unique,
-        profile_type_active boolean not null default true
-    */
-    
     @Id
     @Column(name = "profile_type_id", nullable = false, unique = true)
     private long id;
