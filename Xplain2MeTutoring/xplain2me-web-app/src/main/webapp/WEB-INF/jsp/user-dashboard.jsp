@@ -34,12 +34,12 @@
             <hr/>
             <p>
                 <span>Welcome back, </span>
-                <span><strong><%= context.getProfile().getUser().getUsername() %>.</strong> </span>
+                <span><strong><%= userContext.getProfile().getPerson().getUser().getUsername() %>.</strong> </span>
                 <br/>
                 <span class="text-muted">
                     [PROFILE: 
                     <strong>
-                        <%= context.getProfile().getProfileType().getDescription() %>
+                        <%= userContext.getProfile().getProfileType().getDescription() %>
                     </strong>
                     ]
                 </span>

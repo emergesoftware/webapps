@@ -31,7 +31,7 @@ public class UserSalt implements Serializable {
     private Date dateCreated;
     
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_name", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
             
     

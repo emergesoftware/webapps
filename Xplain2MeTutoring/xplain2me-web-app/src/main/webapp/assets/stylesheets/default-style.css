@@ -1,7 +1,7 @@
 html, body { 
     background-image: url('../images/background001.png');
     background-repeat: repeat;
-    background-attachment: scroll;
+    background-attachment: fixed;
 }
 
 #wrapper {

@@ -26,10 +26,7 @@
         <title>Become a tutor | Xplain2Me Tutoring</title>
         
         <%@include file="../jspf/template/default-header.jspf" %>
-        
-        <link type="text/css" rel="stylesheet" href="<%= request.getContextPath() %>/assets/datepicker/css/datepicker.css" />
-        <script type="text/javascript" src="<%= request.getContextPath() %>/assets/datepicker/js/bootstrap-datepicker.js">
-        </script>
+        <%@include file="../jspf/template/bootstrap-datepicker.jspf" %>
         
         <script type="text/javascript" 
             src="<%= request.getContextPath() %>/assets/js/become-a-tutor.js">

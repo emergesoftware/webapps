@@ -2,10 +2,14 @@ package za.co.emergelets.xplain2me.webapp.controller.helper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
+import za.co.emergelets.util.CellphoneNumberValidator;
+import za.co.emergelets.util.NumericUtils;
+import za.co.emergelets.util.mail.EmailAddressValidator;
 import za.co.emergelets.xplain2me.dao.AuditDAO;
 import za.co.emergelets.xplain2me.dao.AuditDAOImpl;
 import za.co.emergelets.xplain2me.dao.EventTypes;
@@ -168,7 +172,7 @@ public class TutorRequestsManagementControllerHelper extends GenericController {
         
         // get the audit trail
         List<Audit> trail = auditDAO.getLatestAuditTrailByUser(
-                userContext.getProfile().getUser().getUsername(),
+                userContext.getProfile().getPerson().getUser().getUsername(),
                 eventTypes, 10);
         
         if (trail != null)
@@ -202,7 +206,7 @@ public class TutorRequestsManagementControllerHelper extends GenericController {
             
             // create an audit
             SystemAuditManager.logAuditAsync(EventTypes.DELETE_TUTOR_REQUEST_EVENT, 
-                    context.getPerson().getUser(), id, null, request.getRemoteAddr(), 
+                    context.getProfile().getPerson().getUser(), id, null, request.getRemoteAddr(), 
                     request.getHeader("User-Agent"), 0, true);
             
             return true;
@@ -239,7 +243,7 @@ public class TutorRequestsManagementControllerHelper extends GenericController {
             
             // create an audit
             SystemAuditManager.logAuditAsync(EventTypes.MARK_TUTOR_REQUEST_AS_READ_EVENT, 
-                    context.getPerson().getUser(), id, null, request.getRemoteAddr(), 
+                    context.getProfile().getPerson().getUser(), id, null, request.getRemoteAddr(), 
                     request.getHeader("User-Agent"), 0, true);
             
             return true;
@@ -284,6 +288,111 @@ public class TutorRequestsManagementControllerHelper extends GenericController {
         }
         
         // if the type is read...
+        
+    }
+
+    /**
+     * PROCESS ANY RESULT PARAMETERS IN THE
+     * REQUEST
+     * 
+     * @param request 
+     */
+    public void resolveAnySearchResultParameters(HttpServletRequest request) {
+        
+        String result = getParameterValue(request, "result");
+        
+        if (result != null && result.isEmpty() == false) {
+            
+            // if the parameters were found to be invalid
+            if (result.equalsIgnoreCase("invalid-params")) {
+                
+                saveToRequestScope(request, 
+                        new AlertBlock(
+                        AlertBlock.ALERT_BLOCK_WARNING, 
+                        "Invalid search parameters were received."));
+            }
+            
+            // if the search returned nothing
+            if (result.equalsIgnoreCase("empty")) {
+                
+                saveToRequestScope(request, 
+                        new AlertBlock(
+                        AlertBlock.ALERT_BLOCK_INFORMATIVE, 
+                        "No tutor requests could be found, please try again."));
+            }
+            
+        }
+    }
+
+    /**
+     * SEARCHES FOR THE 
+     * TUTOR REQUESTS
+     * 
+     * @param searchKeyword
+     * @param searchType
+     * @param form 
+     */
+    public void searchTutorRequest(String searchKeyword, int searchType, TutorRequestsManagementForm form) {
+        
+        if (form == null) {
+            LOG.warning("... could not initiate tutor request search, "
+                    + "form is null ...");
+            return;
+        }
+        
+        Map<Long, TutorRequest> results = new TreeMap<>();
+        
+        // search by request ID
+        if (searchType == TutorRequest.SEARCH_BY_REQUEST_ID && 
+                !NumericUtils.isNaN(searchKeyword)) {
+            
+            TutorRequest result = tutorRequestDAO.searchTutorRequestById(
+                    Long.parseLong(searchKeyword));
+            
+            if (result != null)
+                results.put(result.getId(), result);
+        }
+        
+        // search by reference number
+        if (searchType == TutorRequest.SEARCH_BY_REFERENCE_NUMBER && 
+                searchKeyword.startsWith("TR")) {
+            
+            TutorRequest result = tutorRequestDAO
+                    .searchTutorRequestByReferenceNumber(searchKeyword);
+            
+            if (result != null)
+                results.put(result.getId(), result);
+            
+        }
+        
+        // search by email address
+        if (searchType == TutorRequest.SEARCH_BY_EMAIL_ADDRESS &&
+                EmailAddressValidator.isEmailAddressValid(searchKeyword)) {
+            
+            List<TutorRequest> list = tutorRequestDAO
+                    .searchTutorRequestByEmailAddress(searchKeyword);
+            
+            if (list != null) {
+                for (TutorRequest result : list)
+                    results.put(result.getId(), result);
+            }
+        }
+        
+        // search by contact number
+        if (searchType == TutorRequest.SEARCH_BY_CONTACT_NUMBER &&
+                CellphoneNumberValidator.isCellphoneNumberValid(
+                        "27" + searchKeyword.substring(1))) { 
+            
+            List<TutorRequest> list = tutorRequestDAO
+                    .searchTutorRequestByContactNumber(searchKeyword);
+            
+            if (list != null) {
+                for (TutorRequest result : list)
+                    results.put(result.getId(), result);
+            }
+        }
+        
+        form.setSearchResults(results);
         
     }
 }

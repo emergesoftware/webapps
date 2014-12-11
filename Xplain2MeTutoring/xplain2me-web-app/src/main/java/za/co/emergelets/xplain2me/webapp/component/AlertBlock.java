@@ -19,6 +19,12 @@ public class AlertBlock implements Serializable {
         this.alertBlockType = ALERT_BLOCK_INFORMATIVE;
         this.alertBlockMessages = new ArrayList<>();
     }
+    
+    public AlertBlock(int alertBlockType, String alertBlockMessage) {
+        this();
+        this.alertBlockType = alertBlockType;
+        this.alertBlockMessages.add(alertBlockMessage);
+    }
 
     public int getAlertBlockType() {
         return alertBlockType;
@@ -36,6 +42,13 @@ public class AlertBlock implements Serializable {
         this.alertBlockMessages = alertBlockMessages;
     }
     
-    
+    public void addAlertBlockMessage(String message) {
+        
+        if (this.alertBlockMessages == null)
+            this.alertBlockMessages = new ArrayList<>();
+        
+        if (!this.alertBlockMessages.contains(message))
+            this.alertBlockMessages.add(message);
+    }
     
 }

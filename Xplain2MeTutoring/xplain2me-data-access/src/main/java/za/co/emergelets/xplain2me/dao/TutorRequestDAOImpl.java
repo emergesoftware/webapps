@@ -293,4 +293,158 @@ public class TutorRequestDAOImpl implements TutorRequestDAO {
         }
         
     }
+    
+    /**
+     * CREATES A SEARCH CRITERION
+     * OBJECT FROM THE PROVIDED SESSION
+     * 
+     * @param value
+     * @param searchType
+     * @param session
+     * @return 
+     */
+    private Criteria createSearchTutorRequestCriteria(Object value, int searchType, Session session) {
+        
+        if (searchType == TutorRequest.SEARCH_BY_REFERENCE_NUMBER)
+            return session.createCriteria(TutorRequest.class, "request")
+                    .add(Restrictions.eq("request.referenceNumber", value.toString()));
+        
+        else if (searchType == TutorRequest.SEARCH_BY_REQUEST_ID)
+            return session.createCriteria(TutorRequest.class, "request")
+                    .add(Restrictions.eq("request.id", (Long)value));
+        
+        else if (searchType == TutorRequest.SEARCH_BY_EMAIL_ADDRESS)
+            return session.createCriteria(TutorRequest.class, "request")
+                    .add(Restrictions.eq("request.emailAddress", value.toString()))
+                    .addOrder(Order.desc("request.dateReceived"));
+        
+        else if (searchType == TutorRequest.SEARCH_BY_CONTACT_NUMBER)
+            return session.createCriteria(TutorRequest.class, "request")
+                    .add(Restrictions.eq("request.contactNumber", value.toString()))
+                    .addOrder(Order.desc("request.dateReceived"));
+        
+        else return null;
+        
+    }
+
+    @Override
+    public TutorRequest searchTutorRequestByReferenceNumber(String referenceNumber) throws DataAccessException {
+        
+        if (referenceNumber == null || referenceNumber.isEmpty()) {
+            LOG.warning(" ... reference number is empty ...");
+            return null;
+        }
+        
+        TutorRequest result = null;
+        
+        try {
+            
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
+            criteria = createSearchTutorRequestCriteria(referenceNumber,
+                                    TutorRequest.SEARCH_BY_REFERENCE_NUMBER, session);
+            
+            iterator = criteria.list().iterator();
+            
+            while (iterator.hasNext())
+                result = (TutorRequest)iterator.next();
+            
+            return result;
+        }
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+        
+    }
+
+    @Override
+    public TutorRequest searchTutorRequestById(long tutorRequestId) throws DataAccessException {
+        
+        if (tutorRequestId < 0) {
+            LOG.warning(" ... tutor request ID is empty ...");
+            return null;
+        }
+        
+        TutorRequest result = null;
+        
+        try {
+            
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
+            criteria = createSearchTutorRequestCriteria(tutorRequestId,
+                                    TutorRequest.SEARCH_BY_REQUEST_ID, session);
+            
+            iterator = criteria.list().iterator();
+            
+            while (iterator.hasNext())
+                result = (TutorRequest)iterator.next();
+            
+            return result;
+        }
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+
+    @Override
+    public List<TutorRequest> searchTutorRequestByEmailAddress(String emailAddress) throws DataAccessException {
+        
+        if (emailAddress == null || emailAddress.isEmpty()) {
+            LOG.warning(" ... email address is empty ...");
+            return null;
+        }
+        
+        try {
+            
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
+            criteria = createSearchTutorRequestCriteria(emailAddress,
+                                    TutorRequest.SEARCH_BY_EMAIL_ADDRESS, session);
+            
+            return criteria.list();
+            
+        }
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+
+    @Override
+    public List<TutorRequest> searchTutorRequestByContactNumber(String contactNumber) throws DataAccessException {
+    
+        if (contactNumber == null || contactNumber.isEmpty()) {
+            LOG.warning(" ... contact number is empty ...");
+            return null;
+        }
+        
+        try {
+            
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
+            criteria = createSearchTutorRequestCriteria(contactNumber,
+                                    TutorRequest.SEARCH_BY_CONTACT_NUMBER, session);
+            
+            return criteria.list();
+        }
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+        
+    }
 }

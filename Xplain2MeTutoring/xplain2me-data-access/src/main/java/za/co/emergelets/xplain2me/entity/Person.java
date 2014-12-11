@@ -18,22 +18,6 @@ import javax.persistence.TemporalType;
 @Table(name = "person")
 public class Person implements Serializable {
     
-    /*
-    Table: person
-    
-    Columns:    
-        person_id int not null unique default nextval('person_id_sequence'),
-        person_last_name varchar(128) not null,
-        person_first_names varchar(256) not null,
-        person_date_of_birth timestamp without time zone not null,
-        person_id_number varchar(32) not null unique,
-        gender_id varchar(1) not null,
-        citizenship_id int not null,
-        contact_detail_id int not null,
-        physical_address_id int not null,
-        user_name varchar(32) not null
-    */
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "person_id")
@@ -69,7 +53,7 @@ public class Person implements Serializable {
     private PhysicalAddress physicalAddress;
     
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_name", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
     public Person() {

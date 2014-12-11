@@ -21,6 +21,11 @@ import javax.persistence.TemporalType;
 @Table(name = "tutor_request")
 public class TutorRequest implements Serializable {
     
+    public static final int SEARCH_BY_REFERENCE_NUMBER = 1;
+    public static final int SEARCH_BY_REQUEST_ID = 2;
+    public static final int SEARCH_BY_EMAIL_ADDRESS = 3;
+    public static final int SEARCH_BY_CONTACT_NUMBER = 4;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tutor_request_id")

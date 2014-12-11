@@ -1,18 +1,15 @@
 <%-- 
-    Document   : view-tutor-requests
-    Created on : 30 Sep 2014, 8:08:34 PM
-    Author     : tsepo maleka
+    Document   : search-tutor-requests-results
+    Created on : 09 Dec 2014, 4:34:02 PM
+    Author     : user
 --%>
 
-<%@page import="za.co.emergelets.util.DateTimeUtils"%>
-<%@page import="za.co.emergelets.xplain2me.entity.Audit"%>
 <%@page import="za.co.emergelets.xplain2me.entity.TutorRequestSubject"%>
 <%@page import="za.co.emergelets.xplain2me.entity.TutorRequest"%>
 <%@page import="za.co.emergelets.xplain2me.webapp.component.TutorRequestsManagementForm"%>
 <%
-    // get the form
-    TutorRequestsManagementForm form = (TutorRequestsManagementForm)session
-            .getAttribute(TutorRequestsManagementForm.class.getName());
+    TutorRequestsManagementForm form = (TutorRequestsManagementForm)
+            session.getAttribute(TutorRequestsManagementForm.class.getName());
     
     if (form == null) {
         form = new TutorRequestsManagementForm();
@@ -20,49 +17,46 @@
 %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
     <head>
-        <title>Tutor Requests</title>
+        <title>Search Tutor Requests</title>
         
         <%@include file="../jspf/template/default-manager-header.jspf" %>
         
     </head>
     <body>
-        
         <div id="wrapper">
             
             <%@include file="../jspf/template/default-manager-navigation.jspf" %>
             
             <div class="container-fluid" id="page-wrapper">
                 
-                <h2>Tutor Requests</h2>
-                
+                <h2>Tutor Requests Search Results</h2>
                 <hr/>
                 
                 <%@include file="../jspf/template/default-alert-block.jspf" %>
                 
                 <div class="row">
+                    
                     <div class="col-md-12">
-                        <!-- START: new tutor requests -->
+                      
+                        <!-- START: search tutor requests results-->
                         <div class="panel panel-primary">
 
                             <div class="panel-heading">
-                               <h3 class="panel-title">New Tutor Requests</h3>
+                               <h3 class="panel-title">Search Results</h3>
                             </div>
 
                             <div class="panel-body">
 
                                  <%
-                            int count = form.getUnreadTutorRequests().size();
+                            int count = form.getSearchResults().size();
                             if (count == 0) {
 
                                 %>
                                 <p>
-                                    <span class="glyphicon glyphicon-bell"></span>
-                                    <span>&nbsp;</span>
-                                    <span>You have no new or unread tutor requests.</span>
+                                    <span>No tutor requests could be found from your search.</span>
                                 </p>
                             <%
                             }
@@ -72,9 +66,7 @@
                                 %>
 
                                 <p>
-                                    <span class="glyphicon glyphicon-bell"></span>
-                                    <span>&nbsp;</span>
-                                    <span>You have <%= count %> new or unread tutor requests.</span>
+                                    <span>Tutor Requests Found: <%= count %>.</span>
                                 </p>
 
                                 <table border="0" class="table table-bordered">
@@ -93,8 +85,8 @@
                                     </thead>
                                     <tbody>
                                         <%
-                                            for (Long key : form.getUnreadTutorRequests().keySet()) {
-                                                TutorRequest item = form.getUnreadTutorRequests().get(key); 
+                                            for (Long key : form.getSearchResults().keySet()) {
+                                                TutorRequest item = form.getSearchResults().get(key); 
 
                                                 %>
                                             <tr id="tutorRequestRowEntryNo_<%= item.getId() %>">
@@ -195,83 +187,15 @@
 
                              </div>
                          </div>
-                        <!-- END: new tutor requests -->
-                    </div>
-                </div>
+                        <!-- END: search tutor requests results -->
                         
-                <div class="row">
-                    
-                    <div class="col-md-12">
-                        <!-- START: previous tutor requests audits -->
-                        <div class="panel panel-primary">
-
-                            <div class="panel-heading">
-                               <h3 class="panel-title">Previous Tutor Request Audits</h3>
-                            </div>
-
-                            <div class="panel-body">
-                                <br/>
-                                
-                                <%
-                                    int auditTrailCount = form.getAuditTrail().size();
-                                    if (auditTrailCount == 0) {
-                                        %>
-                                        <p>You have no audit trail for tutor request management.</p>
-                                    <%
-                                    }
-                                    
-                                    else {
-                                    %>
-                                    <table border="0" class="table table-stripped">
-                                        <thead>
-                                            <tr>
-                                                <th>Sequence #</th>
-                                                <th>Date + Time</th>
-                                                <th>Event Code</th>
-                                                <th>Description</th>
-                                                <th>Tutor Request #</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            
-                                            <%
-                                                for (Audit audit : form.getAuditTrail()) {
-                                                    %>
-                                            
-                                                    <tr>
-                                                        <td><%= audit.getId() %></td>
-                                                        <td><%= DateTimeUtils.formatDateTime(audit.getTimestamp()) %></td>
-                                                        <td><%= audit.getEvent().getType() %></td>
-                                                        <td><%= audit.getEvent().getShortDescription() %></td>
-                                                        <td><%= audit.getReference() %></td>
-                                                    </tr>
-                                                    
-                                            <%
-                                                    
-                                                }
-                                            %>
-                                            
-                                        </tbody>
-                                        
-                                    </table>
-                                        <%
-                                    }
-                                %>
-                                
-                            </div>
-                        </div>
-                        <!-- END: previous tutor requests audits -->
                     </div>
-                   
-                </div>
                     
-                <br/>
-                
+                </div>
             </div>
-             
-            <%@include file="../jspf/template/default-footer.jspf" %>              
+            
+            <%@include file="../jspf/template/default-footer.jspf" %> 
             
         </div>
-        
     </body>
 </html>

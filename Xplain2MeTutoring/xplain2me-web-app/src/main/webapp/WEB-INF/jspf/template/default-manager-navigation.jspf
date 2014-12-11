@@ -9,20 +9,20 @@
 <%@page import="za.co.emergelets.xplain2me.webapp.component.UserContext"%>
 
 <%
-    UserContext context = (UserContext)session
+    UserContext userContext = (UserContext)session
             .getAttribute(UserContext.class.getName());
     
-    if (context == null) {
-        response.sendRedirect("/login"); 
+    if (userContext == null) {
+        response.sendRedirect(request.getContextPath() + RequestMappings.LOGOUT); 
         return;
     }
     
     // build the person's name
-    String personFullName = (context.getPerson().getFirstNames().split(" ")[0] + " " + 
-            context.getPerson().getLastName());
+    String personFullName = (userContext.getProfile().getPerson().getFirstNames().split(" ")[0] + " " + 
+            userContext.getProfile().getPerson().getLastName());
     
     // the profile type description
-    String profileTypeDescription = context.getProfile().getProfileType()
+    String profileTypeDescription = userContext.getProfile().getProfileType()
             .getDescription().toUpperCase();
     
 %>
@@ -57,7 +57,7 @@
             
             <%
                 List<ProfileTypeUrlPermissions> permittedUrls = 
-                        context.getProfileTypeUrlPermissions();
+                        userContext.getProfileTypeUrlPermissions();
                 
                 BucketMap<String, MenuItem> navBar = new BucketMap<String, MenuItem>();
                 String category = null;

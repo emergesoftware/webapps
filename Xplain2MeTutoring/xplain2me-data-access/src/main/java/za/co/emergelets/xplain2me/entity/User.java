@@ -4,10 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -17,6 +16,10 @@ import javax.persistence.TemporalType;
 public class User implements Serializable {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id", nullable = false, unique = true)
+    private long id;
+    
     @Column(name = "user_name", nullable = false, unique = true)
     private String username;
     
@@ -34,11 +37,15 @@ public class User implements Serializable {
     @Column(name = "user_deactivated")
     private Date deactivated;
     
-    @OneToOne(targetEntity = UserRole.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_role_id", nullable = false)
-    private UserRole role;
-    
     public User() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -80,14 +87,5 @@ public class User implements Serializable {
     public void setDeactivated(Date deactivated) {
         this.deactivated = deactivated;
     }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
-    
     
 }

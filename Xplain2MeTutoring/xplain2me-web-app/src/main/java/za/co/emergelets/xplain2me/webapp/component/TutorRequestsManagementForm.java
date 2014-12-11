@@ -21,6 +21,7 @@ public class TutorRequestsManagementForm implements Serializable {
     private String searchKeyword;
     private int searchType;
     private Map<Long, TutorRequest> searchResults;
+    private int showResultsAnswer;
     
     public TutorRequestsManagementForm() {
         resetForm();
@@ -33,6 +34,7 @@ public class TutorRequestsManagementForm implements Serializable {
         this.searchKeyword = null;
         this.searchType = 0;
         this.searchResults = null;
+        this.showResultsAnswer = 0;
     }
 
     public Map<Long, TutorRequest> getUnreadTutorRequests() {
@@ -83,7 +85,13 @@ public class TutorRequestsManagementForm implements Serializable {
     public void setSearchResults(Map<Long, TutorRequest> searchResults) {
         this.searchResults = searchResults;
     }
-    
-    
+
+    public int getShowResultsAnswer() {
+        return showResultsAnswer;
+    }
+
+    public void setShowResultsAnswer(int showResultsAnswer) {
+        this.showResultsAnswer = showResultsAnswer;
+    }
     
 }

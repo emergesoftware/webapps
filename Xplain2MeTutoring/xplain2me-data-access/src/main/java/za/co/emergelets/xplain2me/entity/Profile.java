@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,22 +18,8 @@ import javax.persistence.TemporalType;
 @Table(name = "profile")
 public class Profile implements Serializable {
     
-    /*
-    
-    Table: profile
-    
-    Columns:
-        profile_id int not null unique default nextval('profile_id_sequence'),
-        profile_type_id int not null,
-        profile_created timestamp without time zone not null default now(),
-        user_name varchar(32) not null,
-        profile_verified boolean not null default false,
-        profile_verification_code text
-    
-    */
-    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "profile_id")
     private long id;
     
@@ -46,9 +31,9 @@ public class Profile implements Serializable {
     @Column(name = "profile_created", nullable = false)
     private Date dateCreated;
     
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_name")
-    private User user;
+    @OneToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
     
     @Column(name = "profile_verified", nullable = false)
     private boolean verified;
@@ -83,14 +68,14 @@ public class Profile implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public User getUser() {
-        return user;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPerson(Person person) {
+        this.person = person;
     }
-
+    
     public boolean isVerified() {
         return verified;
     }

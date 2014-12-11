@@ -32,7 +32,7 @@ public class Audit implements Serializable {
     private Event event;
     
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_name", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
     @Column(name = "audit_reference")

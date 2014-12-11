@@ -42,14 +42,12 @@ public class ProfileDAOImpl implements ProfileDAO {
             
             criteria = session.createCriteria(Profile.class, "profile")
                 .createAlias("profile.profileType", "profileType")
-                .createAlias("profile.user", "user")
-                .createAlias("user.role", "role")
-            
+                .createAlias("profile.person", "person")
+                .createAlias("person.user", "user")
+                    
                 .add(Restrictions.eq("profile.verified", true))
                 .add(Restrictions.eq("profileType.active", true))
                 .add(Restrictions.eq("user.active", true))
-                .add(Restrictions.eq("role.active", true))
-                .add(Restrictions.eq("role.allowedLogin", true))
             
                 .add(Restrictions.eq("user.username", username))
                 .add(Restrictions.eq("user.password", password));

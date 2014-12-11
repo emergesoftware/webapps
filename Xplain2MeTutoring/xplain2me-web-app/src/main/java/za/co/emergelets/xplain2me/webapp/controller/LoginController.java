@@ -11,14 +11,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.emergelets.util.SHA256Encryptor;
-import za.co.emergelets.xplain2me.dao.EventTypes;
 import za.co.emergelets.xplain2me.dao.PersonDAO;
 import za.co.emergelets.xplain2me.dao.PersonDAOImpl;
 import za.co.emergelets.xplain2me.dao.ProfileDAO;
 import za.co.emergelets.xplain2me.dao.ProfileDAOImpl;
 import za.co.emergelets.xplain2me.dao.ProfileTypeUrlPermissionsDAO;
 import za.co.emergelets.xplain2me.dao.ProfileTypeUrlPermissionsDAOImpl;
-import za.co.emergelets.xplain2me.dao.SystemAuditManager;
 import za.co.emergelets.xplain2me.dao.UserSaltDAO;
 import za.co.emergelets.xplain2me.dao.UserSaltDAOImpl;
 import za.co.emergelets.xplain2me.entity.Profile;
@@ -216,9 +214,6 @@ public class LoginController extends GenericController {
             context.setProfile(profile); 
             context.setTimeUserLoggedIn(new Date());
             
-            // get the person details
-            context.setPerson(personDAO.getPerson(profile.getUser().getUsername()));
-            
             // get the permitted urls
             context.setProfileTypeUrlPermissions(profileTypeUrlPermissionsDAO
                     .getUserProfileUrlPermissions(context.getProfile().getProfileType()));
@@ -230,8 +225,8 @@ public class LoginController extends GenericController {
             saveToSessionScope(request, context);
             
             // log the login audit async
-            SystemAuditManager.logAuditAsync(EventTypes.LOGIN_EVENT, profile.getUser(), 0, 
-                    null, request.getRemoteAddr(), request.getHeader("User-Agent"), 0, true);
+            /* SystemAuditManager.logAuditAsync(EventTypes.LOGIN_EVENT, profile.getUser(), 0, 
+                    null, request.getRemoteAddr(), request.getHeader("User-Agent"), 0, true); */
             
             // redirect to the appropriate page
             return helper.redirectToRelevantDashboardPage();

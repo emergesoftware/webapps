@@ -3,12 +3,16 @@
     http://formvalidator.net/
 
 --%>
+<%@page import="za.co.emergelets.xplain2me.webapp.CommonStylesheetsAndScripts"%>
 <%@ page pageEncoding="UTF-8" %>
 
 <script type="text/javascript" 
-    src="http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
+src="<%= CommonStylesheetsAndScripts.JQUERY_FORM_VALIDATION_JS %>"></script>
+
 <script> 
     $(document).ready(function() {
-        $.validate(); 
+        $.validate({
+            modules : 'date'
+        }); 
     });
 </script>

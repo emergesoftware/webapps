@@ -1,5 +1,7 @@
 BEGIN;
 
+USE xplain2me;
+
 -- REVOKE ALL PERMISSIONS EVERYONE
 delete from profile_type_url_permissions;
 

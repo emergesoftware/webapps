@@ -70,7 +70,7 @@
                                     <span>&nbsp;Remove</span>
                                 </a>
                             
-                        </div>
+                            </div>
                             
                         </div>
                         

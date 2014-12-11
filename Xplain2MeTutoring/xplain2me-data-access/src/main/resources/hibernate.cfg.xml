@@ -8,7 +8,7 @@
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/xplain2me</property>
         <property name="hibernate.connection.username">xplain2me</property>
-        <property name="hibernate.connection.password">xplain2me</property>
+        <property name="hibernate.connection.password">#xplain2me10XMORE</property>
         
         <!-- Additional MySQL connection properties -->
         <property name="hibernate.connection.zeroDateTimeBehavior">convertToNull</property>
@@ -28,33 +28,6 @@
         <property name="hibernate.format_sql">true</property>
         <property name="hibernate.use_sql_comments">true</property>
         <property name="hibernate.show_sql">true</property>
-    
-        <!-- Mappings -->
-        <mapping class="za.co.emergelets.xplain2me.entity.AcademicLevel"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.AcademicLevelsTutoredBefore"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.AppClient"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.Audit"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.BecomeTutorRequest"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.BecomeTutorSupportingDocument"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.Citizenship"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.ContactDetail"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.Event"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.Gender"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.MenuCategory"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.Person"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.PhysicalAddress"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.Profile"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.ProfileType"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.Province"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.Subject"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.TutorRequest"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.TutorRequestSubject"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.User"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.UserRole"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.UserRolePermission"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.UserSalt"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.MenuItem"/>
-        <mapping class="za.co.emergelets.xplain2me.entity.ProfileTypeUrlPermissions" />
 
   </session-factory>
 </hibernate-configuration>

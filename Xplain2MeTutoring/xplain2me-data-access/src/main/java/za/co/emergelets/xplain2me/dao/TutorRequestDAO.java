@@ -15,5 +15,13 @@ public interface TutorRequestDAO {
     
     public TutorRequest updateTutorRequest(TutorRequest request) throws DataAccessException;
     public TutorRequest deleteTutorRequest(TutorRequest request) throws DataAccessException;
-       
+    
+    public TutorRequest searchTutorRequestByReferenceNumber(String referenceNumber)
+            throws DataAccessException;
+    public TutorRequest searchTutorRequestById(long tutorRequestId) throws DataAccessException;
+    public List<TutorRequest> searchTutorRequestByEmailAddress(String emailAddress)
+            throws DataAccessException;
+    public List<TutorRequest> searchTutorRequestByContactNumber(String contactNumber)
+            throws DataAccessException;
+    
 }

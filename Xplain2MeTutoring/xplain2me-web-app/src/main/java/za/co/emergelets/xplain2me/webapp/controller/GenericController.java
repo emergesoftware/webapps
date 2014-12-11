@@ -49,8 +49,8 @@ public abstract class GenericController {
      * @param viewName
      * @return 
      */
-    protected ModelAndView createModelAndView(Object modelObject, 
-            String modelName, String viewName) {
+    protected ModelAndView createModelAndView(String modelName, Object modelObject, 
+            String viewName) {
         return new ModelAndView(viewName, modelName, modelObject);
     }
     
@@ -146,6 +146,23 @@ public abstract class GenericController {
             return null;
 
         return request.getParameter(parameterName);
+    }
+    
+    /**
+     * Gets the value carried by the parameter specified
+     * 
+     * @param request
+     * @param parameterName
+     * @param convertNullToEmpty
+     * @return 
+     */
+    protected String getParameterValue(HttpServletRequest request, String parameterName, 
+            boolean convertNullToEmpty) {
+        
+        String value = getParameterValue(request, parameterName);
+        if (value == null) value = "";
+        
+        return value;
     }
     
     /**

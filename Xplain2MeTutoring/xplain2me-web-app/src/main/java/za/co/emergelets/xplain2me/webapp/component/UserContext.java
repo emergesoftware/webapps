@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Component;
-import za.co.emergelets.xplain2me.entity.Person;
 import za.co.emergelets.xplain2me.entity.Profile;
 import za.co.emergelets.xplain2me.entity.ProfileTypeUrlPermissions;
 
@@ -16,9 +15,6 @@ public class UserContext implements Serializable {
     
     // the user profile
     private Profile profile;
-    
-    // the person details
-    private Person person;
     
     // the list of permitted urls
     private List<ProfileTypeUrlPermissions> profileTypeUrlPermissions;
@@ -63,15 +59,5 @@ public class UserContext implements Serializable {
     public void setTimeUserLoggedIn(Date timeUserLoggedIn) {
         this.timeUserLoggedIn = timeUserLoggedIn;
     }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-    
-    
     
 }

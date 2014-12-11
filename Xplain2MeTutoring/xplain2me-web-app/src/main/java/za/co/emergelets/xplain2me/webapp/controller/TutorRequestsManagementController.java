@@ -24,12 +24,6 @@ public class TutorRequestsManagementController extends GenericController {
     
     private static final Logger LOG = 
             Logger.getLogger(TutorRequestsManagementController.class.getName(), null);
-   
-    // the search types
-    public static final int SEARCH_BY_REFERENCE_NUMBER = 1;
-    public static final int SEARCH_BY_REQUEST_ID = 2;
-    public static final int SEARCH_BY_EMAIL_ADDRESS = 3;
-    public static final int SEARCH_BY_CONTACT_NUMBER = 4;
     
     // the helper class
     @Autowired
@@ -101,11 +95,112 @@ public class TutorRequestsManagementController extends GenericController {
         }
         else form.resetForm();
         
+        // process the result params
+        helper.resolveAnySearchResultParameters(request);
+        
         // save the form to the session scope
         saveToSessionScope(request, form);
         
         // return a view
         return createModelAndView(Views.SEARCH_TUTOR_REQUESTS);
+    }
+    
+    /**
+     * PROCESSES THE SEARCH FOR A TUTOR
+     * REQUEST
+     * 
+     * @param request
+     * @param searchType
+     * @param searchKeyword
+     * @return 
+     */
+    @RequestMapping(value = RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH, 
+            method = RequestMethod.POST, 
+            params = {"searchType", "searchKeyword"})
+    public ModelAndView processSearchTutorRequest(
+            HttpServletRequest request,
+            @RequestParam(value = "searchType")String searchType,
+            @RequestParam(value = "searchKeyword")String searchKeyword) {
+        
+        // check for the form from the
+        // session
+        TutorRequestsManagementForm form = (TutorRequestsManagementForm)
+                getFromSessionScope(request, TutorRequestsManagementForm.class);
+        if (form == null) {
+            LOG.warning("... invalid request ..."); 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH + 
+                                "?rand=" + System.currentTimeMillis());
+        }
+        
+        // get the parameters
+        if ((searchKeyword == null || searchKeyword.isEmpty()) || 
+                (searchType == null || searchType.isEmpty())) {
+            
+            LOG.warning(" ... invalid params for the search type or keyword ...");
+            
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH + 
+                    "?result=invalid-params" + 
+                    "&rand=" + System.currentTimeMillis());
+        }
+        
+        //save the search params
+        form.setSearchKeyword(searchKeyword);
+        form.setSearchType(Integer.parseInt(searchType));
+        
+        // initiate the search
+        helper.searchTutorRequest(searchKeyword, Integer.parseInt(searchType), form);
+        
+        // check if the any requests could be
+        // found
+        if (form.getSearchResults() == null || 
+                form.getSearchResults().isEmpty()) {
+            
+            LOG.warning(" ... no tutor request could be found ...");
+            
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH + 
+                    "?result=empty" + 
+                    "&rand=" + System.currentTimeMillis());
+        }
+        
+        // generate a random key
+        form.setShowResultsAnswer(1000 + (int)(Math.random() * 4000));
+        
+        // save the form to the session
+        // scope
+        saveToSessionScope(request, form);
+        
+        // send a redirect
+        return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH + 
+                "?searchKey=" + form.getShowResultsAnswer());
+    }
+    
+    
+     @RequestMapping(value = RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH, 
+            method = RequestMethod.GET,
+            params = {"searchKey"})
+    public ModelAndView showTutorRequestSearchResultsPage(HttpServletRequest request,
+            @RequestParam(value = "searchKey")String searchKey) {
+        
+        // check for the form from the
+        // session
+        TutorRequestsManagementForm form = (TutorRequestsManagementForm)
+                getFromSessionScope(request, TutorRequestsManagementForm.class);
+        if (form == null) {
+            LOG.warning("... invalid request ..."); 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH + 
+                                "?rand=" + System.currentTimeMillis());
+        }
+        
+        // check the search key
+        if (NumericUtils.isNaN(searchKey) || 
+                Integer.parseInt(searchKey) != form.getShowResultsAnswer()) {
+            LOG.warning("... invalid search key ..."); 
+            return sendRedirect(RequestMappings.TUTOR_REQUESTS_MANAGEMENT_SEARCH + 
+                                "?rand=" + System.currentTimeMillis());
+        }
+        
+        // return a view
+        return createModelAndView(Views.SEARCH_TUTOR_REQUESTS_RESULTS);
     }
     
     /**
@@ -158,7 +253,7 @@ public class TutorRequestsManagementController extends GenericController {
             // log an event
             SystemAuditManager.logAuditAsync(
                     EventTypes.MARK_TUTOR_REQUEST_AS_READ_EVENT, 
-                    context.getProfile().getUser(), 
+                    context.getProfile().getPerson().getUser(), 
                     Long.parseLong(requestId), 
                     null, 
                     request.getRemoteAddr(), 
@@ -227,7 +322,7 @@ public class TutorRequestsManagementController extends GenericController {
             // log an event
             SystemAuditManager.logAuditAsync(
                     EventTypes.DELETE_TUTOR_REQUEST_EVENT, 
-                    context.getProfile().getUser(), 
+                    context.getProfile().getPerson().getUser(), 
                     Long.parseLong(requestId), 
                     null, 
                     request.getRemoteAddr(), 

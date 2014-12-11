@@ -39,7 +39,7 @@ public class DashboardController extends GenericController {
         // get the audit trail for this user - last 15
         // activities
         helper.populateRecentAuditTrailByUser(form, 
-                context.getProfile().getUser().getUsername(), 
+                context.getProfile().getPerson().getUser().getUsername(), 
                 15);
         
         // save to the session scope

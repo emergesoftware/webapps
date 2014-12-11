@@ -4,6 +4,7 @@
     Author     : user
 --%>
 
+<%@page import="za.co.emergelets.xplain2me.webapp.CommonStylesheetsAndScripts"%>
 <%@page import="za.co.emergelets.xplain2me.webapp.component.LoginForm"%>
 <%
     LoginForm form = (LoginForm)session
@@ -22,46 +23,21 @@
     <head>
         <title>Login | Xplain2Me Tutoring</title>
         
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
-
-        <!-- Bootstrap: Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="http://bootswatch.com/cosmo/bootstrap.min.css" />
-
-        <!-- Bootstrap Glyphicons -->
-        <link type="text/css" rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" />
-
-        <!-- Latest version of jQuery -->
-        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <%@include file="../jspf/template/default-header.jspf" %>
         
-        <script type="text/javascript" 
-            src="<%= request.getContextPath() %>/assets/js/login.js"></script>
-            
-            
-        <!-- force reload on back press -->
-        <script type="text/javascript">
-            window.onpageshow = function(event) {
-                if (event.persisted) {
-                    document.body.style.display = "none";
-                    location.reload();
-                }
-            };
-        </script>
+        <script src="<%= request.getContextPath() %>/assets/js/login.js"></script>
         
     </head>
     <body onload="initialisation()">
         
         <div id="content" class="container">
             
-            <h4 class="text-primary">Xplain2Me Tutoring Services | Portal</h4>
-            <hr/>
+             
+            <%@include file="../jspf/template/default-banner.jspf" %>
+            
+            <%@include file="../jspf/template/default-nav-bar.jspf" %>
            
-            <h3>Login</h3>
+            <h3>Login | Xplain2Me Tutoring | Portal</h3>
             <p class="text-muted">
                 To utilise our portal, please provide your
                 login credentials below:
@@ -140,11 +116,6 @@
                     name="loginButton" class="btn btn-primary"
                     value="Login"/>
                
-                <a href="<%= request.getContextPath() %>/index"
-                   class="btn btn-default">
-                    Go Back
-                </a>
-                
             </form>
                             
             <br/>

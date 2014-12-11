@@ -96,5 +96,19 @@ public class PhysicalAddress implements Serializable {
         this.areaCode = areaCode;
     }
     
-    
+    public String toHtmlString() {
+        
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append(addressLine1).append("<br/>");
+        
+        if (addressLine2 != null && addressLine2.isEmpty() == false)
+            builder.append(addressLine2).append("<br/>");
+        
+        builder.append(suburb).append("<br/>");
+        builder.append(city).append("<br/>");
+        builder.append(areaCode).append("<br/>");
+        
+        return builder.toString();
+    }
 }
