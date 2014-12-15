@@ -12,5 +12,7 @@ public interface EventTypes {
     public static final long UPDATE_OWN_USER_PASSWORD = 1022;
     /** Update Own User Login Name */
     public static final long UPDATE_OWN_USERNAME = 1023;
+    /** Update Own Personal Information */
+    public static final long UPDATE_OWN_PERSONAL_INFORMATION = 1024;
     
 }

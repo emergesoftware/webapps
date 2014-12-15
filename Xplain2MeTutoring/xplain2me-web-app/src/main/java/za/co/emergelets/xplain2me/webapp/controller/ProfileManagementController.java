@@ -13,8 +13,8 @@ import za.co.emergelets.util.SHA256Encryptor;
 import za.co.emergelets.util.SaltGenerator;
 import za.co.emergelets.xplain2me.dao.EventTypes;
 import za.co.emergelets.xplain2me.dao.SystemAuditManager;
+import za.co.emergelets.xplain2me.entity.Person;
 import za.co.emergelets.xplain2me.entity.User;
-import za.co.emergelets.xplain2me.entity.UserSalt;
 import za.co.emergelets.xplain2me.webapp.component.AlertBlock;
 import za.co.emergelets.xplain2me.webapp.component.PasswordSet;
 import za.co.emergelets.xplain2me.webapp.component.ProfileManagementForm;
@@ -76,13 +76,16 @@ public class ProfileManagementController extends GenericController implements Se
             form.setProfileMode(EDIT_PROFILE_MODE);
         }
         
+        // resolve any alerts 
+        helper.resolveAnyAlerts(request);
+        
         // save the form to the
         // session scope
         saveToSessionScope(request, form);
         
         // return a view
         if (form.getProfileMode() == EDIT_PROFILE_MODE) {
-            return createModelAndView("profile", form.getProfile(), Views.EDIT_OWN_PROFILE);
+            return createModelAndView(Views.EDIT_OWN_PROFILE);
         }
         else
             return createModelAndView(Views.VIEW_OWN_PROFILE);
@@ -202,18 +205,123 @@ public class ProfileManagementController extends GenericController implements Se
             // send redirect
             return sendRedirect(RequestMappings.MY_PROFILE_EDIT + 
                 "?mode=1" + 
+                "&result=200" +
                 "&rand=" + System.currentTimeMillis());
         }
         
         else {
             
             // save the alert block to
-            // the request scope
+            // the session scope
             alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_ERROR);
-            saveToRequestScope(request, alertBlock);
+            saveToSessionScope(request, alertBlock);
             
             // some validations failed
-            return createModelAndView(Views.EDIT_OWN_PROFILE);
+            return sendRedirect(RequestMappings.MY_PROFILE_EDIT + 
+                "?mode=1" + 
+                "&result=201" +
+                "&rand=" + System.currentTimeMillis());
+            
+        }
+    }
+    
+    /**
+     * HANDLES THE REQUEST TO
+     * UPDATE THE PERSONAL INFORMATION
+     * 
+     * @param request
+     * @param lastName
+     * @param firstNames
+     * @param dateOfBirth
+     * @param gender
+     * @param citizenship
+     * @return 
+     */
+    @RequestMapping(value = RequestMappings.MY_PROFILE_EDIT, 
+            method = RequestMethod.POST,
+            params = {"lastName", "firstNames", "dateOfBirth",
+                      "gender", "citizenship"})
+    public ModelAndView updatePersonalInformationRequest(
+            HttpServletRequest request,
+            @RequestParam("lastName")String lastName,
+            @RequestParam("firstNames")String firstNames,
+            @RequestParam("dateOfBirth")String dateOfBirth,
+            @RequestParam("gender")String gender,
+            @RequestParam("citizenship")String citizenship) {
+        
+        // check for the form 
+        // in the session
+        ProfileManagementForm form = (ProfileManagementForm)
+                getFromSessionScope(request, ProfileManagementForm.class);
+        
+        if (form == null) {
+            
+            LOG.warning("... no form found in the session scope ...");
+            return sendRedirect(RequestMappings.MY_PROFILE_EDIT + 
+                "?mode=0" + 
+                "&rand=" + System.currentTimeMillis());
+        }
+        
+        // user context
+        UserContext context = (UserContext)
+                getFromSessionScope(request, UserContext.class);
+        
+        // Pull the original person
+        Person originalPerson = form.getProfile().getPerson();
+        
+        // Create the updated person
+        Person updatedPerson = helper.createUpdatedPerson(form, originalPerson, 
+                lastName, firstNames, dateOfBirth, gender, citizenship);
+        
+        // the alert block
+        AlertBlock alertBlock = new AlertBlock();
+        
+        if (helper.validateUpdatedPerson(updatedPerson, alertBlock)) {
+            
+            // update the person 
+            helper.updatePerson(updatedPerson);
+
+            // log an audit
+            SystemAuditManager.logAuditAsync(EventTypes.UPDATE_OWN_PERSONAL_INFORMATION, 
+                    context.getProfile().getPerson().getUser(), 
+                    0, null, 
+                    request.getRemoteAddr(), 
+                    request.getHeader("User-Agent"), 
+                    0, true);
+
+            // update the user context
+            context.getProfile().setPerson(updatedPerson);
+
+            // save to the 
+            // session scope
+            saveToSessionScope(request, context);
+            
+            // update in the form
+            form.getProfile().setPerson(updatedPerson);
+            
+            // save the form to the
+            // session scope
+            saveToSessionScope(request, form);
+            
+            // send redirect
+            return sendRedirect(RequestMappings.MY_PROFILE_EDIT + 
+                "?mode=1" + 
+                "&result=202" +
+                "&rand=" + System.currentTimeMillis());
+        }
+        
+        else {
+            
+            // save the alert block to
+            // the session scope
+            alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_ERROR);
+            saveToSessionScope(request, alertBlock);
+            
+            // some validations failed
+            return sendRedirect(RequestMappings.MY_PROFILE_EDIT + 
+                "?mode=1" + 
+                "&result=203" +
+                "&rand=" + System.currentTimeMillis());
             
         }
     }

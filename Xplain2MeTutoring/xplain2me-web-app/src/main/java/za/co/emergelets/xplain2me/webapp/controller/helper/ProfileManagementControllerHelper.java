@@ -3,21 +3,29 @@ package za.co.emergelets.xplain2me.webapp.controller.helper;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
+import za.co.emergelets.util.DateTimeUtils;
+import za.co.emergelets.util.NumericUtils;
 import za.co.emergelets.util.SHA256Encryptor;
+import za.co.emergelets.xplain2me.bo.PersonalInformationValidationRule;
+import za.co.emergelets.xplain2me.bo.PersonalInformationValidationRuleImpl;
 import za.co.emergelets.xplain2me.dao.CitizenshipDAO;
 import za.co.emergelets.xplain2me.dao.CitizenshipDAOImpl;
 import za.co.emergelets.xplain2me.dao.GenderDAO;
 import za.co.emergelets.xplain2me.dao.GenderDAOImpl;
+import za.co.emergelets.xplain2me.dao.PersonDAO;
+import za.co.emergelets.xplain2me.dao.PersonDAOImpl;
 import za.co.emergelets.xplain2me.dao.UserDAO;
 import za.co.emergelets.xplain2me.dao.UserDAOImpl;
 import za.co.emergelets.xplain2me.dao.UserSaltDAO;
 import za.co.emergelets.xplain2me.dao.UserSaltDAOImpl;
 import za.co.emergelets.xplain2me.entity.Citizenship;
 import za.co.emergelets.xplain2me.entity.Gender;
+import za.co.emergelets.xplain2me.entity.Person;
 import za.co.emergelets.xplain2me.entity.User;
 import za.co.emergelets.xplain2me.entity.UserSalt;
 import za.co.emergelets.xplain2me.webapp.component.AlertBlock;
@@ -32,10 +40,15 @@ public class ProfileManagementControllerHelper extends GenericController impleme
     private static final Logger LOG = 
             Logger.getLogger(ProfileManagementControllerHelper.class.getName(), null);
     
+    // data access objects
     private GenderDAO genderDAO;
     private CitizenshipDAO citizenshipDAO;
     private UserSaltDAO userSaltDAO;
     private UserDAO userDAO;
+    private PersonDAO personDAO;
+    
+    // business objects or rules
+    private PersonalInformationValidationRule personValidationRules;
     
     /**
      * Constructor
@@ -48,10 +61,14 @@ public class ProfileManagementControllerHelper extends GenericController impleme
      * INITIALISATION
      */
     private void initialize() {
+        
         this.genderDAO = new GenderDAOImpl();
         this.citizenshipDAO = new CitizenshipDAOImpl();
         this.userSaltDAO = new UserSaltDAOImpl();
         this.userDAO = new UserDAOImpl();
+        this.personDAO = new PersonDAOImpl();
+        
+        this.personValidationRules = new PersonalInformationValidationRuleImpl();
     }
 
     /**
@@ -195,7 +212,7 @@ public class ProfileManagementControllerHelper extends GenericController impleme
                     !originalPassword.equals(form.getProfile().getPerson()
                     .getUser().getPassword())) {
                 counter++;
-                alertBlock.addAlertBlockMessage("The current password entered does not match your "
+                alertBlock.addAlertBlockMessage("The current password entered does not match "
                         + "your original password.");
             }
 
@@ -256,5 +273,133 @@ public class ProfileManagementControllerHelper extends GenericController impleme
         }
         
         return userDAO.updateUser(updatedUser);
+    }
+
+    /**
+     * Resolves any alerts
+     * 
+     * @param request 
+     */
+    public void resolveAnyAlerts(HttpServletRequest request) {
+        
+        String resultCode = getParameterValue(request, "result");
+        
+        if (resultCode == null || 
+            resultCode.isEmpty() ||
+            NumericUtils.isNaN(resultCode)) {
+            
+            LOG.warning(" ... no result code found in the "
+                    + "request url ...");
+            return;
+        }
+        
+        AlertBlock alertBlock = new AlertBlock();
+        
+        switch (Integer.parseInt(resultCode)) {
+            
+            // IF THE USER WAS UPDATING THEIR USER CREDENTIALS
+            // AND THE ACTION WAS SUCCESSFUL.
+            case 200:
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
+                alertBlock.addAlertBlockMessage("Your User Credentials were "
+                        + "updated successfully.");
+                break;
+                
+            case 202:
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
+                alertBlock.addAlertBlockMessage("Your Personal Details were "
+                        + "updated successfully.");
+                break;
+                
+            // IF A COUPLE OF ERRORS OCCURED BUT THE
+            // ALERT BLOCK IS ALREADY IN THE 
+            // REQUEST SESSION
+            case 201:
+            case 203:
+                AlertBlock object = (AlertBlock)getFromSessionScope(request, 
+                        AlertBlock.class);
+                
+                if (object != null) {
+                    alertBlock = object;
+                    removeFromSessionScope(request, AlertBlock.class);
+                }
+                
+                break;
+        }
+        
+        // ONLY SAVE TO THE REQUEST SCOPE TO 
+        // IF THERE WAS ANY MESSAGES
+        if (alertBlock.getAlertBlockMessages().isEmpty() == false) 
+            saveToRequestScope(request, alertBlock);
+        
+    }
+
+    /**
+     * CREATES AN UPDATED PERSON
+     * ENTITY
+     * 
+     * @param form
+     * @param originalPerson
+     * @param lastName
+     * @param firstNames
+     * @param dateOfBirth
+     * @param gender
+     * @param citizenship
+     * @return 
+     */
+    public Person createUpdatedPerson(ProfileManagementForm form, 
+            Person originalPerson, String lastName, 
+            String firstNames, String dateOfBirth, 
+            String gender, String citizenship) {
+        
+        Person updatedPerson = new Person();
+        // transfer unchanged properties
+        updatedPerson.setId(originalPerson.getId());
+        updatedPerson.setIdentityNumber(originalPerson.getIdentityNumber());
+        updatedPerson.setUser(originalPerson.getUser());
+        updatedPerson.setPhysicalAddress(originalPerson.getPhysicalAddress());
+        updatedPerson.setContactDetail(originalPerson.getContactDetail());
+        
+        // update with the new data
+        updatedPerson.setLastName(lastName);
+        updatedPerson.setFirstNames(firstNames);
+        updatedPerson.setDateOfBirth(DateTimeUtils.parseDate(dateOfBirth));
+        updatedPerson.setGender(form.getGender().get(gender));
+        updatedPerson.setCitizenship(form.getCitizenship()
+                .get(Long.parseLong(citizenship)));
+        
+        return updatedPerson;
+    }
+    
+    public boolean validateUpdatedPerson(Person person, AlertBlock alertBlock) {
+        
+        if (person == null || alertBlock == null) {
+            LOG.warning(" ... person / alert block is null ...");
+            return false;
+        }
+        
+        List<String> errors = personValidationRules
+                .validatePersonalInformation(person);
+        
+        if (errors == null || errors.isEmpty()) {
+            return true;
+        }
+        
+        else {
+            
+            for (String error : errors) 
+                alertBlock.addAlertBlockMessage(error);
+            
+            return false;
+        }
+    }
+
+    public void updatePerson(Person updatedPerson) {
+        if (updatedPerson == null) {
+            LOG.warning(" .. update person failed - null ...");
+            return;
+        }
+        
+        personDAO.updatePerson(updatedPerson);
     }
 }

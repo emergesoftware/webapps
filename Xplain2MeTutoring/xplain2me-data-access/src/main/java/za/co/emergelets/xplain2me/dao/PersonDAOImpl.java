@@ -9,6 +9,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import za.co.emergelets.data.transformation.DataTransformerTool;
 import za.co.emergelets.xplain2me.entity.Person;
 
 public class PersonDAOImpl implements PersonDAO {
@@ -60,6 +61,37 @@ public class PersonDAOImpl implements PersonDAO {
             HibernateConnectionProvider.closeConnection(session);
         }
         
+    }
+
+    @Override
+    public Person updatePerson(Person person) throws DataAccessException {
+        if (person == null) {
+            return null;
+        }
+        
+        try {
+            
+            DataTransformerTool
+                    .transformStringValuesToUpperCase(person);
+            
+            session = HibernateConnectionProvider.getSessionFactory()
+                    .openSession();
+            
+            transaction = session.beginTransaction();
+            session.merge(person);
+            transaction.commit();
+            
+            return person;
+        }
+        
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
     }
     
     

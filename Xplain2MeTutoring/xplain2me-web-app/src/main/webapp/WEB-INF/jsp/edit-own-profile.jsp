@@ -238,7 +238,7 @@
                                     </div>
                                             
                                     <div class="form-group">
-                                        <input type="submit" name="updatePersonalInfoRequest"
+                                        <input type="submit"
                                                value="Update Personal Details" ondblclick="return false"
                                                class="btn btn-primary" />
                                     </div>

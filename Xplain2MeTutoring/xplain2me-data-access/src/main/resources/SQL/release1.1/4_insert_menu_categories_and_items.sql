@@ -53,7 +53,7 @@ values (7, 'Edit Profile', 'Edit your own profile',
 
 insert into menu_item(menu_item_id, menu_item_desc, menu_item_title, menu_item_relative_url, menu_item_load_onto_panel, menu_category_id) 
 values (8, 'Change Login', 'Edit your user login profile', 
-'/portal/account/edit-credentials', true, 5);
+'/portal/account/edit-credentials', false, 5);
 
 insert into menu_item(menu_item_id, menu_item_desc, menu_item_title, menu_item_relative_url, menu_item_load_onto_panel, menu_category_id) 
 values (9, 'Log Out', 'Logs a user out', '/account/logout', true, 5);
