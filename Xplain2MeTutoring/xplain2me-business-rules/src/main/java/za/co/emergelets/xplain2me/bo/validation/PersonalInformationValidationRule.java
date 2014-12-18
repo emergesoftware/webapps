@@ -1,4 +1,4 @@
-package za.co.emergelets.xplain2me.bo;
+package za.co.emergelets.xplain2me.bo.validation;
 
 import java.util.List;
 import za.co.emergelets.xplain2me.entity.Person;

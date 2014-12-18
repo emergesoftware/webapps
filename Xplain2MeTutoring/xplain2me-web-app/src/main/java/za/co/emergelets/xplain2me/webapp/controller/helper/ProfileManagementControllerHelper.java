@@ -3,6 +3,7 @@ package za.co.emergelets.xplain2me.webapp.controller.helper;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -11,27 +12,38 @@ import org.springframework.stereotype.Component;
 import za.co.emergelets.util.DateTimeUtils;
 import za.co.emergelets.util.NumericUtils;
 import za.co.emergelets.util.SHA256Encryptor;
-import za.co.emergelets.xplain2me.bo.PersonalInformationValidationRule;
-import za.co.emergelets.xplain2me.bo.PersonalInformationValidationRuleImpl;
+import za.co.emergelets.xplain2me.bo.validation.ContactDetailValidationRule;
+import za.co.emergelets.xplain2me.bo.validation.PersonalInformationValidationRule;
+import za.co.emergelets.xplain2me.bo.validation.PhysicalAddressValidationRule;
+import za.co.emergelets.xplain2me.bo.validation.impl.ContactDetailValidationRuleImpl;
+import za.co.emergelets.xplain2me.bo.validation.impl.PersonalInformationValidationRuleImpl;
+import za.co.emergelets.xplain2me.bo.validation.impl.PhysicalAddressValidationRuleImpl;
 import za.co.emergelets.xplain2me.dao.CitizenshipDAO;
 import za.co.emergelets.xplain2me.dao.CitizenshipDAOImpl;
+import za.co.emergelets.xplain2me.dao.ContactDetailDAO;
+import za.co.emergelets.xplain2me.dao.ContactDetailDAOImpl;
 import za.co.emergelets.xplain2me.dao.GenderDAO;
 import za.co.emergelets.xplain2me.dao.GenderDAOImpl;
 import za.co.emergelets.xplain2me.dao.PersonDAO;
 import za.co.emergelets.xplain2me.dao.PersonDAOImpl;
+import za.co.emergelets.xplain2me.dao.PhysicalAddressDAO;
+import za.co.emergelets.xplain2me.dao.PhysicalAddressDAOImpl;
 import za.co.emergelets.xplain2me.dao.UserDAO;
 import za.co.emergelets.xplain2me.dao.UserDAOImpl;
 import za.co.emergelets.xplain2me.dao.UserSaltDAO;
 import za.co.emergelets.xplain2me.dao.UserSaltDAOImpl;
 import za.co.emergelets.xplain2me.entity.Citizenship;
+import za.co.emergelets.xplain2me.entity.ContactDetail;
 import za.co.emergelets.xplain2me.entity.Gender;
 import za.co.emergelets.xplain2me.entity.Person;
+import za.co.emergelets.xplain2me.entity.PhysicalAddress;
 import za.co.emergelets.xplain2me.entity.User;
 import za.co.emergelets.xplain2me.entity.UserSalt;
 import za.co.emergelets.xplain2me.webapp.component.AlertBlock;
 import za.co.emergelets.xplain2me.webapp.component.PasswordSet;
 import za.co.emergelets.xplain2me.webapp.component.ProfileManagementForm;
 import za.co.emergelets.xplain2me.webapp.controller.GenericController;
+import za.co.emergelets.xplain2me.webapp.controller.ProfileManagementController;
 
 @Component
 public class ProfileManagementControllerHelper extends GenericController implements Serializable {
@@ -46,9 +58,13 @@ public class ProfileManagementControllerHelper extends GenericController impleme
     private UserSaltDAO userSaltDAO;
     private UserDAO userDAO;
     private PersonDAO personDAO;
+    private ContactDetailDAO contactDetailDAO;
+    private PhysicalAddressDAO physicalAddressDAO;
     
     // business objects or rules
     private PersonalInformationValidationRule personValidationRules;
+    private ContactDetailValidationRule contactDetailValidationRules;
+    private PhysicalAddressValidationRule addressValidationRules;
     
     /**
      * Constructor
@@ -67,8 +83,12 @@ public class ProfileManagementControllerHelper extends GenericController impleme
         this.userSaltDAO = new UserSaltDAOImpl();
         this.userDAO = new UserDAOImpl();
         this.personDAO = new PersonDAOImpl();
+        this.contactDetailDAO = new ContactDetailDAOImpl();
+        this.physicalAddressDAO = new PhysicalAddressDAOImpl();
         
         this.personValidationRules = new PersonalInformationValidationRuleImpl();
+        this.contactDetailValidationRules = new ContactDetailValidationRuleImpl();
+        this.addressValidationRules = new PhysicalAddressValidationRuleImpl();
     }
 
     /**
@@ -297,25 +317,36 @@ public class ProfileManagementControllerHelper extends GenericController impleme
         
         switch (Integer.parseInt(resultCode)) {
             
-            // IF THE USER WAS UPDATING THEIR USER CREDENTIALS
-            // AND THE ACTION WAS SUCCESSFUL.
-            case 200:
+            case ProfileManagementController.RESULT_USER_CREDENTIALS_UPDATE_SUCCESS:
+                
                 alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
                 alertBlock.addAlertBlockMessage("Your User Credentials were "
                         + "updated successfully.");
                 break;
                 
-            case 202:
+            case ProfileManagementController.RESULT_PERSONAL_DETAILS_UPDATE_SUCCESS:
+                
                 alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
                 alertBlock.addAlertBlockMessage("Your Personal Details were "
                         + "updated successfully.");
                 break;
                 
-            // IF A COUPLE OF ERRORS OCCURED BUT THE
-            // ALERT BLOCK IS ALREADY IN THE 
-            // REQUEST SESSION
-            case 201:
-            case 203:
+            case ProfileManagementController.RESULT_CONTACT_DETAILS_UPDATE_SUCCESS:
+                
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
+                alertBlock.addAlertBlockMessage("Your Contact Details were "
+                        + "updated successfully.");
+                break;
+                
+            case ProfileManagementController.RESULT_RESIDENTIAL_ADDRESS_UPDATE_SUCCESS:
+                
+                alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE);
+                alertBlock.addAlertBlockMessage("Your Residential Address was "
+                        + "updated successfully.");
+                break;
+                
+            case ProfileManagementController.RESULT_ERRORS_OCCURED:
+                
                 AlertBlock object = (AlertBlock)getFromSessionScope(request, 
                         AlertBlock.class);
                 
@@ -371,6 +402,14 @@ public class ProfileManagementControllerHelper extends GenericController impleme
         return updatedPerson;
     }
     
+    /**
+     * VALIDATES THE UPDATED PERSON
+     * ENTITY
+     * 
+     * @param person
+     * @param alertBlock
+     * @return 
+     */
     public boolean validateUpdatedPerson(Person person, AlertBlock alertBlock) {
         
         if (person == null || alertBlock == null) {
@@ -394,6 +433,12 @@ public class ProfileManagementControllerHelper extends GenericController impleme
         }
     }
 
+    /**
+     * UPDATES THE PERSON ENTITY
+     * INTO THE DATA STORE.
+     * 
+     * @param updatedPerson 
+     */
     public void updatePerson(Person updatedPerson) {
         if (updatedPerson == null) {
             LOG.warning(" .. update person failed - null ...");
@@ -401,5 +446,150 @@ public class ProfileManagementControllerHelper extends GenericController impleme
         }
         
         personDAO.updatePerson(updatedPerson);
+    }
+
+    /**
+     * CREATES AN INSTANCE OF THE
+     * UPDATED CONTACT DETAIL ENTITY.
+     * 
+     * @param request
+     * @param originalContactDetail
+     * @return 
+     */
+    public ContactDetail createUpdatedContactDetail(HttpServletRequest request, 
+            ContactDetail originalContactDetail) {
+        
+        if (originalContactDetail == null) {
+            return null;
+        }
+        
+        ContactDetail updatedContactDetail = new ContactDetail();
+        // copy the unchangeables from the original 
+        updatedContactDetail.setId(originalContactDetail.getId());
+        //setup the updated 
+        updatedContactDetail.setEmailAddress(getParameterValue(request, "emailAddress"));
+        updatedContactDetail.setCellphoneNumber("0" + 
+                getParameterValue(request, "contactNumber"));
+        
+        return updatedContactDetail;
+    
+    }
+
+    /**
+     * VALIDATES THE CONTACT DETAIL (UPDATED)
+     * ENTITY.
+     * 
+     * @param updatedContactDetail
+     * @param alertBlock
+     * @return 
+     */
+    public boolean validateUpdatedContactDetail(ContactDetail updatedContactDetail, 
+            AlertBlock alertBlock) {
+        
+        List<String> errors = new ArrayList<>();
+        
+        // validate the email address
+        errors.addAll(contactDetailValidationRules
+                .isEmailAddressValid(updatedContactDetail.getEmailAddress()));
+        // validate the contact number
+        errors.addAll(contactDetailValidationRules
+                .isContactNumberValid(updatedContactDetail.getCellphoneNumber()));
+        // check if the contact details are completely unique
+        if (!contactDetailDAO.isContactDetailCompletelyUnique(
+                updatedContactDetail, false)) {
+            errors.add("Either [Email Address or Contact Number] is "
+                    + "already in use by another person.");
+        }
+        
+        if (errors.isEmpty()) {
+            return true;
+        }
+        
+        else {
+            for (String error : errors) {
+                alertBlock.addAlertBlockMessage(error);
+            }
+
+            return false;
+        }
+    }
+
+    /**
+     * VALIDATES THE CONTACT DETAIL
+     * ENTITY IN THE DATA STORE.
+     * 
+     * @param updatedContactDetail
+     * @return 
+     */
+    public boolean updateContactDetails(ContactDetail updatedContactDetail) {
+        if (updatedContactDetail == null) {
+            LOG.warning(" ... could not initiate contact detail update ...");
+            return false;
+        }
+        
+        return (contactDetailDAO.updateContactDetail(
+                updatedContactDetail) != null);
+    }
+
+    /**
+     * CREATES AN INSTANCE OF THE 
+     * UPDATED PHYSICAL ADDRESS ENTITY.
+     * 
+     * @param request
+     * @param originalAddress
+     * @return 
+     */
+    public PhysicalAddress createUpdatedPhysicalAddress(HttpServletRequest request, 
+            PhysicalAddress originalAddress) {
+        
+        if (originalAddress == null) {
+            LOG.warning(" ... original physical address is null ...");
+            return null;
+        }
+        
+        PhysicalAddress updatedAddress = new PhysicalAddress();
+        // copy the unchangable properties
+        updatedAddress.setId(originalAddress.getId());
+        // get the updated properties
+        updatedAddress.setAddressLine1(getParameterValue(request, "physicalAddressLine1"));
+        updatedAddress.setAddressLine2(getParameterValue(request, "physicalAddressLine2"));
+        updatedAddress.setSuburb(getParameterValue(request, "suburb"));
+        updatedAddress.setCity(getParameterValue(request, "city"));
+        updatedAddress.setAreaCode(getParameterValue(request, "areaCode"));
+        
+        return updatedAddress;
+        
+    }
+
+    public boolean validateUpdatedPhysicalAddress(PhysicalAddress updatedAddress, 
+            AlertBlock alertBlock) {
+        
+        if (updatedAddress == null || alertBlock == null) {
+            return false;
+        }
+        
+        List<String> errors = new ArrayList<>();
+        errors.addAll(addressValidationRules.isPhysicalAddressValid(updatedAddress));
+        
+        if (errors.isEmpty()) return true;
+        else {
+        
+            for (String error : errors) {
+                alertBlock.addAlertBlockMessage(error);
+            }
+            
+            alertBlock.setAlertBlockType(AlertBlock.ALERT_BLOCK_ERROR);
+            return false;
+        }
+        
+    }
+
+    public boolean updatePhysicalAddress(PhysicalAddress updatedAddress) {
+        
+        if (updatedAddress == null) return false;
+        
+        return (physicalAddressDAO.updatePhysicalAddress(
+                updatedAddress) != null);
+        
     }
 }

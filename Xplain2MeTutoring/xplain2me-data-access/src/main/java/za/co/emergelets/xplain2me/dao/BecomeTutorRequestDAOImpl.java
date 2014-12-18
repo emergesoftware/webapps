@@ -7,10 +7,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Query;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.data.transformation.DataTransformerTool;
 import za.co.emergelets.xplain2me.entity.AcademicLevelsTutoredBefore;
@@ -130,6 +132,30 @@ public class BecomeTutorRequestDAOImpl implements BecomeTutorRequestDAO {
             HibernateConnectionProvider.rollback(transaction);
             
             LOG.log(Level.SEVERE, "error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+
+    @Override
+    public List<BecomeTutorRequest> getBecomeTutorRequests(int pageNumber) throws DataAccessException {
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            criteria = session.createCriteria(BecomeTutorRequest.class, "request")
+                    .addOrder(Order.desc("request.id"))
+                    .setFirstResult((pageNumber - 1) * 10)
+                    .setMaxResults(10);
+            
+            return criteria.list();
+        }
+        
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);
         }
         finally {

@@ -57,7 +57,7 @@ insert into profile_type(profile_type_id, profile_type_desc)
 values(100, 'Default Profile');
 
 insert into profile_type(profile_type_id, profile_type_desc)
-values(101, 'App Manager Profile');
+values(101, 'Manager Profile');
 
 insert into profile_type(profile_type_id, profile_type_desc)
 values(102, 'Tutor Profile');
@@ -85,8 +85,8 @@ insert into province values(8, 'Northern Cape');
 insert into province values(9, 'Western Cape');
 
 -- CREATE A NEW USER (APPLICATION MANAGER)
-insert into users(user_name, user_password, user_active, user_role_id)
-values('washington', '716867a5cf04f066656259c4bb8ff5cedf73b7b690755e24c8acc455cd1604fa', true, 101);
+insert into users(user_name, user_password, user_active)
+values('washington', '716867a5cf04f066656259c4bb8ff5cedf73b7b690755e24c8acc455cd1604fa', true);
 
 -- CREATE A PASSWORD SALT ENTRY FOR THE NEW USER
 insert into user_salt(user_salt_value, user_id)
@@ -99,7 +99,7 @@ values('0784755987', 'wchingwa@yahoo.com');
 -- CREATE THE PHYSICAL ADDRESS DETAILS FOR THE NEW USER
 insert into physical_address(physical_address_line_1, physical_address_line_2, physical_address_suburb, 
 physical_address_city, physical_address_area_code) 
-values('Bramley View', '', 'bramley', 'Johannesburg', '2086');
+values('0C Corlett Drive', 'Bramley View', 'Bramley', 'Johannesburg', '2086');
 
 -- CREATE A NEW PERSON FOR THE NEW USER
 insert into person(person_last_name, person_first_names, person_date_of_birth, person_id_number, 

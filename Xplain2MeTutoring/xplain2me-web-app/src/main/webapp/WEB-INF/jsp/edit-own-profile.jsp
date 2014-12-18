@@ -4,6 +4,7 @@
     Author     : user
 --%>
 
+<%@page import="za.co.emergelets.xplain2me.entity.PhysicalAddress"%>
 <%@page import="za.co.emergelets.xplain2me.entity.Citizenship"%>
 <%@page import="za.co.emergelets.xplain2me.entity.Gender"%>
 <%@page import="za.co.emergelets.util.DateTimeUtils"%>
@@ -250,6 +251,121 @@
 
                         </div>
                         <!-- end: Personal Information -->
+                        
+                        <!-- start: Contact Details -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    EDIT CONTACT INFORMATION
+                                </h3>
+                            </div>
+
+                            <div class="panel-body">
+                                
+                                <form id="contactInfoForm" name="contactInfoForm"
+                                      method="post" 
+                                      action="<%= request.getContextPath() + RequestMappings.MY_PROFILE_EDIT %>">
+                                    
+                                    <div class="form-group">
+                                        <label>Email Address:</label>
+                                        <input type="email" id="emailAddress" name="emailAddress"
+                                               placeholder="Enter your email address (Required)"
+                                               class="form-control" 
+                                               value="<%= profile.getPerson().getContactDetail().getEmailAddress() %>"/>
+                                    </div>
+                                    
+                                    <%
+                                        String contactNumber = profile.getPerson().getContactDetail().getCellphoneNumber();
+                                        if (contactNumber.startsWith("0"))
+                                            contactNumber = contactNumber.substring(1);
+                                    %>
+                                    
+                                    <div class="form-group">
+                                        <label>Contact Number:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">+27</span>
+                                            <input type="text" id="contactNumber" name="contactNumber"
+                                                class="form-control" placeholder="Enter your contact number (Required)" 
+                                                data-validation="number"
+                                                value="<%= contactNumber %>"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <input type="submit" value="Update Contact Details"
+                                               class="btn btn-primary"
+                                               ondblclick="return false"/>
+                                    </div> 
+                                    
+                                </form>
+                            </div>
+
+                        </div>
+                        <!-- end: Contact Details -->
+                        
+                        <!-- start: Physical Address -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    EDIT RESIDENTIAL ADDRESS
+                                </h3>
+                            </div>
+
+                            <div class="panel-body">
+                                
+                                <%
+                                    PhysicalAddress address = profile.getPerson().getPhysicalAddress();
+                                %>
+
+                                <form id="addressForm" id="addressForm"
+                                    method="post"
+                                    action="<%= request.getContextPath() + RequestMappings.MY_PROFILE_EDIT %>">
+                                    
+                                    <!-- Physical Address Line 1 to 4 -->
+                                    <div class="form-group">
+                                        <label>Physical Address:</label>
+
+                                        <input type="text" id="physicalAddressLine1" name="physicalAddressLine1"
+                                               class="form-control" placeholder="Enter street number / street name / unit number etc. (Required)"
+                                               value="<%= (address.getAddressLine1() == null) ? "" : address.getAddressLine1() %>"
+                                               max-length="36" />
+
+                                        <input type="text" id="physicalAddressLine2" name="physicalAddressLine2"
+                                               class="form-control" placeholder="Enter complex name / section / extension etc. (Optional)"
+                                               value="<%= (address.getAddressLine2() == null) ? "" : address.getAddressLine2() %>"
+                                               max-length="36" />
+
+                                        <input type="text" id="suburb" name="suburb"
+                                               class="form-control" placeholder="Enter suburb / town (Required)"
+                                               value="<%= (address.getSuburb() == null) ? "" : address.getSuburb() %>"
+                                               max-length="36" />
+
+                                        <input type="text" id="city" name="city"
+                                               class="form-control" placeholder="Enter city / municipality (Required)"
+                                               value="<%= (address.getCity() == null) ? "" : address.getCity() %>"
+                                               max-length="36" />
+                                    </div>
+
+                                    <!-- Area Code -->
+                                    <div class="form-group">
+                                        <label>Area Code:</label>
+                                        <input type="text" id="areaCode" name="areaCode"
+                                               class="form-control" placeholder="Enter area code (Required)"
+                                               value="<%= (address.getAreaCode() == null) ? "" 
+                                                       : address.getAreaCode() %>" max-length="6" />
+                                    </div>
+
+                                    <div class="form-group">
+                                            <input type="submit" value="Update Residential Address"
+                                                   class="btn btn-primary"
+                                                   ondblclick="return false"/>
+                                    </div> 
+                                    
+                                </form>
+                            </div>
+
+                        </div>
+                        <!-- end: Physical Address -->
                         
                     </div>
                 </div>

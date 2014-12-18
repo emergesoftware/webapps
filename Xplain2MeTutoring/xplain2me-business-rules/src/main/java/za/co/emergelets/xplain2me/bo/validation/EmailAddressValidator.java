@@ -1,4 +1,4 @@
-package za.co.emergelets.util.mail;
+package za.co.emergelets.xplain2me.bo.validation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -14,5 +14,9 @@ public interface EventTypes {
     public static final long UPDATE_OWN_USERNAME = 1023;
     /** Update Own Personal Information */
     public static final long UPDATE_OWN_PERSONAL_INFORMATION = 1024;
+    /** Update Own Contact Details */
+    public static final long UPDATE_OWN_CONTACT_DETAILS = 1025;
+    /** Update Own Physical Address */
+    public static final long UPDATE_OWN_RESIDENTIAL_ADDRESS = 1026;
     
 }

@@ -31,9 +31,12 @@ public interface Views {
     public static final String SEARCH_TUTOR_REQUESTS = "search-tutor-requests";
     public static final String SEARCH_TUTOR_REQUESTS_RESULTS = "search-tutor-requests_results";
     
-    // PROFILE MANAGEMENT MAPPINGS
+    // PROFILE MANAGEMENT VIEWS
     public static final String VIEW_OWN_PROFILE = "view-own-profile";
     public static final String EDIT_OWN_PROFILE = "edit-own-profile";
+    
+    // TUTOR JOB APPLICATIONS VIEWS
+    public static final String BROWSE_TUTOR_JOBS_APPLICATIONS = "browse-tutor-job-applications";
     
     // ERROR VIEWS
     public static final String GENERIC_ERROR_PAGE = "generic-error-page";

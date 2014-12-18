@@ -3,6 +3,7 @@ package za.co.emergelets.xplain2me.webapp.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.emergelets.util.SHA256Encryptor;
-import za.co.emergelets.xplain2me.dao.PersonDAO;
-import za.co.emergelets.xplain2me.dao.PersonDAOImpl;
 import za.co.emergelets.xplain2me.dao.ProfileDAO;
 import za.co.emergelets.xplain2me.dao.ProfileDAOImpl;
 import za.co.emergelets.xplain2me.dao.ProfileTypeUrlPermissionsDAO;
@@ -27,14 +26,20 @@ import za.co.emergelets.xplain2me.webapp.controller.helper.LoginControllerHelper
 @Controller
 public class LoginController extends GenericController {
     
+    private static final Logger LOG = 
+            Logger.getLogger(LoginController.class.getName(), null);
+    
     // the form
     private LoginForm form;
     
     // data access objects
     private final UserSaltDAO userSaltDAO;
     private final ProfileDAO profileDAO;
-    private final PersonDAO personDAO;
     private final ProfileTypeUrlPermissionsDAO profileTypeUrlPermissionsDAO;
+    
+    public static final int RESULT_USER_BLOCKED = 300;
+    public static final int USERNAME_OR_PASSWORD_NOT_PROVIDED = 301;
+    public static final int UNABLE_TO_AUTHENTICATE_USER = 302;
     
     // the controller helper class
     @Autowired
@@ -44,7 +49,6 @@ public class LoginController extends GenericController {
         
         this.userSaltDAO = new UserSaltDAOImpl();
         this.profileDAO = new ProfileDAOImpl();
-        this.personDAO = new PersonDAOImpl();
         this.profileTypeUrlPermissionsDAO = new ProfileTypeUrlPermissionsDAOImpl();
         
     }
@@ -74,6 +78,9 @@ public class LoginController extends GenericController {
         if (form == null) {
             form = new LoginForm();
         }
+        
+        // resolve any alerts
+        //helper.resolveAnyAlerts(request);
         
         // serialize form to the session
         saveToSessionScope(request, form);
@@ -110,20 +117,27 @@ public class LoginController extends GenericController {
             
             form.getErrorsEncountered().add("You have exhausted your "
                     + "chances of loggin in.");
-            
             saveToSessionScope(request, form);
-            return createModelAndView(Views.LOGIN);
+            
+            return sendRedirect(RequestMappings.LOGIN + 
+                  "?result=" + RESULT_USER_BLOCKED + 
+                  "&rand=" + System.currentTimeMillis());
+            
         }
         
         // check if the username and password are not null
         if ((username == null || username.isEmpty()) || 
                 (password == null || password.isEmpty())) {
+            
             form.getErrorsEncountered().add("Either your username and/or password "
                     + "were not provided.");
             helper.accumulateLoginAttempts(form);
             
             saveToSessionScope(request, form);
-            return createModelAndView(Views.LOGIN);
+            
+            return sendRedirect(RequestMappings.LOGIN + 
+                  "?result=" + USERNAME_OR_PASSWORD_NOT_PROVIDED + 
+                  "&rand=" + System.currentTimeMillis());
         }
         
         // collect the username and password
@@ -144,7 +158,8 @@ public class LoginController extends GenericController {
      * @param request
      * @return 
      */
-    @RequestMapping(value = RequestMappings.PROCESS_LOGIN_REQUEST, method = RequestMethod.GET)
+    @RequestMapping(value = RequestMappings.PROCESS_LOGIN_REQUEST, 
+            method = RequestMethod.GET)
     public ModelAndView processLoginRequest(HttpServletRequest request) {
         
         // check the session
@@ -163,7 +178,10 @@ public class LoginController extends GenericController {
                     + "chances of loggin in.");
             
             saveToSessionScope(request, form);
-            return createModelAndView(Views.LOGIN);
+            
+            return sendRedirect(RequestMappings.LOGIN + 
+                  "?result=" + RESULT_USER_BLOCKED + 
+                  "&rand=" + System.currentTimeMillis());
         }
         
         // retrieve the salt value for hashing the password
@@ -176,7 +194,10 @@ public class LoginController extends GenericController {
             helper.accumulateLoginAttempts(form); 
             
             saveToSessionScope(request, form);
-            return createModelAndView(Views.LOGIN);
+            
+            return sendRedirect(RequestMappings.LOGIN + 
+                  "?result=" + UNABLE_TO_AUTHENTICATE_USER + 
+                  "&rand=" + System.currentTimeMillis());
         }
         
         // perform a SHA-256 to hash the password
@@ -201,7 +222,10 @@ public class LoginController extends GenericController {
             helper.accumulateLoginAttempts(form); 
             
             saveToSessionScope(request, form);
-            return createModelAndView(Views.LOGIN);
+            
+            return sendRedirect(RequestMappings.LOGIN + 
+                  "?result=" + UNABLE_TO_AUTHENTICATE_USER + 
+                  "&rand=" + System.currentTimeMillis());
         }
         
         else {
@@ -223,10 +247,6 @@ public class LoginController extends GenericController {
             
             // save the context to the session
             saveToSessionScope(request, context);
-            
-            // log the login audit async
-            /* SystemAuditManager.logAuditAsync(EventTypes.LOGIN_EVENT, profile.getUser(), 0, 
-                    null, request.getRemoteAddr(), request.getHeader("User-Agent"), 0, true); */
             
             // redirect to the appropriate page
             return helper.redirectToRelevantDashboardPage();

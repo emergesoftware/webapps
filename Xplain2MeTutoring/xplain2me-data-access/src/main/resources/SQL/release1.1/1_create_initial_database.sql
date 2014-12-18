@@ -25,8 +25,8 @@ SET time_zone="+00:00";
 -- ACADEMIC LEVELS
 CREATE TABLE IF NOT EXISTS academic_level (
 
-    academic_level_id INT(11) NOT NULL AUTO_INCREMENT,
-    academic_level_desc VARCHAR(128) NOT NULL,
+    academic_level_id INT(11) NOT NULL AUTO_INCREMENT UNIQUE,
+    academic_level_desc VARCHAR(128) NOT NULL UNIQUE,
 
     PRIMARY KEY (academic_level_id)
 );
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS academic_level (
 -- APP CLIENT INFORMATION
 CREATE TABLE IF NOT EXISTS app_client (
 
-    app_client_id INT(11) NOT NULL AUTO_INCREMENT,
+    app_client_id INT(11) NOT NULL AUTO_INCREMENT UNIQUE,
     app_client_name VARCHAR(128) NOT NULL,
     app_client_trading_name VARCHAR(128) NOT NULL,
     app_client_business_reg_number VARCHAR(64),
@@ -56,20 +56,20 @@ CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT NOT NULL UNIQUE,
     user_name VARCHAR(24) NOT NULL UNIQUE,
     user_password TEXT NOT NULL,
-    user_active BOOLEAN DEFAULT 0 NOT NULL,
+    user_active BOOLEAN DEFAULT FALSE NOT NULL,
     user_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     user_deactivated TIMESTAMP,
-    user_role_id INT(11) NOT NULL,
 
     PRIMARY KEY (user_id)
 );
 
 -- EVENT
 CREATE TABLE IF NOT EXISTS event (
-    event_type INT(11) NOT NULL,
-    event_short_desc VARCHAR(128) NOT NULL,
-    event_desc TEXT NOT NULL,
-    event_is_financial bool DEFAULT 0 NOT NULL,
+
+    event_type INT(11) NOT NULL UNIQUE,
+    event_short_desc VARCHAR(128) NOT NULL UNIQUE,
+    event_desc VARCHAR(255) NOT NULL UNIQUE,
+    event_is_financial BOOLEAN DEFAULT FALSE NOT NULL,
 
     PRIMARY KEY (event_type)
 );
@@ -77,16 +77,16 @@ CREATE TABLE IF NOT EXISTS event (
 -- AUDIT
 CREATE TABLE IF NOT EXISTS audit (
 
-    audit_id INT(11) NOT NULL AUTO_INCREMENT,
+    audit_id INT(11) NOT NULL AUTO_INCREMENT UNIQUE,
     audit_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     event_type INT(11) NOT NULL,
-    user_id INT NOT NULL,
+    user_id INT(11) NOT NULL,
     audit_reference INT(11) DEFAULT 0 NOT NULL,
     audit_xml TEXT,
     audit_ip_address VARCHAR(255) NOT NULL DEFAULT '127.0.0.1',
     audit_user_agent TEXT NOT NULL,
     audit_authority_code INT(11),
-    audit_authorised bool DEFAULT 1 NOT NULL,
+    audit_authorised BOOLEAN DEFAULT TRUE NOT NULL,
 
     PRIMARY KEY (audit_id),
     FOREIGN KEY (event_type) REFERENCES event(event_type),
@@ -97,12 +97,12 @@ CREATE TABLE IF NOT EXISTS audit (
 -- PHYSICAL ADDRESS
 CREATE TABLE IF NOT EXISTS physical_address (
 
-    physical_address_id INT(11) AUTO_INCREMENT NOT NULL,
+    physical_address_id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
     physical_address_line_1 TEXT NOT NULL,
     physical_address_line_2 TEXT,
     physical_address_suburb TEXT NOT NULL,
     physical_address_city TEXT NOT NULL,
-    physical_address_area_code TEXT, 
+    physical_address_area_code TEXT NOT NULL, 
 
     PRIMARY KEY (physical_address_id)
 );
@@ -110,8 +110,8 @@ CREATE TABLE IF NOT EXISTS physical_address (
 -- CITIZENSHIP
 CREATE TABLE IF NOT EXISTS citizenship (
 
-    citizenship_id INT(11) NOT NULL,
-    citizenship_desc VARCHAR(128) NOT NULL,
+    citizenship_id INT(11) NOT NULL UNIQUE,
+    citizenship_desc VARCHAR(128) NOT NULL UNIQUE,
 
     PRIMARY KEY (citizenship_id)
 );
@@ -119,17 +119,18 @@ CREATE TABLE IF NOT EXISTS citizenship (
 -- CONTACT DETAILS
 CREATE TABLE IF NOT EXISTS contact_detail (
 
-    contact_detail_id INT(11) AUTO_INCREMENT NOT NULL,
-    contact_detail_cell_number VARCHAR(32) NOT NULL,
-    contact_detail_email_address TEXT NOT NULL,
+    contact_detail_id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
+    contact_detail_cell_number VARCHAR(32) NOT NULL UNIQUE,
+    contact_detail_email_address VARCHAR(255) NOT NULL UNIQUE,
 
     PRIMARY KEY(contact_detail_id)
 );
 
 -- GENDER
 CREATE TABLE IF NOT EXISTS gender (
+
     gender_id VARCHAR(1) NOT NULL UNIQUE,
-    gender_desc VARCHAR(64) NOT NULL,
+    gender_desc VARCHAR(64) NOT NULL UNIQUE,
 
     PRIMARY KEY (gender_id)
 );
@@ -137,14 +138,14 @@ CREATE TABLE IF NOT EXISTS gender (
 -- PERSON
 CREATE TABLE IF NOT EXISTS person (
 
-    person_id INT(11) AUTO_INCREMENT NOT NULL,
+    person_id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
     person_last_name VARCHAR(128) NOT NULL,
-    person_first_names TEXT NOT NULL,
+    person_first_names VARCHAR(255) NOT NULL,
     person_date_of_birth TIMESTAMP NOT NULL,
-    person_id_number VARCHAR(32) NOT NULL,
+    person_id_number VARCHAR(32) NOT NULL UNIQUE,
     gender_id VARCHAR(1) NOT NULL,
     citizenship_id INT(11)  NOT NULL,
-    contact_detail_id INT(11)  NOT NULL,
+    contact_detail_id INT(11) NOT NULL UNIQUE,
     physical_address_id INT(11)  NOT NULL,
     user_id INT NOT NULL,
 
@@ -159,8 +160,8 @@ CREATE TABLE IF NOT EXISTS person (
 -- PROFILE TYPE
 CREATE TABLE IF NOT EXISTS profile_type (
 
-    profile_type_id INT(11) NOT NULL,
-    profile_type_desc VARCHAR(64) NOT NULL,
+    profile_type_id INT(11) NOT NULL UNIQUE,
+    profile_type_desc VARCHAR(64) NOT NULL UNIQUE,
     profile_type_active BOOLEAN DEFAULT TRUE NOT NULL,
 
     PRIMARY KEY (profile_type_id)
@@ -169,12 +170,12 @@ CREATE TABLE IF NOT EXISTS profile_type (
 -- PROFILE
 CREATE TABLE IF NOT EXISTS profile (
 
-    profile_id INT(11) AUTO_INCREMENT NOT NULL,
+    profile_id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
     profile_type_id INT(11) NOT NULL,
     profile_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    person_id INT NOT NULL,
+    person_id INT NOT NULL UNIQUE,
     profile_verified BOOLEAN DEFAULT 0 NOT NULL,
-    profile_verification_code TEXT,
+    profile_verification_code VARCHAR(64),
 
     PRIMARY KEY (profile_id),
     FOREIGN KEY (person_id) REFERENCES person(person_id),
@@ -184,8 +185,8 @@ CREATE TABLE IF NOT EXISTS profile (
 
 -- SUBJECT
 CREATE TABLE IF NOT EXISTS subject (
-    subject_id INT(11) NOT NULL,
-    subject_name VARCHAR(128) NOT NULL,
+    subject_id INT(11) NOT NULL UNIQUE,
+    subject_name VARCHAR(128) NOT NULL UNIQUE,
 
     PRIMARY KEY (subject_id)
 );
@@ -193,7 +194,7 @@ CREATE TABLE IF NOT EXISTS subject (
 -- TUTOR REQUEST
 CREATE TABLE IF NOT EXISTS tutor_request (
 
-    tutor_request_id INT(11) AUTO_INCREMENT NOT NULL,
+    tutor_request_id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
     tutor_request_first_names TEXT NOT NULL,
     tutor_request_last_name VARCHAR(128) NOT NULL,
     tutor_request_gender bool DEFAULT 1 NOT NULL,
@@ -217,7 +218,7 @@ CREATE TABLE IF NOT EXISTS tutor_request (
 -- TUTOR REQUEST SUBJECTS
 CREATE TABLE IF NOT EXISTS tutor_request_subjects (
 
-    tutor_request_subjects_id INT(11) AUTO_INCREMENT NOT NULL,
+    tutor_request_subjects_id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
     tutor_request_id INT(11)  NOT NULL,
     subject_id INT(11)  NOT NULL,
     
@@ -232,7 +233,7 @@ UNIQUE (tutor_request_id, subject_id);
 -- USER SALT
 CREATE TABLE IF NOT EXISTS user_salt (
 
-    user_salt_id INT(11) AUTO_INCREMENT NOT NULL,
+    user_salt_id INT(11) AUTO_INCREMENT NOT NULL UNIQUE,
     user_salt_value TEXT NOT NULL,
     user_salt_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     user_id INT NOT NULL,

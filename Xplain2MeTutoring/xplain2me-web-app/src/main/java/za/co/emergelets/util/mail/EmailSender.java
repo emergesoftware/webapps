@@ -1,5 +1,6 @@
 package za.co.emergelets.util.mail;
 
+import za.co.emergelets.xplain2me.bo.validation.EmailAddressValidator;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.List;

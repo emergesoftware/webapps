@@ -1,10 +1,11 @@
-package za.co.emergelets.xplain2me.bo;
+package za.co.emergelets.xplain2me.bo.validation.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import za.co.emergelets.xplain2me.bo.validation.PersonalInformationValidationRule;
 import za.co.emergelets.xplain2me.entity.Person;
 
 public class PersonalInformationValidationRuleImpl implements PersonalInformationValidationRule {

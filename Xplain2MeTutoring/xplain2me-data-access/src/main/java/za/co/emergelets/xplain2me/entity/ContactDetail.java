@@ -6,21 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "contact_detail")
 public class ContactDetail implements Serializable {
-    
-    /*
-    Table: contact_detail
-    
-    Columns:
-        contact_detail_id int not null unique default nextval('contact_detail_id_sequence'),
-        contact_detail_cell_number varchar(32) not null unique,
-        contact_detail_email_address varchar(256) not null unique
-    */
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

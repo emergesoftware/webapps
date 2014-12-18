@@ -32,4 +32,14 @@ public interface BecomeTutorRequestDAO {
             List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore, 
             List<BecomeTutorSupportingDocument> documents) throws DataAccessException;
     
+    /**
+     * Gets a list of become a tutor requests
+     * 
+     * @param pageNumber
+     * @return
+     * @throws DataAccessException 
+     */
+    public List<BecomeTutorRequest> getBecomeTutorRequests(int pageNumber)
+            throws DataAccessException;
+    
 }

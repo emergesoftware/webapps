@@ -12,7 +12,7 @@ public interface RequestMappings {
     
     // USER LOGIN MAPINGS
     public static final String LOGIN = "/account/login";
-    public static final String PROCESS_LOGIN_REQUEST = "/process-login-request";
+    public static final String PROCESS_LOGIN_REQUEST = "/account/process-login-request";
     public static final String LOGOUT = "/account/logout";
     
     // USER DASHBOARD MAPPINGS
@@ -41,5 +41,9 @@ public interface RequestMappings {
             "/portal/tutor-requests/remove";
     public static final String TUTOR_REQUESTS_MANAGEMENT_DETAILS = 
             "/portal/tutor-requests/details";
+    
+    // BECOME A TUTOR MANAGEMENT MAPPINGS
+    public static final String BROWSE_TUTOR_JOB_APPLICATIONS = 
+            "/portal/tutor-job-applications/browse";
     
 }
