@@ -42,4 +42,15 @@ public interface BecomeTutorRequestDAO {
     public List<BecomeTutorRequest> getBecomeTutorRequests(int pageNumber)
             throws DataAccessException;
     
+    /**
+     * Gets the become a tutor request
+     * by ID.
+     * 
+     * @param id
+     * @return
+     * @throws DataAccessException 
+     */
+    public BecomeTutorRequest getBecomeTutorRequest(long id) 
+            throws DataAccessException;
+    
 }

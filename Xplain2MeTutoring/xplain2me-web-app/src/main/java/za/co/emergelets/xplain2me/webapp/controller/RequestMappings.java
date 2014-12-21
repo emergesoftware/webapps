@@ -45,5 +45,7 @@ public interface RequestMappings {
     // BECOME A TUTOR MANAGEMENT MAPPINGS
     public static final String BROWSE_TUTOR_JOB_APPLICATIONS = 
             "/portal/tutor-job-applications/browse";
+    public static final String VIEW_TUTOR_JOB_APPLICATION_DETAILS = 
+            "/portal/tutor-job-applications/details";
     
 }

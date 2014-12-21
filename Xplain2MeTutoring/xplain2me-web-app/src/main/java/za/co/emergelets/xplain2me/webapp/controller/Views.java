@@ -37,6 +37,7 @@ public interface Views {
     
     // TUTOR JOB APPLICATIONS VIEWS
     public static final String BROWSE_TUTOR_JOBS_APPLICATIONS = "browse-tutor-job-applications";
+    public static final String VIEW_TUTOR_JOB_APPLICATION_DETAILS = "view-tutor-job-application-details";
     
     // ERROR VIEWS
     public static final String GENERIC_ERROR_PAGE = "generic-error-page";

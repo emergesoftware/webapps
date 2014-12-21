@@ -41,11 +41,19 @@ public class TutorJobApplicationControllerHelper extends GenericController imple
                 .getBecomeTutorRequests(form.getCurrentPageNumber());
         TreeMap<Long, BecomeTutorRequest> map = new TreeMap<>();
         
-        for (BecomeTutorRequest request : list) {
-            map.put(request.getId(), request);
+        if (list != null && !list.isEmpty()) {
+            for (BecomeTutorRequest request : list) 
+                map.put(request.getId(), request);
+            
+            form.setTutorJobApplications(map);
+            form.setCannotGoForward(false);
         }
         
-        form.setTutorJobApplications(map);
+        else {
+            
+            form.setCurrentPageNumber(form.getCurrentPageNumber() - 1);
+            form.setCannotGoForward(true);
+        }
     }
     
 }

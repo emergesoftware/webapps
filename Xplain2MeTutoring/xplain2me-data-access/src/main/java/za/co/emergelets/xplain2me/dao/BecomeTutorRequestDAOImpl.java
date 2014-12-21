@@ -162,5 +162,34 @@ public class BecomeTutorRequestDAOImpl implements BecomeTutorRequestDAO {
             HibernateConnectionProvider.closeConnection(session);
         }
     }
+
+    @Override
+    public BecomeTutorRequest getBecomeTutorRequest(long id) throws DataAccessException {
+        if (id < 1) {
+            LOG.warning(" the ID for the become a tutor request is not valid.");
+            return null;
+        }
+        
+        BecomeTutorRequest request = null;
+        
+        try {
+            
+            session = HibernateConnectionProvider.getSessionFactory()
+                    .openSession();
+            request = (BecomeTutorRequest)session.createCriteria(BecomeTutorRequest.class, "request")
+                    .add(Restrictions.eq("request.id", id))
+                    .uniqueResult();
+            
+            return request;
+            
+        }
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
     
 }

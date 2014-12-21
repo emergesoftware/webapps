@@ -69,9 +69,10 @@
                                         tutor job applications on page <strong><%= currentPage %></strong>.
                                     </span>
                                 </p>
-                                <table class="table table-stripped">
+                                <table class="table table-bordered" style="font-size: 90%">
                                     <thead>
                                         <tr>
+                                            <th>Actions</th>
                                             <th>Sequence #</th>
                                             <th>Last Name</th>
                                             <th>First Names</th>
@@ -81,7 +82,7 @@
                                             <th>ID / Passport</th>
                                             <th>Gender</th>
                                             <th>Submitted on</th>
-                                            <th></th>
+                                            
                                         </tr>
                                     </thead>
                                     
@@ -93,6 +94,42 @@
                                     BecomeTutorRequest item = requests.get(id);
                                 %>
                                 <tr>
+                                    <td>
+                                        <div class="btn-group">
+
+                                            <button type="button" data-toggle="dropdown" 
+                                                    class="btn btn-primary btn-sm dropdown-toggle">
+                                                <span class="glyphicon glyphicon-list"></span>
+                                                <span class="caret"></span>
+                                            </button>
+
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                                                <li>
+                                                    <a  title="View all details"
+                                                        href="<%=request.getContextPath() %>/portal/tutor-job-applications/details?id=<%= item.getId() %>">
+                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                        &nbsp;View Details
+                                                    </a>
+                                                </li>
+                                                 <li>
+                                                    <a  title="Download supporting documents"
+                                                        href="<%=request.getContextPath() %>/portal/tutor-job-applications/documents/download?id=<%= item.getId() %>">
+                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                        &nbsp;Download supporting documents
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a title="Send applicant an email" href="mailto:<%= item.getEmailAddress() %>"
+                                                       target="_blank">
+                                                        <span class="glyphicon glyphicon-envelope"></span>
+                                                        &nbsp;Compose Email
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </td>
+                                    
                                     <td>
                                         <%= item.getId() %>
                                     </td>
@@ -124,40 +161,7 @@
                                         <%= DateTimeUtils
                                                 .formatDateTime(item.getDateSubmitted()) %>
                                     </td>
-                                    <td style="width: 135px">
-                                        <div class="btn-group">
-
-                                            <button type="button" data-toggle="dropdown" 
-                                                    class="btn btn-primary dropdown-toggle">
-                                                Action <span class="caret"></span>
-                                            </button>
-
-                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                                                <li>
-                                                    <a  title="View all details"
-                                                        href="<%=request.getContextPath() %>/portal/tutor-job-applications/details?id=<%= item.getId() %>">
-                                                        <span class="glyphicon glyphicon-th-list"></span>
-                                                        &nbsp;View Details
-                                                    </a>
-                                                </li>
-                                                 <li>
-                                                    <a  title="Download supporting documents"
-                                                        href="<%=request.getContextPath() %>/portal/tutor-job-applications/documents/download?id=<%= item.getId() %>">
-                                                        <span class="glyphicon glyphicon-th-list"></span>
-                                                        &nbsp;Download supporting documents
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a title="Send applicant an email" href="mailto:<%= item.getEmailAddress() %>"
-                                                       target="_blank">
-                                                        <span class="glyphicon glyphicon-envelope"></span>
-                                                        &nbsp;Compose Email
-                                                    </a>
-                                                </li>
-                                            </ul>
-
-                                        </div>
-                                    </td>
+                                    
                                 </tr>
                                 
                                 
@@ -167,6 +171,53 @@
                                 %>
                                     </tbody>
                                 </table>
+                                <!-- start: Pagination -->
+                                <div id="pagination">
+                                    <hr/>
+                                    <p>
+                                        <span>Current Page: </span>
+                                        <span>
+                                            <strong>
+                                                <%= form.getCurrentPageNumber() %>
+                                            </strong>
+                                        </span>
+                                    </p>
+                                    <ul class="pager">
+                                        
+                                        <%
+                                            if (form.getCurrentPageNumber() == 1) {
+                                                %>
+                                        <li class="previous disabled">
+                                            <a href="#">
+                                                ← Previous
+                                            </a>
+                                        </li>
+                                        <%
+                                            }
+                                            
+                                            else {
+                                                %>
+                                        <li class="previous">
+                                            <a href="<%= request.getContextPath() + RequestMappings.BROWSE_TUTOR_JOB_APPLICATIONS + "?page=" + (form.getCurrentPageNumber() - 1) %>">
+                                                ← Previous
+                                            </a>
+                                        </li>
+                                        <%
+                                            }
+      
+                                        %>
+                                        
+                                        
+                                        <li class="next <%= (form.isCannotGoForward()) ? "disabled" : "" %>">
+                                            <a href="<%= request.getContextPath() + RequestMappings.BROWSE_TUTOR_JOB_APPLICATIONS + "?page=" + (form.getCurrentPageNumber() + 1) %>">
+                                                Next →
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <hr/>
+                                </div>
+                                <!-- end: Pagination -->
+                                
                                     <%
                             }
                         %>
@@ -177,7 +228,7 @@
                     <!-- start: TUTOR JOB APPLICATIONS AUDIT TRAIL -->
                     <div class="col-md-12">
                         <hr/>
-                        <h4>BROWSE TUTOR JOB APPLICATIONS</h4>
+                        <h4>RECENT RELATED AUDIT TRAIL</h4>
                         <hr/>
                         
                         <p>

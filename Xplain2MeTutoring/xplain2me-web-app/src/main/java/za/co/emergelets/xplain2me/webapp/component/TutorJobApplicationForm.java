@@ -1,7 +1,6 @@
 package za.co.emergelets.xplain2me.webapp.component;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.stereotype.Component;
 import za.co.emergelets.xplain2me.entity.BecomeTutorRequest;
@@ -11,6 +10,7 @@ public class TutorJobApplicationForm implements Serializable {
     
     private TreeMap<Long, BecomeTutorRequest> tutorJobApplications;
     private int currentPageNumber;
+    private boolean cannotGoForward;
     
     public TutorJobApplicationForm() {
         resetForm();
@@ -19,6 +19,7 @@ public class TutorJobApplicationForm implements Serializable {
     public final void resetForm() {
         this.tutorJobApplications = null;
         this.currentPageNumber = 1;
+        this.cannotGoForward = false;
     }
 
     public TreeMap<Long, BecomeTutorRequest> getTutorJobApplications() {
@@ -41,6 +42,14 @@ public class TutorJobApplicationForm implements Serializable {
 
     public void setCurrentPageNumber(int currentPageNumber) {
         this.currentPageNumber = currentPageNumber;
+    }
+
+    public boolean isCannotGoForward() {
+        return cannotGoForward;
+    }
+
+    public void setCannotGoForward(boolean cannotGoForward) {
+        this.cannotGoForward = cannotGoForward;
     }
     
     
