@@ -11,8 +11,12 @@ src="<%= CommonStylesheetsAndScripts.JQUERY_FORM_VALIDATION_JS %>"></script>
 
 <script> 
     $(document).ready(function() {
+        
         $.validate({
-            modules : 'date'
+            modules : 'date',
+            validateOnBlur : false, 
+            errorMessagePosition : 'top',
+            scrollToTopOnError : true 
         }); 
     });
 </script>

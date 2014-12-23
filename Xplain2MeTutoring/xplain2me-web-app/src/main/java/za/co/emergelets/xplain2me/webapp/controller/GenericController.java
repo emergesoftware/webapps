@@ -1,11 +1,13 @@
 package za.co.emergelets.xplain2me.webapp.controller;
 
 import java.util.Date;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.springframework.web.servlet.ModelAndView;
+import za.co.emergelets.xplain2me.webapp.component.UserContext;
 
 public abstract class GenericController {
 
@@ -17,6 +19,29 @@ public abstract class GenericController {
      */
     protected GenericController() {
         this.session = null;
+    }
+    
+    /**
+     * Checks for the web application's session
+     * heartbeat
+     * 
+     * @param request
+     * @return 
+     */
+    protected boolean inspectWebAppHeartbeat(HttpServletRequest request) {
+        
+        session = request.getSession(false);
+        if (session == null) 
+            return false;
+        
+        UserContext userContext = (UserContext)session
+                .getAttribute(UserContext.class.getName());
+        
+        if (userContext == null)
+            return false;
+        
+        return true;
+        
     }
     
     /**
@@ -49,9 +74,11 @@ public abstract class GenericController {
      * @param viewName
      * @return 
      */
-    protected ModelAndView createModelAndView(String modelName, Object modelObject, 
-            String viewName) {
-        return new ModelAndView(viewName, modelName, modelObject);
+    protected ModelAndView createModelAndView(String modelName, Object modelObject, String viewName) {
+        
+        ModelAndView modelAndView = new ModelAndView(viewName);
+        modelAndView.addObject(modelName, modelObject);
+        return modelAndView;
     }
     
     /**
@@ -80,7 +107,6 @@ public abstract class GenericController {
 
         session = request.getSession(true);
         session.setAttribute(object.getClass().getName(), object);
-        session.setMaxInactiveInterval(900);
         return session.getId();
         
     }
@@ -149,23 +175,6 @@ public abstract class GenericController {
     }
     
     /**
-     * Gets the value carried by the parameter specified
-     * 
-     * @param request
-     * @param parameterName
-     * @param convertNullToEmpty
-     * @return 
-     */
-    protected String getParameterValue(HttpServletRequest request, String parameterName, 
-            boolean convertNullToEmpty) {
-        
-        String value = getParameterValue(request, parameterName);
-        if (value == null) value = "";
-        
-        return value;
-    }
-    
-    /**
      * Gets the values in an array, carried by the specified
      * parameter
      * 
@@ -198,8 +207,37 @@ public abstract class GenericController {
      * @return 
      */
     protected ModelAndView sendRedirect(String path) {
-
         return createModelAndView("redirect:" + path);
+    }
+    
+    /**
+     * Sends a redirect with parameters-values
+     * in a map
+     * 
+     * @param path
+     * @param parameterValues
+     * @return 
+     */
+    protected ModelAndView sendRedirect(String path, Map<String, String> parameterValues) {
+        
+        StringBuilder queryString = new StringBuilder();
+        queryString.append(path)
+                   .append("?");
+        
+        for (String parameter : parameterValues.keySet()) {
+            
+            String value = parameterValues.get(parameter);
+            queryString.append(parameter)
+                    .append("=")
+                    .append(value)
+                    .append("&");
+        }
+        
+        queryString.append("rand=")
+                .append(System.currentTimeMillis());
+        
+        return sendRedirect(queryString.toString());
+        
     }
     
     /**

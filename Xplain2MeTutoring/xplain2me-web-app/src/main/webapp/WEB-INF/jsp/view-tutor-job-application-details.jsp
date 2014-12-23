@@ -138,15 +138,15 @@
                                     <td colspan="2">
                                         
                                         <a  title="Download supporting documents" 
-                                            class="btn btn-primary btn-sm"
-                                            href="#">
+                                            class="btn btn-primary btn-sm" target="_blank"
+                                            href="<%= request.getContextPath() + RequestMappings.DOWNLOAD_TUTOR_JOB_APPLICATION_SUPPORTING_DOCUMENTS + "?id=" + becomeTutorRequest.getId() %>">
                                             <span class="glyphicon glyphicon-save"></span>
                                             <span>&nbsp;Download supporting documents</span>
                                         </a>
 
                                         <a title="Approve / Accept" 
                                            class="btn btn-primary btn-sm"
-                                            href="#">
+                                            href="<%= request.getContextPath() + RequestMappings.APPROVE_TUTOR_JOB_APPLICATION + "?id=" + becomeTutorRequest.getId() %>">
                                             <span class="glyphicon glyphicon-hand-right"></span>
                                             <span>&nbsp;Approve / Accept</span>
                                         </a>

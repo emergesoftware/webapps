@@ -34,5 +34,5 @@ public final class CommonStylesheetsAndScripts {
             APP_CONTEXT + "/assets/datepicker/js/bootstrap-datepicker.js";
     
     public static final String NORMALISE_CSS =
-            APP_CONTEXT + "/aasets/normalize/normalize.css";
+            APP_CONTEXT + "/assets/normalize/normalize.css";
 }

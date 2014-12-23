@@ -47,5 +47,11 @@ public interface RequestMappings {
             "/portal/tutor-job-applications/browse";
     public static final String VIEW_TUTOR_JOB_APPLICATION_DETAILS = 
             "/portal/tutor-job-applications/details";
+    public static final String APPROVE_TUTOR_JOB_APPLICATION = 
+            "/portal/tutor-job-applications/approve";
+    public static final String DOWNLOAD_TUTOR_JOB_APPLICATION_SUPPORTING_DOCUMENTS = 
+            "/portal/tutor-job-applications/documents/download";
+    public static final String SEARCH_TUTOR_JOB_APPLICATIONS = 
+            "/portal/tutor-job-applications/search";
     
 }

@@ -9,9 +9,8 @@ public class DataAccessTestClass {
     public static void main(String... args) throws Exception {
        
         BecomeTutorRequestDAO dao = new BecomeTutorRequestDAOImpl();
-        BecomeTutorRequest request = dao.getBecomeTutorRequest(1);
         
-        System.out.println("Result: " + request);
+        System.out.println("Result: " + dao.getBecomeTutorSupportingDocuments(1).toString());
         
         HibernateConnectionProvider.destroyConnectionPools();
     }

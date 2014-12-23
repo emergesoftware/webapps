@@ -1,15 +1,9 @@
-<%-- 
-    Document   : browse-tutor-job-applications
-    Created on : 16 Dec 2014, 8:23:29 PM
-    Author     : user
---%>
 
 <%@page import="za.co.emergelets.util.DateTimeUtils"%>
-<%@page import="za.co.emergelets.util.BooleanToText"%>
-<%@page import="java.util.Map"%>
 <%@page import="java.util.TreeMap"%>
 <%@page import="za.co.emergelets.xplain2me.entity.BecomeTutorRequest"%>
 <%@page import="za.co.emergelets.xplain2me.webapp.component.TutorJobApplicationForm"%>
+
 <%
     TutorJobApplicationForm form = (TutorJobApplicationForm)
             session.getAttribute(TutorJobApplicationForm.class.getName());
@@ -18,43 +12,41 @@
     }
     
     TreeMap<Long, BecomeTutorRequest> requests = form.getTutorJobApplications();
-    int currentPage = form.getCurrentPageNumber();
-    int nextPage = currentPage + 1;
 %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
     <head>
-        <title>Browse Tutor Job Applications | Xplain2Me Tutoring</title>
+        <title>Search Tutor Requests</title>
+        
         <%@include file="../jspf/template/default-manager-header.jspf" %>
         
     </head>
     <body>
         <div id="wrapper">
+            
             <%@include file="../jspf/template/default-manager-navigation.jspf" %>
             
             <div class="container-fluid" id="page-wrapper">
                 
-                <h2>Tutor Job Applications</h2>
+                <h2>Tutor Job Applications Search Results</h2>
                 <hr/>
                 
                 <%@include file="../jspf/template/default-alert-block.jspf" %>
                 
                 <div class="row">
-                    <!-- start: BROWSE TUTOR JOB APPLICATIONS -->
+                    
                     <div class="col-md-12">
-                        
-                        <h4>BROWSE TUTOR JOB APPLICATIONS</h4>
-                        <hr/>
-                        
-                        <%
+                      
+                         <%
                             if (requests.isEmpty()) {
                                 %>
                                 <p>
                                     <span class="glyphicon glyphicon-bullhorn"></span>
                                     <span>&nbsp;</span>
-                                    <span>There are no tutor job applications made so far.</span>
+                                    <span>There are no tutor job applications that were found
+                                        during the search.</span>
                                 </p>
                         <%
                             }
@@ -65,8 +57,8 @@
                                 <p>
                                     <span class="glyphicon glyphicon-bullhorn"></span>
                                     <span>&nbsp;</span>
-                                    <span>Showing <strong><%= requests.size() %></strong> 
-                                        tutor job applications on page <strong><%= currentPage %></strong>.
+                                    <span>
+                                        Found <%= requests.size() %> tutor job application(s).
                                     </span>
                                 </p>
                                 <table class="table table-bordered" style="font-size: 90%">
@@ -171,85 +163,15 @@
                                 %>
                                     </tbody>
                                 </table>
-                                <!-- start: Pagination -->
-                                <div id="pagination">
-                                    <hr/>
-                                    <p>
-                                        <span>Current Page: </span>
-                                        <span>
-                                            <strong>
-                                                <%= form.getCurrentPageNumber() %>
-                                            </strong>
-                                        </span>
-                                    </p>
-                                    <ul class="pager">
-                                        
-                                        <%
-                                            if (form.getCurrentPageNumber() == 1) {
-                                                %>
-                                        <li class="previous disabled">
-                                            <a href="#">
-                                                ← Previous
-                                            </a>
-                                        </li>
-                                        <%
-                                            }
-                                            
-                                            else {
-                                                %>
-                                        <li class="previous">
-                                            <a href="<%= request.getContextPath() + RequestMappings.BROWSE_TUTOR_JOB_APPLICATIONS + "?page=" + (form.getCurrentPageNumber() - 1) %>">
-                                                ← Previous
-                                            </a>
-                                        </li>
-                                        <%
-                                            }
-      
-                                        %>
-                                        
-                                        
-                                        <li class="next <%= (form.isCannotGoForward()) ? "disabled" : "" %>">
-                                            <a href="<%= request.getContextPath() + RequestMappings.BROWSE_TUTOR_JOB_APPLICATIONS + "?page=" + (form.getCurrentPageNumber() + 1) %>">
-                                                Next →
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <hr/>
-                                </div>
-                                <!-- end: Pagination -->
-                                
-                                    <%
+                       <% 
                             }
-                        %>
-                        
+                       %>
                     </div>
-                    <!-- end: BROWSE TUTOR JOB APPLICATIONS -->    
-                    
-                    <!-- start: TUTOR JOB APPLICATIONS AUDIT TRAIL -->
-                    <div class="col-md-12">
-                        <hr/>
-                        <h4>RECENT RELATED AUDIT TRAIL</h4>
-                        <hr/>
-                        
-                        <p>
-                            <span class="glyphicon glyphicon-bullhorn"></span>
-                            <span>&nbsp;</span>
-                            <span>
-                                <label class="label label-info">Coming soon</label> 
-                                <br/>
-                                In the near future, you will be able
-                                to see the most recent audit trail related to events
-                                within tutor job applications - done by you.
-                            </span>
-                        </p>
-                        
-                    </div>
-                    <!-- end: TUTOR JOB APPLICATIONS AUDIT TRAIL -->
                     
                 </div>
-                
+                                    
             </div>
-                        
+            
             <%@include file="../jspf/template/default-footer.jspf" %> 
             
         </div>

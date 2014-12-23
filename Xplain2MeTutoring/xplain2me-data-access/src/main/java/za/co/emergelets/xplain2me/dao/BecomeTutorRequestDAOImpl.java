@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Query;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -183,6 +182,133 @@ public class BecomeTutorRequestDAOImpl implements BecomeTutorRequestDAO {
             return request;
             
         }
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+
+    @Override
+    public List<BecomeTutorSupportingDocument> getBecomeTutorSupportingDocuments(long requestId) throws DataAccessException {
+        if (requestId < 1) {
+            LOG.warning("... the request ID does not appear authentic ...");
+            return null;
+        }
+        
+        try {
+            
+            session = HibernateConnectionProvider.getSessionFactory().openSession();
+            criteria = session.createCriteria(BecomeTutorSupportingDocument.class, "document")
+                    .createAlias("document.request", "request")
+                    .add(Restrictions.eq("request.id", requestId))
+                    .addOrder(Order.asc("document.id"));
+            
+            return criteria.list();
+            
+        }
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+
+    @Override
+    public BecomeTutorRequest searchBecomeTutorRequestByIdNumber(String identityNumber) throws DataAccessException {
+        if (identityNumber == null || identityNumber.isEmpty()) {
+            LOG.warning(" the ID number is not provided ...");
+            return null;
+        }
+        
+        BecomeTutorRequest request = null;
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            criteria = session.createCriteria(BecomeTutorRequest.class)
+                    .add(Restrictions.eq("identityNumber", identityNumber.toUpperCase()));
+            iterator = criteria.list().iterator();
+            
+            while (iterator.hasNext())
+                request = (BecomeTutorRequest)iterator.next();
+            
+            return request;
+        }
+        
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+        
+    }
+
+    @Override
+    public BecomeTutorRequest searchBecomeTutorRequestByEmailAddress(String emailAddress) throws DataAccessException {
+        if (emailAddress == null || emailAddress.isEmpty()) {
+            LOG.warning(" the email address is not provided ...");
+            return null;
+        }
+        
+        BecomeTutorRequest request = null;
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            criteria = session.createCriteria(BecomeTutorRequest.class)
+                    .add(Restrictions.eq("emailAddress", emailAddress.toUpperCase()));
+            iterator = criteria.list().iterator();
+            
+            while (iterator.hasNext())
+                request = (BecomeTutorRequest)iterator.next();
+            
+            return request;
+        }
+        
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+
+    @Override
+    public BecomeTutorRequest searchBecomeTutorRequestByContactNumber(String contactNumber) throws DataAccessException {
+        if (contactNumber == null || contactNumber.isEmpty()) {
+            LOG.warning(" the contact number is not provided ...");
+            return null;
+        }
+        
+        BecomeTutorRequest request = null;
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            criteria = session.createCriteria(BecomeTutorRequest.class)
+                    .add(Restrictions.eq("contactNumber", contactNumber.toUpperCase()));
+            iterator = criteria.list().iterator();
+            
+            while (iterator.hasNext())
+                request = (BecomeTutorRequest)iterator.next();
+            
+            return request;
+        }
+        
         catch (HibernateException e) {
             LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
             throw new DataAccessException(e);

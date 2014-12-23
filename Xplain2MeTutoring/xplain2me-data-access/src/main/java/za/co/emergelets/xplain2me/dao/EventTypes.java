@@ -18,5 +18,7 @@ public interface EventTypes {
     public static final long UPDATE_OWN_CONTACT_DETAILS = 1025;
     /** Update Own Physical Address */
     public static final long UPDATE_OWN_RESIDENTIAL_ADDRESS = 1026;
+    /** Send a tutor interview invitation */
+    public static final long SEND_TUTOR_APPLICANT_INTERVIEW_INVITATION = 1027;
     
 }

@@ -56,8 +56,8 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
     
     private static final long MAX_FILE_UPLOAD_SIZE = 1000000 * 5;
     private static final int FILE_SIZE_THRESHOLD = 4 * 1024;
-    private static final String WIN_FILE_REPOSITORY = "C:\\\\Users\\{0}\\Temp";
-    private static final String LINUX_FILE_REPOSITORY = "/tmp";
+    public static final String WIN_FILE_REPOSITORY = "C:\\Users\\{0}\\Temp";
+    public static final String LINUX_FILE_REPOSITORY = "/tmp";
     
     public BecomeTutorControllerHelper() {
     }
@@ -929,7 +929,7 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
      * 
      * @return 
      */
-    private boolean isWindowsOperationSystem() {
+    public static boolean isWindowsOperationSystem() {
         
         String operatingSystemName = 
                 System.getProperty("os.name").toLowerCase();

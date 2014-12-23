@@ -53,4 +53,46 @@ public interface BecomeTutorRequestDAO {
     public BecomeTutorRequest getBecomeTutorRequest(long id) 
             throws DataAccessException;
     
+    /**
+     * Gets a list of supporting documents
+     * 
+     * @param requestId
+     * @return
+     * @throws DataAccessException 
+     */
+    public List<BecomeTutorSupportingDocument> getBecomeTutorSupportingDocuments(long requestId)
+            throws DataAccessException;
+    
+    /**
+     * Searches for a BecomeTutorRequest entity
+     * using the identity number.
+     * 
+     * @param identityNumber
+     * @return
+     * @throws DataAccessException 
+     */
+    public BecomeTutorRequest searchBecomeTutorRequestByIdNumber(String identityNumber)
+            throws DataAccessException;
+    
+    /**
+     * Searches for a BecomeTutorRequest entity 
+     * using the email address.
+     * 
+     * @param emailAddress
+     * @return
+     * @throws DataAccessException 
+     */
+    public BecomeTutorRequest searchBecomeTutorRequestByEmailAddress(String emailAddress)
+            throws DataAccessException;
+    
+    /**
+     * Searches for a BecomeTutorRequest entity
+     * using the contact number.
+     * 
+     * @param contactNumber
+     * @return
+     * @throws DataAccessException 
+     */
+    public BecomeTutorRequest searchBecomeTutorRequestByContactNumber(String contactNumber)
+            throws DataAccessException;
 }

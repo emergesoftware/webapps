@@ -1,9 +1,12 @@
 package za.co.emergelets.xplain2me.webapp.component;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.TreeMap;
 import org.springframework.stereotype.Component;
+import za.co.emergelets.xplain2me.entity.Audit;
 import za.co.emergelets.xplain2me.entity.BecomeTutorRequest;
+import za.co.emergelets.xplain2me.entity.BecomeTutorSupportingDocument;
 
 @Component
 public class TutorJobApplicationForm implements Serializable {
@@ -11,6 +14,11 @@ public class TutorJobApplicationForm implements Serializable {
     private TreeMap<Long, BecomeTutorRequest> tutorJobApplications;
     private int currentPageNumber;
     private boolean cannotGoForward;
+    
+    private BecomeTutorRequest tutorJobApplication;
+    private List<BecomeTutorSupportingDocument> supportingDocuments;
+    
+    private List<Audit> auditTrail;
     
     public TutorJobApplicationForm() {
         resetForm();
@@ -20,6 +28,11 @@ public class TutorJobApplicationForm implements Serializable {
         this.tutorJobApplications = null;
         this.currentPageNumber = 1;
         this.cannotGoForward = false;
+        
+        this.tutorJobApplication = null;
+        this.supportingDocuments = null;
+        
+        this.auditTrail = null;
     }
 
     public TreeMap<Long, BecomeTutorRequest> getTutorJobApplications() {
@@ -51,7 +64,29 @@ public class TutorJobApplicationForm implements Serializable {
     public void setCannotGoForward(boolean cannotGoForward) {
         this.cannotGoForward = cannotGoForward;
     }
-    
-    
+
+    public BecomeTutorRequest getTutorJobApplication() {
+        return tutorJobApplication;
+    }
+
+    public void setTutorJobApplication(BecomeTutorRequest tutorJobApplication) {
+        this.tutorJobApplication = tutorJobApplication;
+    }
+
+    public List<BecomeTutorSupportingDocument> getSupportingDocuments() {
+        return supportingDocuments;
+    }
+
+    public void setSupportingDocuments(List<BecomeTutorSupportingDocument> supportingDocuments) {
+        this.supportingDocuments = supportingDocuments;
+    }
+
+    public List<Audit> getAuditTrail() {
+        return auditTrail;
+    }
+
+    public void setAuditTrail(List<Audit> auditTrail) {
+        this.auditTrail = auditTrail;
+    }
     
 }
