@@ -21,4 +21,11 @@ public interface EventTypes {
     /** Send a tutor interview invitation */
     public static final long SEND_TUTOR_APPLICANT_INTERVIEW_INVITATION = 1027;
     
+    /** Create New User */
+    public static final long CREATE_NEW_USER_PROFILE = 2000;
+    /** Assign User To Profile */
+    public static final long ASSIGN_USER_TO_PROFILE = 2001;
+    /** Verify Own Profile */
+    public static final long VERIFY_OWN_PROFILE = 2008;
+    
 }

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -94,8 +95,8 @@ public class TutorJobApplicationControllerHelper extends GenericController imple
             ));
         }
         catch (ParseException e) {
-            LOG.severe("... an error occured while attempting to parse the "
-                        + "date of the interview... error: " + e.getMessage());
+            LOG.log(Level.SEVERE,"... an error occured while attempting to parse the " +
+                    "date of the interview... error: {0}", e.getMessage());
             approval.setDateOfInterview(null);
         }
         
@@ -110,8 +111,8 @@ public class TutorJobApplicationControllerHelper extends GenericController imple
             
         }
         catch (ParseException e) {
-            LOG.severe("... an error occured while attempting to parse the "
-                        + "time of the interview... error: " + e.getMessage());
+            LOG.log(Level.SEVERE,"... an error occured while attempting to parse the " + 
+                    "time of the interview... error: {0}", e.getMessage());
             approval.setDateOfInterview(null);
         }
         

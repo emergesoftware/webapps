@@ -26,7 +26,7 @@ public final class SystemAuditManager {
      * @param authorityCode
      * @param authorised 
      */
-    public static void logAuditAsync(final long eventType, final User user, final long referenceNumber, 
+    public synchronized static void logAuditAsync(final long eventType, final User user, final long referenceNumber, 
             final String auditXml, final String sourceIpAddress, final String userAgent,
             final long authorityCode, final boolean authorised) {
         

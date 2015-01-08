@@ -6,5 +6,6 @@ public enum EmailTemplateType {
     NotifyNewTutorJobApplication,
     ReceiptNewTutorJobApplication,
     NotifyNewQuoteRequest,
-    SendUserVerificatioCode
+    SendUserVerificatioCode,
+    SendNewUserVerificationInstructions
 }

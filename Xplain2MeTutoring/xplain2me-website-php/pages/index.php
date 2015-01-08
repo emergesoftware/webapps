@@ -49,6 +49,8 @@
                                             <li>Breaking down complex concepts to an understandable level.</li>
                                             <li>Pinpointing the important things in the modules and chapters for tests and exam preparations.</li>
                                             <li>Unpacking and explaining difficult components of the modules to improve understanding.</li>
+                                            <li>Different rates apply for different student levels and the more the lessons you purchase the 
+                                                less our rates are for you.</li>
                                         </ul>
                                     </div>
                                     
@@ -62,21 +64,28 @@
                                         <br/>
                                         <br/>
                                         
-                                        <h2>Our Rates</h2>
-                                        <p>Different rates apply for different student levels and the more the lessons you purchase the 
-											less our rates are for you.For a quotation to be sent to you, fill in the information 
-											from the link below and submit.
+                                        <h2>Rates</h2>
+                                   
+                                        <p>
+                                            Our rates are affordable yet we offer the best service with utilization of 
+                                            qualified and trained tutors.We ensure our clients get value for their 
+                                            money by following up regularly on student performance and ensuring progress 
+                                            is being made. We encourage our tutors to motivate students to ensure both 
+                                            the tutor and the student are working to achieve desired results.
+                                            <br/> <br/>
+                                            
+                                            <br/>
+                                            For more information,send an email to 
+                                            <a href="mailto:info@xplain2me.co.za" 
+                                               target="_blank" title="Send Email">
+                                                info@xplain2me.co.za</a> or contact <strong>Washington</strong> at 
+                                           <a href="tel:+27728931542" target="_blank" title="Call">0728931542</a>.
+                                           <br/>
+                                           <br/>
+                                       
+                                            <!-- Social Media Links -->
                                         </p>
                                         
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <p>
-                                        <a href="http://portal.xplain2me.co.za/xplain2me/quote-request" 
-											color = "blue">Request a quote</a> 
-											for a quotation to be sent to you.</p>
-                                        
-                                       <br/>
                                     </div>
                                     
                                     <div class="post">

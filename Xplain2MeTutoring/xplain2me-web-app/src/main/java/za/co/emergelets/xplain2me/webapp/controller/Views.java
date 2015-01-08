@@ -46,4 +46,9 @@ public interface Views {
     // ERROR VIEWS
     public static final String GENERIC_ERROR_PAGE = "generic-error-page";
     
+    // USER MANAGEMENT VIEWS
+    public static final String BROWSE_EXISTING_USERS = "browse-existing-users";
+    public static final String ADD_NEW_USER = "add-new-user";
+    public static final String VERIFY_NEW_OWN_USER_PROFILE = "verify-new-own-user-profile";
+    
 }

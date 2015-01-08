@@ -1,6 +1,10 @@
 package za.co.emergelets.xplain2me.webapp.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -460,7 +464,7 @@ public class ProfileManagementController extends GenericController implements Se
                     0, true);
             
             // update the user context with the
-            // updated physical  address
+            // updated physical address
             context.getProfile().getPerson().setPhysicalAddress(updatedAddress);
             saveToSessionScope(request, context);
             

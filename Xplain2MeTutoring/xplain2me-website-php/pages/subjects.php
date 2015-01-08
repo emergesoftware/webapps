@@ -96,6 +96,21 @@
                                             and lesson preparation.
                                         </li>
                                     </ul>
+                                    <br/>
+                                    
+                                    <h2>Performance Targets</h2>
+                                    
+                                    <p>We have set performance targets for our students, so as to meet our objectives on the students’ productivity and to attain this we have a  
+                                        review basis where the students’ progress is monitored on an individual basis and corrective steps and timely adjustments are made where 
+                                        necessary .Performance evaluation will be done after every test and exam Tutors will also report on their analysis of students’ progress 
+                                        after every 3 lessons to the administrator in charge of the students and if slow or no progress at all is being , then adjustments will 
+                                        be done by the tutor with regards to materials used, techniques on tutoring approach to questions and study methods.
+                                    </p>
+                                    
+                                    <p>All results of tests and exams will be analysed and one on one discussion will be held, with students who perform below average, the 
+                                        tutor’s responsibility will be to pinpoint what went wrong and adjustments to be made to exam techniques.
+                                    </p>
+                                    
                                 </div>
                                 
                             </div>
