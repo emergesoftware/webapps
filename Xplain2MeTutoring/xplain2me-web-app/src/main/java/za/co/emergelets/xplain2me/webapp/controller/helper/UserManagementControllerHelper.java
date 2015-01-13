@@ -1,12 +1,15 @@
 package za.co.emergelets.xplain2me.webapp.controller.helper;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import za.co.emergelets.util.DateTimeUtils;
+import za.co.emergelets.util.SHA256Encryptor;
 import za.co.emergelets.xplain2me.dao.ProfileDAO;
 import za.co.emergelets.xplain2me.dao.ProfileDAOImpl;
 import za.co.emergelets.xplain2me.entity.ContactDetail;
@@ -16,6 +19,7 @@ import za.co.emergelets.xplain2me.entity.Profile;
 import za.co.emergelets.xplain2me.entity.ProfileType;
 import za.co.emergelets.xplain2me.entity.User;
 import za.co.emergelets.xplain2me.webapp.component.AlertBlock;
+import za.co.emergelets.xplain2me.webapp.component.ProfileManagementForm;
 import za.co.emergelets.xplain2me.webapp.component.UserContext;
 import za.co.emergelets.xplain2me.webapp.component.UserManagementForm;
 import za.co.emergelets.xplain2me.webapp.controller.GenericController;
@@ -45,10 +49,10 @@ public class UserManagementControllerHelper extends GenericController implements
         }
         
         List<Profile> profiles = null;
-        long currentUserProfileId = context.getProfile().getId();
+        long currentUserProfileTypeId = context.getProfile().getProfileType().getId();
         ProfileDAO dao = new ProfileDAOImpl();
         
-        profiles = dao.getUserAuthorisedProfiles(currentUserProfileId);
+        profiles = dao.getUserAuthorisedProfiles(currentUserProfileTypeId);
         
         if (profiles != null) {
             
@@ -228,6 +232,19 @@ public class UserManagementControllerHelper extends GenericController implements
             
             saveToRequestScope(request, alertBlock);
         }
+    }
+
+    public String computeSHA256Hashword(String password, String saltValue) {
+        
+        String hash = "";
+        try {
+            hash = SHA256Encryptor.computeSHA256(password, saltValue);
+        }
+        catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            LOG.warning(" ... failed to compute SHA-256 for this password ..."); 
+        }
+        
+        return hash;
     }
     
     

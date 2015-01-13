@@ -32,11 +32,6 @@ public class LoginController extends GenericController {
     // the form
     private LoginForm form;
     
-    // data access objects
-    private final UserSaltDAO userSaltDAO;
-    private final ProfileDAO profileDAO;
-    private final ProfileTypeUrlPermissionsDAO profileTypeUrlPermissionsDAO;
-    
     public static final int RESULT_USER_BLOCKED = 300;
     public static final int USERNAME_OR_PASSWORD_NOT_PROVIDED = 301;
     public static final int UNABLE_TO_AUTHENTICATE_USER = 302;
@@ -46,11 +41,6 @@ public class LoginController extends GenericController {
     private LoginControllerHelper helper;
     
     public LoginController() {
-        
-        this.userSaltDAO = new UserSaltDAOImpl();
-        this.profileDAO = new ProfileDAOImpl();
-        this.profileTypeUrlPermissionsDAO = new ProfileTypeUrlPermissionsDAOImpl();
-        
     }
     
     /**
@@ -185,6 +175,7 @@ public class LoginController extends GenericController {
         }
         
         // retrieve the salt value for hashing the password
+        UserSaltDAO userSaltDAO = new UserSaltDAOImpl();
         String salt = helper.getSaltValue(form, userSaltDAO);
         
         if (salt == null || salt.isEmpty()) {
@@ -211,6 +202,7 @@ public class LoginController extends GenericController {
         }
         
         // authenticate the user
+        ProfileDAO profileDAO = new ProfileDAOImpl();
         Profile profile = profileDAO.authenticateProfile(
                 form.getUsername(), hashCode);
         
@@ -239,6 +231,9 @@ public class LoginController extends GenericController {
             context.setTimeUserLoggedIn(new Date());
             
             // get the permitted urls
+            ProfileTypeUrlPermissionsDAO profileTypeUrlPermissionsDAO = 
+                    new ProfileTypeUrlPermissionsDAOImpl();
+            
             context.setProfileTypeUrlPermissions(profileTypeUrlPermissionsDAO
                     .getUserProfileUrlPermissions(context.getProfile().getProfileType()));
             
@@ -264,9 +259,11 @@ public class LoginController extends GenericController {
      */
     @RequestMapping(value = RequestMappings.LOGOUT, method = RequestMethod.GET)
     public ModelAndView handleLogoutRequest(HttpServletRequest request) {
+        
         invalidateCurrentSession(request);
         return sendRedirect(RequestMappings.LOGIN
                 + "?logged-out=1");
+        
     }
     
 }

@@ -30,25 +30,29 @@ public class AlertBlock implements Serializable {
         return alertBlockType;
     }
 
-    public void setAlertBlockType(int alertBlockType) {
+    public AlertBlock setAlertBlockType(int alertBlockType) {
         this.alertBlockType = alertBlockType;
+        return this;
     }
 
     public List<String> getAlertBlockMessages() {
         return alertBlockMessages;
     }
 
-    public void setAlertBlockMessages(List<String> alertBlockMessages) {
+    public AlertBlock setAlertBlockMessages(List<String> alertBlockMessages) {
         this.alertBlockMessages = alertBlockMessages;
+        return this;
     }
     
-    public void addAlertBlockMessage(String message) {
+    public AlertBlock addAlertBlockMessage(String message) {
         
         if (this.alertBlockMessages == null)
             this.alertBlockMessages = new ArrayList<>();
         
         if (!this.alertBlockMessages.contains(message))
             this.alertBlockMessages.add(message);
+        
+        return this;
     }
     
 }

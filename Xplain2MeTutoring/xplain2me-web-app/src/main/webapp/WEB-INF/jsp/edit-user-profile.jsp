@@ -1,28 +1,25 @@
-<%-- 
-    Document   : edit-own-profile
-    Created on : 09 Dec 2014, 9:48:34 PM
-    Author     : user
---%>
-
+<%@page import="za.co.emergelets.xplain2me.webapp.component.ProfileManagementForm"%>
+<%@page import="za.co.emergelets.util.BooleanToText"%>
 <%@page import="za.co.emergelets.xplain2me.entity.PhysicalAddress"%>
 <%@page import="za.co.emergelets.xplain2me.entity.Citizenship"%>
 <%@page import="za.co.emergelets.xplain2me.entity.Gender"%>
 <%@page import="za.co.emergelets.util.DateTimeUtils"%>
 <%@page import="za.co.emergelets.xplain2me.entity.ProfileType"%>
 <%@page import="za.co.emergelets.xplain2me.entity.Profile"%>
-<%@page import="za.co.emergelets.xplain2me.webapp.component.ProfileManagementForm"%>
 <%
-    ProfileManagementForm form = (ProfileManagementForm)
-            session.getAttribute(ProfileManagementForm.class.getName());
     
-    if (form == null || form.getProfile() == null) {
+    ProfileManagementForm form = (ProfileManagementForm)session
+            .getAttribute(ProfileManagementForm.class.getName());
+    
+    if (form == null) {
         response.sendRedirect(request.getContextPath() + 
-                RequestMappings.DASHBOARD_OVERVIEW);
+                RequestMappings.BROWSE_EXISTING_USERS + 
+                "?invalid-request=1");
         return;
     }
     
     Profile profile = form.getProfile();
-    ProfileType profileType = profile.getProfileType();
+    boolean found = (profile != null);
     
 %>
 
@@ -30,7 +27,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
     <head>
-        <title>Edit Own Profile</title>
+        <title>Edit User Profile</title>
         
         <%@include file="../jspf/template/default-manager-header.jspf" %>
         <%@include file="../jspf/template/bootstrap-datepicker.jspf" %>
@@ -44,10 +41,14 @@
             
             <div class="container-fluid" id="page-wrapper">
                 
-                <h2>Edit My Profile</h2>
+                <h2>Edit User Profile</h2>
                 <hr/>
                 
                 <%@include file="../jspf/template/default-alert-block.jspf" %>
+                
+                <%
+                    if (found) {
+                %>
                 
                 <div class="row">
                     <div class="col-md-6">
@@ -56,21 +57,27 @@
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">
-                                    PROFILE TYPE
+                                    PROFILE INFORMATION
                                 </h3>
                             </div>
 
                             <div class="panel-body">
                                 
-                                <div class="alert alert-warning">
-                                    <h4>PLEASE NOTE:</h4>
-                                    <p>You cannot edit this section - please contact your
-                                        system administrator to make changes to your
-                                        profile type.</p>
-                                </div>
-                                
-                                <table border="0" class="table table-stripped" style="font-size: 95%">
+                                <table border="0" class="table table-stripped" style="font-size: 100%">
                                     <tbody>
+                                        <tr>
+                                            <td><strong>Profile ID</strong></td>
+                                            <td><%= profile.getId() %></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Username</strong></td>
+                                            <td><%= profile.getPerson().getUser().getUsername() %></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Active</strong></td>
+                                            <td><%= BooleanToText.format(profile.getPerson().getUser()
+                                                    .isActive(), BooleanToText.YES_NO_FORMAT) %></td>
+                                        </tr>
                                         <tr>
                                             <td><strong>Profile Type:</strong></td>
                                             <td>
@@ -81,88 +88,19 @@
                                             <td><strong>Date Created:</strong></td>
                                             <td><%= DateTimeUtils.formatDateTime(profile.getDateCreated()) %></td>
                                         </tr>
+                                        <tr>
+                                            <td><strong>Profile Verified</strong></td>
+                                            <td><%= BooleanToText.format(profile.isVerified(), BooleanToText.YES_NO_FORMAT) %></td>
+                                        </tr>
                                     </tbody>
                                 </table>
-
+                                        
                             </div>
 
                         </div>
                         <!-- end: Profile Type -->
                         
-                        <!-- start: User Account -->
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">
-                                    EDIT USER LOGIN INFORMATION
-                                </h3>
-                            </div>
-
-                            <div class="panel-body">
-                                
-                                <div class="alert alert-warning">
-                                    <h4>KEEP PASSWORDS SAFE:</h4>
-                                    <p>It is your responsibility to keep your
-                                        login information both username and passwords
-                                        secure and not to share these with anyone.
-                                    </p>
-                                </div>
-                                
-                                <form id="userLoginInfoForm" name="userLoginInfoForm"
-                                      method="post" 
-                                      action="<%= request.getContextPath() + RequestMappings.EDIT_MY_CREDENTIALS %>">
-                                    
-                                    <div class="form-group">
-                                        <label>Change Username:</label>
-                                        <input type="text" id="username" name="username" 
-                                               value="<%= profile.getPerson().getUser().getUsername() %>"
-                                               class="form-control" data-validation="length"
-                                               data-validation="alphanumeric" data-validation-length="8-24"
-                                               />
-                                    </div>
-                                    <hr/>
-                                    <h4>Change Password:</h4>
-                                    
-                                    <div class="form-group">
-                                        <label>Enter current password:</label>
-                                        <input type="password" id="currentPassword" name="currentPassword"
-                                               placeholder="Enter the CURRENT password"
-                                               class="form-control" data-validation="length"
-                                               data-validation="alphanumeric" data-validation-length="8-24"
-                                               data-validation-optional="true"/>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label>Enter new password:</label>
-                                        <input type="password" id="newPassword" name="newPassword"
-                                               placeholder="Enter the NEW password"
-                                               class="form-control" data-validation="length"
-                                               data-validation="alphanumeric" data-validation-length="8-24"
-                                                data-validation-optional="true"/>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label>Re-enter new password:</label>
-                                        <input type="password" id="reEnterNewPassword" name="reEnterNewPassword"
-                                               placeholder="Re-enter the NEW password"
-                                               class="form-control" data-validation="length"
-                                               data-validation="alphanumeric" data-validation-length="8-24"
-                                                data-validation-optional="true"/>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <input type="submit" name="changeUserCredentialsRequest"
-                                               value="Update Credentials" ondblclick="return false" 
-                                               class="btn btn-primary"/>
-                                    </div>
-                                    
-                                </form>
-
-                            </div>
-
-                        </div>
-                        <!-- end: User Account -->
-                        
-                         <!-- start: Personal Information -->
+                        <!-- start: Personal Information -->
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">
@@ -173,7 +111,7 @@
                             <div class="panel-body">
                                 
                                 <form id="personForm" name="personForm" method="post"
-                                      action="<%= request.getContextPath() + RequestMappings.MY_PROFILE_EDIT %>">
+                                      action="<%= request.getContextPath() + RequestMappings.EDIT_USER_PROFILE %>">
                                     
                                     <div class="form-group">
                                         <label>Last Name:</label>
@@ -197,6 +135,14 @@
                                                value="<%= DateTimeUtils.formatDate(profile.getPerson().getDateOfBirth()) %>"
                                                class="form-control datepicker"
                                                data-validation="birthdate" data-validation-format="yyyy-mm-dd" />
+                                    </div>
+                                               
+                                    <div class="form-group">
+                                        <label>ID / Passport Number:</label>
+                                        <input type="text" name="idNumber" id="idNumber"
+                                               value="<%= profile.getPerson().getIdentityNumber() %>"
+                                               class="form-control" maxlength="24"
+                                               data-validation="length" data-validation-length="6-24" />
                                     </div>
                                                
                                     <div class="form-group">
@@ -264,7 +210,7 @@
                                 
                                 <form id="contactInfoForm" name="contactInfoForm"
                                       method="post" 
-                                      action="<%= request.getContextPath() + RequestMappings.MY_PROFILE_EDIT %>">
+                                      action="<%= request.getContextPath() + RequestMappings.EDIT_USER_PROFILE %>">
                                     
                                     <div class="form-group">
                                         <label>Email Address:</label>
@@ -316,7 +262,7 @@
 
                                 <form id="addressForm" id="addressForm"
                                     method="post"
-                                    action="<%= request.getContextPath() + RequestMappings.MY_PROFILE_EDIT %>">
+                                    action="<%= request.getContextPath() + RequestMappings.EDIT_USER_PROFILE %>">
                                     
                                     <!-- Physical Address Line 1 to 4 -->
                                     <div class="form-group">
@@ -366,6 +312,10 @@
                         
                     </div>
                 </div>
+                                    
+                <%
+                    }
+                %>
                 
             </div>
             

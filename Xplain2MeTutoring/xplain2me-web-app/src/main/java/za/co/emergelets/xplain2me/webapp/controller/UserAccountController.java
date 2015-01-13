@@ -1,12 +1,10 @@
 package za.co.emergelets.xplain2me.webapp.controller;
 
 import java.io.Serializable;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -36,9 +34,6 @@ public class UserAccountController extends GenericController implements Serializ
     private static final Logger LOG = Logger
             .getLogger(UserAccountController.class.getName(), null);
     
-    public static final int RESULT_PROFILE_VERIFICATION_FAILED = 300;
-    public static final int RESULT_PROFILE_VERIFICATION_PASSED = 200;
-    
     public UserAccountController() {
     }
     
@@ -63,8 +58,20 @@ public class UserAccountController extends GenericController implements Serializ
             return sendRedirect(RequestMappings.UNAUTHORIZED_ACCESS);
         }
         
-        // resolve additional result parameters
-        resolveAdditionalParameters(request);
+        // check if there is alert block in 
+        // the session - then transfer to the
+        // request session
+        AlertBlock alertBlock = (AlertBlock)getFromSessionScope(request,
+                AlertBlock.class);
+        
+        if (alertBlock != null && 
+                alertBlock.getAlertBlockMessages() != null &&
+                !alertBlock.getAlertBlockMessages().isEmpty()) {
+            
+            removeFromSessionScope(request, AlertBlock.class);
+            saveToRequestScope(request, alertBlock);
+        }
+        
         
         return createModelAndView(Views.VERIFY_NEW_OWN_USER_PROFILE);
     }
@@ -82,6 +89,7 @@ public class UserAccountController extends GenericController implements Serializ
      * @param reCaptchaChallenge
      * @param reCaptchaResponse
      * @return 
+     * @throws java.lang.Exception 
      */
     @RequestMapping(value = RequestMappings.VERIFY_OWN_USER_PROFILE, 
             method = RequestMethod.POST, 
@@ -151,8 +159,7 @@ public class UserAccountController extends GenericController implements Serializ
             
             // send redirect
             parameters = new HashMap<>();
-            parameters.put("result", String.valueOf(
-                    RESULT_PROFILE_VERIFICATION_FAILED));
+            parameters.put("result", "PRE-VERIFICATION-FAILED");
             
             return sendRedirect(RequestMappings.VERIFY_OWN_USER_PROFILE, parameters);
         }
@@ -160,8 +167,8 @@ public class UserAccountController extends GenericController implements Serializ
         // verify the user against the data in the
         // data store
         ProfileDAO profileDao = new ProfileDAOImpl();
-        Profile verifiedProfile = profileDao.verifyOwnUserProfile(identityNumber, emailAddress, 
-                Long.parseLong(verificationCode));
+        Profile verifiedProfile = profileDao.verifyOwnUserProfile(identityNumber, 
+                emailAddress, verificationCode);
         
         // if not verified - send error
         if (verifiedProfile == null) {
@@ -175,8 +182,7 @@ public class UserAccountController extends GenericController implements Serializ
             
             // send redirect
             parameters = new HashMap<>();
-            parameters.put("result", 
-                    String.valueOf(RESULT_PROFILE_VERIFICATION_FAILED));
+            parameters.put("result", "PROFILE-ACTIVATION-FAILED");
             
             return sendRedirect(RequestMappings.VERIFY_OWN_USER_PROFILE, parameters);
         }
@@ -223,8 +229,7 @@ public class UserAccountController extends GenericController implements Serializ
 
                 // send redirect
                 parameters = new HashMap<>();
-                parameters.put("result", 
-                        String.valueOf(RESULT_PROFILE_VERIFICATION_PASSED));
+                parameters.put("result", "PROFILE-ACTIVATED");
 
             }
             
@@ -240,8 +245,7 @@ public class UserAccountController extends GenericController implements Serializ
 
                 // send redirect
                 parameters = new HashMap<>();
-                parameters.put("result", 
-                        String.valueOf(RESULT_PROFILE_VERIFICATION_FAILED));
+                parameters.put("result", "PASSWORD-UPDATE-FAILED");
 
                 
             }
@@ -252,40 +256,5 @@ public class UserAccountController extends GenericController implements Serializ
         
     }
 
-    /**
-     * Resolves additional parameters
-     * 
-     * @param request 
-     */
-    private void resolveAdditionalParameters(HttpServletRequest request) {
-        
-        String result = getParameterValue(request, "result");
-        
-        if (result != null && 
-                result.isEmpty() == false &&
-                !NumericUtils.isNaN(result)) {
-            
-            AlertBlock alertBlock = null;
-            
-            switch (Integer.parseInt(result)) {
-                
-                case RESULT_PROFILE_VERIFICATION_PASSED:
-                case RESULT_PROFILE_VERIFICATION_FAILED:
-                    
-                    alertBlock = (AlertBlock)getFromSessionScope(request, AlertBlock.class);
-                    removeFromSessionScope(request, AlertBlock.class);
-                    break;
-                
-            }
-            
-            if (alertBlock != null && alertBlock.getAlertBlockMessages() != null 
-                && !alertBlock.getAlertBlockMessages().isEmpty()) {
-            
-                saveToRequestScope(request, alertBlock);
-            }
-            
-        }
-    }
-    
 }
 

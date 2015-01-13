@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,22 +39,11 @@ public class RequestTutorController extends GenericController {
     private static final Logger LOG = 
             Logger.getLogger(RequestTutorController.class.getName(), null);
     
-    // data access objects
-    private final SubjectDAO subjectDAO;
-    private final AcademicLevelDAO academicLevelDAO;
-    private final TutorRequestDAO tutorRequestDAO;
-    
     // controller helper
-    private final RequestTutorControllerHelper helper;
+    @Autowired
+    private RequestTutorControllerHelper helper;
     
     public RequestTutorController() {
-        // helpers
-        this.helper = new RequestTutorControllerHelper();
-        
-        // DAOs
-        this.subjectDAO = new SubjectDAOImpl();
-        this.academicLevelDAO = new AcademicLevelDAOImpl();
-        this.tutorRequestDAO = new TutorRequestDAOImpl();
     }
     
     /**
@@ -71,6 +61,7 @@ public class RequestTutorController extends GenericController {
         RequestTutorForm form = new RequestTutorForm();
         
         // get the subjects
+        SubjectDAO subjectDAO = new SubjectDAOImpl();
         List<Subject> subjects = subjectDAO.getAllSubjects();
         SortedMap<Long, Subject> subjectsMap = new TreeMap<>();
         
@@ -82,6 +73,7 @@ public class RequestTutorController extends GenericController {
         subjects = null;
         
         // get the academic levels
+        AcademicLevelDAO academicLevelDAO = new AcademicLevelDAOImpl();
         List<AcademicLevel> academicLevels = academicLevelDAO.getAllAcademicLevels();
         SortedMap<Long, AcademicLevel> academicLevelsMap = new TreeMap<>();
         
@@ -257,6 +249,7 @@ public class RequestTutorController extends GenericController {
                 
                 // save the data 
                 // into the database
+                TutorRequestDAO tutorRequestDAO = new TutorRequestDAOImpl();
                 tutorRequestDAO.saveTutorRequest(form.getTutorRequest());
 
                 // start a thread to send an email to the 

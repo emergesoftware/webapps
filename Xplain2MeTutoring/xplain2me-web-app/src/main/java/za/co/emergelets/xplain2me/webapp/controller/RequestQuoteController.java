@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,20 +27,11 @@ public class RequestQuoteController extends GenericController implements Seriali
     private static final Logger LOG = Logger.getLogger(
             RequestQuoteController.class.getName(), null);
     
-    // data access objects
-    private final AcademicLevelDAO academicLevelDAO;
-    private final ProvinceDAO provinceDAO;
-    private final SubjectDAO subjectDAO;
-    
     // helper class
-    private final RequestQuoteControllerHelper helper;
+    @Autowired
+    private RequestQuoteControllerHelper helper;
     
     public RequestQuoteController() {
-        this.academicLevelDAO = new AcademicLevelDAOImpl();
-        this.provinceDAO = new ProvinceDAOImpl();
-        this.subjectDAO = new SubjectDAOImpl();
-        
-        this.helper = new RequestQuoteControllerHelper();
     }
     
     @RequestMapping(value = RequestMappings.QUOTE_REQUEST, method = RequestMethod.GET)
@@ -52,18 +44,21 @@ public class RequestQuoteController extends GenericController implements Seriali
         RequestQuoteForm form = new RequestQuoteForm();
         
         // get the academic levels
+        AcademicLevelDAO academicLevelDAO = new AcademicLevelDAOImpl();
         List<AcademicLevel> academicLevels = academicLevelDAO.getAllAcademicLevels();
         for (AcademicLevel level : academicLevels) {
             form.getAcademicLevels().put(level.getId(), level);
         }
         
         // get the provinces
+        ProvinceDAO provinceDAO = new ProvinceDAOImpl();
         List<Province> provinces = provinceDAO.getAllProvinces();
         for (Province province : provinces) {
             form.getProvinces().put(province.getId(), province);
         }
         
         // get the subjects
+        SubjectDAO subjectDAO = new SubjectDAOImpl();
         List<Subject> subjects = subjectDAO.getAllSubjects();
         for (Subject subject : subjects) {
             form.getSubjects().put(subject.getId(), subject);

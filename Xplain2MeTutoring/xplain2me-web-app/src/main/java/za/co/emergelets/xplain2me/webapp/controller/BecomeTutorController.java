@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,31 +26,29 @@ public class BecomeTutorController extends GenericController implements Serializ
     private static final Logger LOG = Logger.getLogger(
             BecomeTutorController.class.getName(), null);
     
-    // the controller helper 
-    private final BecomeTutorControllerHelper helper;
-    
-    // data access objects
-    private final CitizenshipDAO citizenshipDAO;
-    private final GenderDAO genderDAO;
-    private final AcademicLevelDAO academicLevelDAO;
-    private final BecomeTutorRequestDAO becomeTutorRequestDAO;
+    // the controller helper
+    @Autowired
+    private BecomeTutorControllerHelper helper;
     
     public BecomeTutorController() {
-        
-        helper = new BecomeTutorControllerHelper();
-        
-        citizenshipDAO = new CitizenshipDAOImpl();
-        genderDAO = new GenderDAOImpl();
-        becomeTutorRequestDAO = new BecomeTutorRequestDAOImpl();
-        academicLevelDAO = new AcademicLevelDAOImpl();
-        
     }
     
+    /**
+     * Delivers the become a tutor webpage
+     * 
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = RequestMappings.BECOME_A_TUTOR, method = RequestMethod.GET)
     public ModelAndView displayBecomeTutorPage(HttpServletRequest request) {
         
         // invalidate the session
         invalidateCurrentSession(request);
+        
+        // the data access objects
+        CitizenshipDAO citizenshipDAO = new CitizenshipDAOImpl();
+        GenderDAO genderDAO = new GenderDAOImpl();
+        AcademicLevelDAO academicLevelDAO = new AcademicLevelDAOImpl();
         
         // create and initialise
         BecomeTutorForm form = new BecomeTutorForm();
@@ -64,6 +63,14 @@ public class BecomeTutorController extends GenericController implements Serializ
         
     }
     
+    /**
+     * Handles the request to process a 
+     * tutor job application.
+     * 
+     * @param request
+     * @return
+     * @throws Exception 
+     */
     @RequestMapping(value = RequestMappings.BECOME_A_TUTOR, method = RequestMethod.POST)
     public ModelAndView handleBecomeTutorRequest(HttpServletRequest request) 
             
@@ -74,6 +81,7 @@ public class BecomeTutorController extends GenericController implements Serializ
                 request, BecomeTutorForm.class);
         
         if (form == null) {
+            
             LOG.warning("... no active session found ...");
             invalidateCurrentSession(request);
             return sendRedirect(RequestMappings.BECOME_A_TUTOR +
@@ -153,7 +161,13 @@ public class BecomeTutorController extends GenericController implements Serializ
         }
     }
     
-    
+    /**
+     * Processes the verification of the tutor
+     * job application.
+     * 
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = RequestMappings.VERIFY_BECOME_A_TUTOR_REQUEST, 
             method = RequestMethod.POST)
     public ModelAndView verifyAndCompleteTutorJobApplicationRequest(HttpServletRequest request) {
@@ -172,6 +186,9 @@ public class BecomeTutorController extends GenericController implements Serializ
         // clear all errors
         form.getErrorsEncountered().clear();
         
+        // data access object
+        BecomeTutorRequestDAO becomeTutorRequestDAO = 
+                new BecomeTutorRequestDAOImpl();
         
         if (// verify the verification code
             helper.checkVerificationCode(request, form) &&

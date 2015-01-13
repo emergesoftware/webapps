@@ -52,8 +52,28 @@ public class ProfileType implements Serializable {
     public void setActive(boolean active) {
         this.active = active;
     }
-    
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + (int) (this.id ^ (this.id >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProfileType other = (ProfileType) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
+    }
     
 }
 

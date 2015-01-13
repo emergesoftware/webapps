@@ -50,5 +50,9 @@ public interface Views {
     public static final String BROWSE_EXISTING_USERS = "browse-existing-users";
     public static final String ADD_NEW_USER = "add-new-user";
     public static final String VERIFY_NEW_OWN_USER_PROFILE = "verify-new-own-user-profile";
+    public static final String EDIT_USER_PROFILE = "edit-user-profile";
+    public static final String VIEW_USER_PROFILE = "view-user-profile";
+    public static final String CHANGE_USER_ACCOUNT_PROFILE_TYPE = "change-user-account-profile-type";
+    public static final String ACTIVATE_OR_BLOCK_USER = "activate-or-block-user";
     
 }

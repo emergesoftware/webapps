@@ -5,6 +5,9 @@ import java.util.List;
 import za.co.emergelets.xplain2me.bo.validation.CellphoneNumberValidator;
 import za.co.emergelets.xplain2me.bo.validation.ContactDetailValidationRule;
 import za.co.emergelets.xplain2me.bo.validation.EmailAddressValidator;
+import za.co.emergelets.xplain2me.dao.ContactDetailDAO;
+import za.co.emergelets.xplain2me.dao.ContactDetailDAOImpl;
+import za.co.emergelets.xplain2me.entity.ContactDetail;
 
 public class ContactDetailValidationRuleImpl implements ContactDetailValidationRule {
     
@@ -13,33 +16,52 @@ public class ContactDetailValidationRuleImpl implements ContactDetailValidationR
     public ContactDetailValidationRuleImpl() {
         this.errors = null;
     }
-    
-    @Override
-    public List<String> isEmailAddressValid(String emailAddress) {
-        
-        errors = new ArrayList<>();
-        
-        if (emailAddress == null || emailAddress.isEmpty() || 
-                EmailAddressValidator.isEmailAddressValid(emailAddress) == false) {
-            errors.add("Email Address does not appear authentic.");
-        }
-        
-        return errors;
-    }
 
     @Override
-    public List<String> isContactNumberValid(String contactNumber) {
+    public List<String> validateContactDetail(ContactDetail contactDetail) {
         errors = new ArrayList<>();
         
-        if (contactNumber != null) {
-            if (contactNumber.startsWith("0"))
-                contactNumber = "27" + contactNumber.substring(1);
+        if (contactDetail == null) {
+            errors.add("Contact Details are not provided.");
         }
         
-        if (contactNumber == null || contactNumber.isEmpty() || 
-                CellphoneNumberValidator
-                        .isCellphoneNumberValid(contactNumber) == false) {
-            errors.add("Contact Number does not appear authentic.");
+        else {
+            
+            // validate the email address
+            if (contactDetail.getEmailAddress() == null || 
+                     contactDetail.getEmailAddress().isEmpty() || 
+                    !EmailAddressValidator.isEmailAddressValid(contactDetail.getEmailAddress())) {
+                errors.add("Email Address does not appear authentic.");
+            }
+            
+            // if the number starts with 0 - then replace with 
+            // the SA telephone prefix 27
+            if (contactDetail.getCellphoneNumber() != null) {
+                
+                if (contactDetail.getCellphoneNumber().startsWith("0"))
+                    contactDetail.setCellphoneNumber("27" + contactDetail
+                            .getCellphoneNumber().substring(1));
+                
+                if (!contactDetail.getCellphoneNumber().startsWith("27"))
+                    contactDetail.setCellphoneNumber("27" + contactDetail
+                            .getCellphoneNumber());
+            }
+
+            // validate the contact number
+            if (contactDetail.getCellphoneNumber() == null || 
+                    contactDetail.getCellphoneNumber().isEmpty() || 
+                    !CellphoneNumberValidator.isCellphoneNumberValid(
+                            contactDetail.getCellphoneNumber())) {
+                errors.add("Contact Number does not appear authentic.");
+            }
+            
+            // validate to see if anyone else is
+            // currently using this contact detail combination
+            ContactDetailDAO contactDetailDao = new ContactDetailDAOImpl();
+            if (!contactDetailDao.isContactDetailCompletelyUnique(contactDetail, false)) {
+                errors.add("The contact details combination [Email Address and Contact Number] is " + 
+                        "already being used by another person.");
+            }
         }
         
         return errors;

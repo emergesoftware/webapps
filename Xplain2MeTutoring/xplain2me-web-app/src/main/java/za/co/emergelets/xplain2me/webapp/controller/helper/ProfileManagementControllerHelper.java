@@ -468,8 +468,7 @@ public class ProfileManagementControllerHelper extends GenericController impleme
         updatedContactDetail.setId(originalContactDetail.getId());
         //setup the updated 
         updatedContactDetail.setEmailAddress(getParameterValue(request, "emailAddress"));
-        updatedContactDetail.setCellphoneNumber("0" + 
-                getParameterValue(request, "contactNumber"));
+        updatedContactDetail.setCellphoneNumber(getParameterValue(request, "contactNumber"));
         
         return updatedContactDetail;
     
@@ -488,18 +487,9 @@ public class ProfileManagementControllerHelper extends GenericController impleme
         
         List<String> errors = new ArrayList<>();
         
-        // validate the email address
+        // validate the contact information
         errors.addAll(contactDetailValidationRules
-                .isEmailAddressValid(updatedContactDetail.getEmailAddress()));
-        // validate the contact number
-        errors.addAll(contactDetailValidationRules
-                .isContactNumberValid(updatedContactDetail.getCellphoneNumber()));
-        // check if the contact details are completely unique
-        if (!contactDetailDAO.isContactDetailCompletelyUnique(
-                updatedContactDetail, false)) {
-            errors.add("Either [Email Address or Contact Number] is "
-                    + "already in use by another person.");
-        }
+                .validateContactDetail(updatedContactDetail));
         
         if (errors.isEmpty()) {
             return true;

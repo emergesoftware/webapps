@@ -8,4 +8,7 @@ public interface GenderDAO {
     public List<Gender> getAllGender()
             throws DataAccessException;
     
+    public Gender getGender(String id)
+            throws DataAccessException;
+    
 }

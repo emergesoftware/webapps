@@ -1,4 +1,4 @@
-package za.co.emergelets.util;
+package za.co.emergelets.xplain2me.bo.validation;
 
 import java.text.DateFormat;
 import java.text.ParseException;

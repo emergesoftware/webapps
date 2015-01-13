@@ -22,11 +22,23 @@ public interface ProfileDAO {
      * Gets a list of all user profiles that the
      * current user is allowed to manage or view.
      * 
-     * @param currentUserProfileId
+     * @param currentProfileTypeId
      * @return
      * @throws DataAccessException 
      */
-    public List<Profile> getUserAuthorisedProfiles(long currentUserProfileId)
+    public List<Profile> getUserAuthorisedProfiles(long currentProfileTypeId)
+            throws DataAccessException;
+    
+    /**
+     * Gets the user profile - only if the current
+     * user profile allows.
+     * 
+     * @param profileId
+     * @param currentProfileTypeId
+     * @return
+     * @throws DataAccessException 
+     */
+    public Profile getProfileById(long profileId, long currentProfileTypeId)
             throws DataAccessException;
     
     /**
@@ -49,6 +61,17 @@ public interface ProfileDAO {
      * @return
      * @throws DataAccessException 
      */
-    public Profile verifyOwnUserProfile(String identityNumber, String emailAddress, long verificationCode)
+    public Profile verifyOwnUserProfile(String identityNumber, String emailAddress, 
+            String verificationCode)
             throws DataAccessException;
+    
+    /**
+     * Updates the profile entity.
+     * 
+     * @param profile
+     * @return
+     * @throws DataAccessException 
+     */
+    public Profile mergeProfile(Profile profile) throws DataAccessException;
+    
 }

@@ -8,6 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import za.co.emergelets.data.transformation.DataTransformerTool;
 import za.co.emergelets.xplain2me.entity.Person;
@@ -89,6 +90,47 @@ public class PersonDAOImpl implements PersonDAO {
             throw new DataAccessException(e);
         }
         
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+
+    @Override
+    public boolean isPersonCompletelyUnique(Person person, boolean includeInCheck) throws DataAccessException {
+        
+        if (person == null) {
+            LOG.warning("... the Person entity is null ...");
+            return false;
+        }
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            criteria = session.createCriteria(Person.class, "person")
+                    .setProjection(Projections.count("person.id"));
+            if (!includeInCheck)
+                criteria.add(Restrictions.and(
+                        Restrictions.eq("person.identityNumber", person.getIdentityNumber()),
+                        Restrictions.ne("person.id", person.getId())));
+            else
+                criteria.add(Restrictions.eq("person.identityNumber", person.getIdentityNumber()));
+            
+            iterator = criteria.list().iterator();
+            long count = 0;
+            
+            while (iterator.hasNext())
+                count = (Long)iterator.next();
+            
+            return (count == 0);
+            
+        }
+        
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
         finally {
             HibernateConnectionProvider.closeConnection(session);
         }

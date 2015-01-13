@@ -56,10 +56,11 @@ public interface RequestMappings {
             "/portal/tutor-job-applications/search";
     
     // USER MANAGEMENT MAPPINGS
-    public static final String BROWSE_EXISTING_USERS = 
-            "/portal/users/browse";
-    public static final String ADD_NEW_USER = 
-            "/portal/users/add";
-    
+    public static final String BROWSE_EXISTING_USERS = "/portal/users/browse";
+    public static final String ADD_NEW_USER = "/portal/users/add";
+    public static final String EDIT_USER_PROFILE = "/portal/users/edit-profile";
+    public static final String VIEW_USER_PROFILE = "/portal/users/view-profile";
+    public static final String CHANGE_USER_PROFILE_TYPE = "/portal/users/change-profile-type";
+    public static final String ACTIVATE_OR_BLOCK_USER = "/portal/users/activate-or-block-user";
     
 }

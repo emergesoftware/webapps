@@ -10,6 +10,8 @@ import za.co.emergelets.xplain2me.entity.ProfileType;
 
 public class UserManagementForm implements Serializable {
     
+    // the user profile
+    private Profile profile;
     // the map of user profiles
     private TreeMap<Long, Profile> userProfiles;
     // the list of errors encountered
@@ -37,6 +39,7 @@ public class UserManagementForm implements Serializable {
         this.profileTypes = null;
         this.citizenships = null;
         this.gender = null;
+        this.profile = null;
     }
 
     public TreeMap<Long, Profile> getUserProfiles() {
@@ -78,6 +81,14 @@ public class UserManagementForm implements Serializable {
     public void setGender(TreeMap<String, Gender> gender) {
         this.gender = gender;
     }
-    
-    
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 }
+    
+    

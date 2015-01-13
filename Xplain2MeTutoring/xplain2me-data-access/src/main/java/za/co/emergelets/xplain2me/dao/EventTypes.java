@@ -27,5 +27,11 @@ public interface EventTypes {
     public static final long ASSIGN_USER_TO_PROFILE = 2001;
     /** Verify Own Profile */
     public static final long VERIFY_OWN_PROFILE = 2008;
+    /** Amend User */
+    public static final long AMEND_USER_PROFILE = 2002;
+    /** Activate User */
+    public static final long ACTIVATE_USER_PROFILE = 2009;
+    /** Deactivate User */
+    public static final long DEACTIVATE_USER_PROFILE = 2003;
     
 }

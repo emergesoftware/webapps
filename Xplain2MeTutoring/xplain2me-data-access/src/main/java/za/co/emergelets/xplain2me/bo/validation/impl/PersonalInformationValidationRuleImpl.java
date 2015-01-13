@@ -6,6 +6,10 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import za.co.emergelets.xplain2me.bo.validation.PersonalInformationValidationRule;
+import za.co.emergelets.xplain2me.bo.validation.SouthAfricanIdentityTool;
+import za.co.emergelets.xplain2me.dao.PersonDAO;
+import za.co.emergelets.xplain2me.dao.PersonDAOImpl;
+import za.co.emergelets.xplain2me.entity.Citizenship;
 import za.co.emergelets.xplain2me.entity.Person;
 
 public class PersonalInformationValidationRuleImpl implements PersonalInformationValidationRule {
@@ -23,7 +27,7 @@ public class PersonalInformationValidationRuleImpl implements PersonalInformatio
         
         List<String> errors = new ArrayList<>();
         
-        // 1. First Names and Last Names each should have
+        // First Names and Last Names each should have
         //    at least 3 characters or not more than 64 each.
         if (person.getLastName() == null || 
                 person.getLastName().isEmpty() || 
@@ -41,7 +45,7 @@ public class PersonalInformationValidationRuleImpl implements PersonalInformatio
             errors.add("FIRST NAMES: Only allowed between 3 - 64 number of characters.");
         }
         
-        // 2. Date Of Birth must not be after the current date and time.
+        // Date Of Birth must not be after the current date and time.
         //    Should also be at least 6 years old.
         Date today = new Date();
         
@@ -58,6 +62,41 @@ public class PersonalInformationValidationRuleImpl implements PersonalInformatio
                     Days.daysBetween(then, now).getDays() < (365 * MINIMUM_ALLOWED_AGE)) {
                 errors.add("DATE OF BIRTH: Date of birth does not appear authentic.");
             }
+        }
+        
+        // Check if Gender is provided
+        if (person.getGender() == null) {
+            errors.add("GENDER: Gender is required.");
+        }
+        
+        // check for Citizenship
+        if (person.getCitizenship() == null) {
+            errors.add("CITIZENSHIP: Citizenship is required.");
+        }
+        
+        // Check if the user has a unique ID number not being
+        // used by another person already.
+        PersonDAO personDao = new PersonDAOImpl();
+        if (!personDao.isPersonCompletelyUnique(person, false)) {
+            errors.add("ID NUMBER: Identity or Passport Number provided is already "
+                    + "in use by another person.");
+        }
+        
+        else {
+            // validate the SA ID Number against the Home Affairs algorithm
+            if (person.getCitizenship() != null && 
+                    person.getCitizenship().getId() == Citizenship.SOUTH_AFRICAN &&
+                    !SouthAfricanIdentityTool.isValid(person.getIdentityNumber())) {
+                errors.add("ID NUMBER: Identity Number does not appear authentic for " + 
+                           "South African Citizen.");
+            }
+            
+            // validate passport number for non-south africans
+            else if (person.getCitizenship() != null &&
+                    person.getCitizenship().getId() == Citizenship.NON_SOUTH_AFRICAN &&
+                    (person.getIdentityNumber() == null || 
+                    (person.getIdentityNumber().length() < 6 || person.getIdentityNumber().length() > 24)))
+                errors.add("PASSPORT NUMBER: The passport number appears invalid.");
         }
         
         return errors;

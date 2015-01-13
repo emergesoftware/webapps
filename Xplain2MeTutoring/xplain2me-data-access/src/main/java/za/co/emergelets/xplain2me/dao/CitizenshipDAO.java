@@ -5,7 +5,8 @@ import za.co.emergelets.xplain2me.entity.Citizenship;
 
 public interface CitizenshipDAO {
     
-    public List<Citizenship> getAllCitizenships()
-            throws DataAccessException;
+    public List<Citizenship> getAllCitizenships() throws DataAccessException;
+    
+    public Citizenship getCitizenship(long id) throws DataAccessException;
     
 }

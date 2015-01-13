@@ -13,6 +13,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import za.co.emergelets.data.transformation.DataTransformerTool;
 import za.co.emergelets.xplain2me.entity.Profile;
 import za.co.emergelets.xplain2me.entity.UserSalt;
 
@@ -32,7 +33,8 @@ public class ProfileDAOImpl implements ProfileDAO {
     }
     
     @Override
-    public Profile authenticateProfile(String username, String password) throws DataAccessException {
+    public Profile authenticateProfile(String username, String password) 
+            throws DataAccessException {
         
         if ((username == null || username.isEmpty()) || 
                 (password == null || password.isEmpty()))
@@ -77,11 +79,12 @@ public class ProfileDAOImpl implements ProfileDAO {
     }
 
     @Override
-    public List<Profile> getUserAuthorisedProfiles(long currentUserProfileId) throws DataAccessException {
+    public List<Profile> getUserAuthorisedProfiles(long currentProfileTypeId) 
+            throws DataAccessException {
         
-        if (currentUserProfileId < 1 || currentUserProfileId > Long.MAX_VALUE) {
+        if (currentProfileTypeId < 100 || currentProfileTypeId > Long.MAX_VALUE) {
             LOG.warning("... the value for the current user "
-                    + "profile ID is not valid ..."); 
+                    + "profile type ID is not valid ..."); 
             return null;
         }
         
@@ -93,9 +96,8 @@ public class ProfileDAOImpl implements ProfileDAO {
             criteria = session.createCriteria(Profile.class, "profile")
                     .createAlias("profile.person", "person")
                     .createAlias("person.user", "user")
-                    .add(Restrictions.gt("profile.id", currentUserProfileId))
-                    .add(Restrictions.eq("profile.verified", true))
-                    .add(Restrictions.eq("user.active", true))
+                    .createAlias("profile.profileType", "profileType")
+                    .add(Restrictions.gt("profileType.id", currentProfileTypeId))
                     .addOrder(Order.asc("user.id"));
             
             return criteria.list();
@@ -111,7 +113,8 @@ public class ProfileDAOImpl implements ProfileDAO {
     }
 
     @Override
-    public Profile persistProfile(Profile profile, UserSalt userSalt) throws DataAccessException {
+    public Profile persistProfile(Profile profile, UserSalt userSalt) 
+            throws DataAccessException {
         
         if (profile == null || profile.getProfileType() == null || 
                 profile.getPerson() == null || 
@@ -127,6 +130,12 @@ public class ProfileDAOImpl implements ProfileDAO {
         }
         
         try {
+            
+            DataTransformerTool.transformStringValuesToUpperCase(profile
+                    .getPerson().getPhysicalAddress());
+            DataTransformerTool.transformStringValuesToUpperCase(profile
+                    .getPerson().getContactDetail()); 
+            DataTransformerTool.transformStringValuesToUpperCase(profile.getPerson());
             
             session = HibernateConnectionProvider.
                     getSessionFactory().openSession(); 
@@ -158,11 +167,12 @@ public class ProfileDAOImpl implements ProfileDAO {
     }
 
     @Override
-    public Profile verifyOwnUserProfile(String identityNumber, String emailAddress, long verificationCode) throws DataAccessException {
+    public Profile verifyOwnUserProfile(String identityNumber, String emailAddress, 
+            String verificationCode) throws DataAccessException {
         
         if (identityNumber == null || identityNumber.isEmpty() || 
                 emailAddress == null || emailAddress.isEmpty() || 
-                verificationCode < 1000) {
+                verificationCode == null || verificationCode.isEmpty()) {
             LOG.warning(" ... incorrect parameters found ...");
             return null;
         }
@@ -222,6 +232,75 @@ public class ProfileDAOImpl implements ProfileDAO {
             HibernateConnectionProvider.closeConnection(session);
         }
         
+    }
+
+    @Override
+    public Profile getProfileById(long profileId, long currentProfileTypeId) 
+            throws DataAccessException {
+        if ((currentProfileTypeId < 100 || currentProfileTypeId > Long.MAX_VALUE) || 
+                (profileId < 1 || profileId > Long.MAX_VALUE)) {
+            LOG.warning("... either the value for the queried user or current user "
+                    + "profile ID is not valid ..."); 
+            return null;
+        }
+        
+        Profile profile = null;
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            criteria = session.createCriteria(Profile.class, "profile")
+                    .createAlias("profile.profileType", "profileType")
+                    .add(Restrictions.and(
+                            Restrictions.gt("profileType.id", currentProfileTypeId), 
+                            Restrictions.eq("profile.id", profileId))); 
+            
+            iterator =  criteria.list().iterator();
+            while (iterator.hasNext())
+                profile = (Profile)iterator.next();
+            
+            return profile;
+        }
+        
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+
+    @Override
+    public Profile mergeProfile(Profile profile) throws DataAccessException {
+        
+        if (profile == null || profile.getProfileType() == null) {
+            LOG.warning(" the profile entity is null "); 
+            return null;
+        }
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            transaction = session.beginTransaction();
+            session.merge(profile);
+            transaction.commit();
+            
+            return profile;
+        }
+        
+        catch (HibernateException e) {
+            HibernateConnectionProvider.rollback(transaction); 
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
     }
     
 }
