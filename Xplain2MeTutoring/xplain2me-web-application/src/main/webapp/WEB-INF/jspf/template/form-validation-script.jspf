@@ -1,0 +1,22 @@
+<%-- 
+    DOCUMENTATION FOR THE JQUERY VALIDATION SCRIPT CAN BE FOUND AT:
+    http://formvalidator.net/
+
+--%>
+<%@page import="za.co.xplain2me.webapp.CommonStylesheetsAndScripts"%>
+<%@ page pageEncoding="UTF-8" %>
+
+<script type="text/javascript" 
+src="<%= CommonStylesheetsAndScripts.JQUERY_FORM_VALIDATION_JS %>"></script>
+
+<script> 
+    $(document).ready(function() {
+        
+        $.validate({
+            modules : 'date',
+            validateOnBlur : false, 
+            errorMessagePosition : 'top',
+            scrollToTopOnError : true 
+        }); 
+    });
+</script>

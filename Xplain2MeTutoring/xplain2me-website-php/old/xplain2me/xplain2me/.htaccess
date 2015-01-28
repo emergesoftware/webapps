@@ -1,0 +1,6 @@
+
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^xplain2me\.co\.za$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.xplain2me\.co\.za$
+RewriteRule ^/?$ "http\:\/\/xplain2me\.co\.za\/home" [R=301,L]
+

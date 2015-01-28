@@ -1,0 +1,123 @@
+----------------------------------------------
+REQUEST A TUTOR SPECIFICATION
+----------------------------------------------
+Date: 15 January 2014
+Compiled by: Tsepo Maleka 
+Client: Xplain2Me Tutoring (South Africa)
+
+Description:
+This defines business rules for any potential client
+requesting a tutor.
+
+----------------------------------------------
+Inputs
+----------------------------------------------
+[Personal information]
+- Last Name
+- First Names
+- Gender
+
+[Contact Details]
+- Email Address
+- Contact Number
+
+[Residential Address]
+- Street Address
+- Town or Suburb Name
+- City or Municipality
+- Area Code
+
+[Academic Needs]
+- Academic Level
+- Subjects
+- Learner problems areas and other necessary additional information
+
+[Human Test Challenge]
+- Human Test Challenge
+
+[Contractual / Legal Agreements]
+- Terms of Service Agreement
+
+-----------------------------------------------
+Outputs
+-----------------------------------------------
+- Verification Code (Random Four Digits)
+- Reference Number
+
+-----------------------------------------------
+Constraints
+-----------------------------------------------
+- The Last Name and First Names are required - of which each should have at
+least two characters and should not exceed 64 characters respectively.
+- Gender is limited to Male and Female and is required.
+- Email Address is required. It must comply to a valid email address format. 
+It does not have to be necessarily unique.
+- Contact Number is required. IT must comply to a valid South African number
+format. It does not have to be necessarily unique. It must also be a numeric
+value.
+- Street Address is required.
+- Town or Suburb name is required.
+- City or Municipality is required.
+- Area Code is required. It must be a numeric value.
+- Academic Level is required. There are five choices the user is constrained to:
+  (i) Foundation Phase (Grades 1 - 3)
+  (ii) Intermediate Phase (Grades 4 - 6)
+  (iii) Senior Phase (Grades 7 - 9)
+  (iv) Further Education and Training (Grades 10 -12)
+  (v) Post-Matric Level (College or University)
+
+- Subjects is required and at least one selection has to be made.
+- Learner problems areas and other necessary additional information is optional.
+- Human Test Challenge is required and the user must enter the correct response
+to this challenge.
+- The user must read, understand and agree to Terms of Service Agreement.
+
+
+------------------------------------------------------
+Process
+------------------------------------------------------
+
+- The user must provide their Personal Information, Contact Details,
+Academic Needs information, complete the human test challenge and then
+agree to the Terms of Service agreement.
+
+- Upon submission, the web application must validate the information
+entered by the user. If there were any errors that were picked up during
+this verification, then the process must be aborted and the user must be
+informed of the errors that occurred so that they can fix these errors and
+re-submit.
+
+- If no validation errors was picked up during the verification process, then
+the information must be persisted to the web application session facility.
+
+- A four-digit random verification code must then be generated and then
+sent to the user's email address. The user will then be taken to another
+web page to enter this verification code from their email inbox.
+Users will have exactly 5 minutes to enter the verification code. If the
+period has gone past, the user must restart the process again and fill in 
+their information. This is done so to verify if the user entered a correct
+email address and proves that the email address belongs to this user.
+
+- If the user did receive the verification code and entered a correct 
+verification code - then the web application must persist the information
+regarding this tutor request to the data storage facility. 
+
+- A reference number is then generated and persisted. The reference number
+is unique to this tutor request application. The format of the reference number
+is:
+
+   [TR]-[YYYYMMDD][Sequence Number]
+   
+   where TR is a standard prefix which stands for Tutor Request,
+   YYYY is the current year this request was made,
+   MM is the current month this request was made,
+   DD is the current day the request was made and
+   the Sequence Number is the sequence or ID of this tutor request.
+
+- An email to the application manager must be sent informing them of a new request for a tutor
+and a brief of the details including the reference number.
+
+- Another email must be sent to the user, informing the user of that their request
+for a tutor was received and that the entity will be in contact soon - along with 
+the reference number - of which they can use to communicate with regards their
+request.
