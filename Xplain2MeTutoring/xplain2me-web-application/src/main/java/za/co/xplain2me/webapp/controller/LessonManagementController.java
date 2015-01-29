@@ -128,6 +128,7 @@ public class LessonManagementController extends GenericController implements Ser
         
         List<Profile> profiles = new ArrayList<>();
         String outcome = null;
+        int code = 0;
         
         // validate the search field
         if (searchField != null && 
@@ -147,14 +148,18 @@ public class LessonManagementController extends GenericController implements Ser
             
             if (profiles == null) {
                 outcome = "No student could be found.";
+                code = ProfileCollectionWrapper.NOT_FOUND;
                 profiles = new ArrayList<>();
             }
-            else 
+            else {
                 outcome = profiles.size() + " student(s) were found.";
+                code = ProfileCollectionWrapper.FOUND;
+            }
         }
         
         else {
             outcome = "The search field appears to be invalid.";
+            code = ProfileCollectionWrapper.NOT_FOUND;
         }
         
         // set the http headers
@@ -167,6 +172,7 @@ public class LessonManagementController extends GenericController implements Ser
         ProfileCollectionWrapper wrapper = new ProfileCollectionWrapper();
         wrapper.setProfiles(profiles); 
         wrapper.setOutcome(outcome); 
+        wrapper.setCode(code);
         
         return mapper.writeValueAsString(wrapper);
         

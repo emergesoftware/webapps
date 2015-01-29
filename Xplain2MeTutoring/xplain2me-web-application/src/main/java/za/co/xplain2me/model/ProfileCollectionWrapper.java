@@ -6,12 +6,17 @@ import za.co.xplain2me.entity.Profile;
 
 public class ProfileCollectionWrapper implements Serializable {
     
+    public static final int FOUND = 1;
+    public static final int NOT_FOUND = 0;
+    
     private String outcome;
+    private int code;
     private List<Profile> profiles;
     
     public ProfileCollectionWrapper() {
         this.profiles = null;
         this.outcome = null;
+        this.code = NOT_FOUND;
     }
     
     public ProfileCollectionWrapper(List<Profile> profiles) {
@@ -33,6 +38,14 @@ public class ProfileCollectionWrapper implements Serializable {
 
     public void setOutcome(String outcome) {
         this.outcome = outcome;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
     
 }
