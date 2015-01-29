@@ -1,11 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<!DOCTYPE html>
 
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="description" content="Outlines what the culture of the tutors,
+              the services they offer, how to obtain rates of charge and the reasons 
+              why you should choose them." >
         
-        <title>Xplain2Me Tutoring | Simplify your learning</title>
+        <title>Xplain2Me | Welcome | Simplify your learning</title>
         
         <%@include file="scripts/template/header.jspf" %>
         
@@ -37,7 +40,7 @@
                                     <div class="post">
                                             
                                         <h2>Our Tutors</h2>
-                                        <p>Xplain2me tutors are selectively sourced out from different universities throughout the country. 
+                                        <p>Xplain2Me tutors are selectively sourced out from different universities throughout the country. 
                                             Our tutors are either graduates or university students on their course to graduating. 
                                             All of our tutors go through a screening process by qualification competence review and interviews.
                                         </p>

@@ -3,8 +3,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="description" content="Shows various ways in which the company
+              can be contacted." >
         
-        <title>Xplain2Me Tutoring | Contact Us</title>
+        <title>Xplain2Me | Contact Us | Simplify your learning</title>
+        
         
         <%@include file="scripts/template/header.jspf" %>
         

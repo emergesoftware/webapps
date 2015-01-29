@@ -1,11 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<!DOCTYPE html>
 
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="description" content="Informs what the company is about, 
+              their vision and mission in the tutoring industry as well
+              as their customer service policy." >
         
-        <title>Xplain2Me Tutoring | About | Simplify your learning</title>
+        <title>Xplain2Me | About Us | Simplify your learning</title>
         
         <%@include file="scripts/template/header.jspf" %>
    
@@ -37,15 +40,15 @@
                                    <h2>About Us</h2>
                                    
                                     <p>
-                                        Xplain2me was founded by well versed, resourceful and committed graduates
-                                    who commenced private tutoring in and around the province, effectively and 
-                                    efficiently from 2009 till to date.
+                                        Xplain2Me was founded by well versed, resourceful and committed graduates
+                                        who commenced private tutoring in and around the province, effectively and 
+                                        efficiently from 2009 till to date.
                                     </p>
                                     
 				    <p>
                                         Ultimately imparting expertise, skills and knowledge has proved to be a successful 
                                     journey in empowering students from all sorts of communities at large. In essence
-                                    Xplain2me has successfully and primarily endorsed its motto âsimplify your learningâ,
+                                    Xplain2Me has successfully and primarily endorsed its motto <strong>"simplify your learning"</strong>,
                                     which has subsequently been proved through our clients results.
                                     </p>
                                     
@@ -79,7 +82,7 @@
                                         <p>Our goal is to develop an understanding that our company is easy to do business with and to                
                                             improve response time to client complaints and objectives. To help meet these goals, we will   
                                             increase our client service staff, and implement a policy where our clients are guaranteed 
-                                            to receive a return phone call at the end of every week of operation. At Xplain2me,
+                                            to receive a return phone call at the end of every week of operation. At Xplain2Me,
                                             we pride ourselves in the provision of excellent services through the implementation of 
                                             our values which are  accountability, punctuality, Integrity, transparency, reliability, 
                                             diligence, consistency in ensuring good working relations and interactions with our clients.   

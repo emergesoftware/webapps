@@ -3,8 +3,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="description" content="Outlines the different subjects
+              that the tutors are offering to the clients as well as
+               the lesson breakdowns and performance targets." >
         
-        <title>Xplain2Me Tutoring | Subjects | Simplify your learning</title>
+        <title>Xplain2Me | Subjects | Simplify your learning</title>
         
         <%@include file="scripts/template/header.jspf" %>
    
@@ -98,7 +101,7 @@
                                     
                                     <h2>Performance Targets</h2>
                                     
-                                    <p>We have set performance targets for our students, so as to meet our objectives on the studentsâ productivity and to attain this we have a  
+                                    <p>We have set performance targets for our students, so as to meet our objectives on the students' productivity and to attain this we have a  
                                         review basis where the students' progress is monitored on an individual basis and corrective steps and timely adjustments are made where 
                                         necessary .Performance evaluation will be done after every test and exam Tutors will also report on their analysis of studentsâ progress 
                                         after every 3 lessons to the administrator in charge of the students and if slow or no progress at all is being , then adjustments will 
