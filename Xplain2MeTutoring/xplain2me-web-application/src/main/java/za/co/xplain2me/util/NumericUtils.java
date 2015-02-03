@@ -30,4 +30,21 @@ public final class NumericUtils {
         
     }
     
+    /**
+     * Determines if the value lies in between
+     * the specified minimum and maximum ranges.
+     * 
+     * @param value
+     * @param minimum
+     * @param maximum
+     * @return 
+     */
+    public static boolean isBetween(int value, int minimum, int maximum) {
+        return (value >= minimum && value <= maximum);
+    }
+    
+    public static boolean isBetween(double value, double minimum, double maximum) {
+        return (value >= minimum && value <= maximum);
+    }
+    
 }

@@ -39,3 +39,23 @@
         }
     };
 </script>
+
+<script type="text/javascript">
+    
+    function toggleMenuBar() {
+        
+        var menuBar = document.getElementById("menu_bar");
+        
+        if (menuBar.style.display === "none") {
+            $(menuBar).slideDown('fast');
+            return;
+        }
+        
+        else {
+            $(menuBar).slideUp('fast');
+        }
+        
+        
+    }
+    
+</script>

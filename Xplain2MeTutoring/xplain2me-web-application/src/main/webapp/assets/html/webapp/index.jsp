@@ -8,7 +8,7 @@
               the services they offer, how to obtain rates of charge and the reasons 
               why you should choose them." >
         
-        <title>Xplain2Me | Welcome | Simplify your learning</title>
+        <title>Xplain2Me Tutoring | Welcome | Simplify your learning</title>
         
         <%@include file="scripts/template/header.jspf" %>
         

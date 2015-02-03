@@ -1,8 +1,34 @@
 
+<%@page import="za.co.xplain2me.entity.AcademicLevel"%>
+<%@page import="za.co.xplain2me.entity.LessonStatus"%>
+<%@page import="za.co.xplain2me.entity.Subject"%>
+<%@page import="java.util.TreeMap"%>
+<%@page import="za.co.xplain2me.webapp.component.LessonManagementForm"%>
 <%@page import="za.co.xplain2me.webapp.controller.RequestMappings"%>
 
 <%
 
+    LessonManagementForm form = (LessonManagementForm)session
+            .getAttribute(LessonManagementForm.class.getName());
+    
+    if (form == null) {
+        
+        response.sendRedirect(request.getContextPath() + 
+                RequestMappings.ADD_NEW_LESSONS + 
+                "?rand=" + System.currentTimeMillis());
+        return;
+    }
+    
+    // the map of subjects
+    TreeMap<Long, Subject> subjects = form.getSubjects();
+    if (subjects == null)
+        subjects = new TreeMap<Long, Subject>();
+    
+    // the different lesson statuses
+    TreeMap<Long, LessonStatus> lessonStatus = form.getLessonStatus();
+    if (lessonStatus == null)
+        lessonStatus = new TreeMap<Long, LessonStatus>();
+    
     // construct the form action
     String formAction = request.getContextPath() + RequestMappings.ADD_NEW_LESSONS;
     
@@ -19,13 +45,24 @@
         <title>Create New Lessons</title>
         
         <%@include file="../jspf/template/default-manager-header.jspf" %>
+        <%@include file="../jspf/template/bootstrap-datepicker.jspf" %>
         <%@include file="../jspf/template/form-validation-script.jspf" %>
         
         <script type="text/javascript">
             
             $(document).ready(function() {
-                // the async HTTP request
-                var request = null;
+                
+                // basic counter for add-on IDs
+                var counter = 0;
+                
+                // the async HTTP request for fetching
+                // student profiles
+                var studentRequest = null;
+                
+                // the async HTTP request for fetching
+                // tutor profiles
+                var tutorRequest = null;
+                
                 // assign an onClick event for searchStudentBtn button
                  $("#searchStudentBtn").click(function(event){
                      
@@ -71,17 +108,18 @@
                     $("#student").val($.trim( $("#student").val()));
         
                     // abort any running requests
-                    if (request)
-                        request.abort();
+                    if (studentRequest)
+                        studentRequest.abort();
                     
                     // send the async HTTP post request
-                    var request = $.ajax({
+                    studentRequest = $.ajax({
                         
                         url : '<%= findStudentAsyncUrl %>',
                         type: 'GET',
                         async: true,
                         data: {
-                            'search-field' : $.trim($("#student").val())
+                            'search-field' : $.trim($("#student").val()),
+                            'profile-type' : 'student'
                         },
                         beforeSend: function (xhr) {
                             
@@ -152,23 +190,23 @@
 
                                 // for each of the found profiles - 
                                 // add them to the list
-                                var profiles = object.profiles;
+                                var students = object.students;
                                 
-                                for (var i = 0; i < profiles.length; i++) {
+                                for (var i = 0; i < students.length; i++) {
 
                                     // create a list item
                                     var listItem = document.createElement("a");
                                     $(listItem).addClass("list-group-item");
 
                                     // assign attributes
-                                    $(listItem).attr("id", profiles[i].id);
+                                    $(listItem).attr("id", students[i].profile.id);
                                     $(listItem).attr("href", "#");
 
                                     // add content
-                                    var content = profiles[i].id + " - " +
-                                            profiles[i].person.firstNames + " " + 
-                                            profiles[i].person.lastName + " (ID No: " + 
-                                            profiles[i].person.identityNumber + ")";
+                                    var content = students[i].id + " - " +
+                                            students[i].profile.person.firstNames + " " + 
+                                            students[i].profile.person.lastName + " (ID No: " + 
+                                            students[i].profile.person.identityNumber + ")";
 
                                     $(listItem).html(content);
 
@@ -217,6 +255,133 @@
                      
                  });
                 
+                // add an event to create elements after the user has
+                // selected their days of the week
+                $("#selectedDaysOfWeek").change(function(event) {
+                    
+                    // get the wrapper
+                    var enterTimesWrapper = document.getElementById("enterTimesWrapper");
+                    // clear the wrapper
+                    $(enterTimesWrapper).html("");
+                    
+                    // for each selection made
+                    
+                    $("#selectedDaysOfWeek :selected").each(function() {
+                        
+                        counter++;
+                        
+                        // create an input group div
+                        var inputGroup = document.createElement("div");
+                        $(inputGroup).addClass("input-group");
+                        enterTimesWrapper.appendChild(inputGroup);
+                        
+                        // create a glyphicon span
+                        var glyphicon = document.createElement("span");
+                        $(glyphicon).addClass("glyphicon glyphicon-time");
+                        $(glyphicon).css({ float : "left" });
+                        
+                        // create text span
+                        var text = document.createElement("span");
+                        $(text).css({ float : "left" });
+                        $(text).html("&nbsp;Enter time for <strong>" + 
+                                $(this).html() + "</strong>:")
+                        
+                        // create a label add-on span element
+                        var labelAddOn = document.createElement("span");
+                        $(labelAddOn).addClass("input-group-addon");
+                        $(labelAddOn).css({ width : "35%" });
+                        inputGroup.appendChild(labelAddOn);
+                        
+                        // add the glyphicon + text
+                        labelAddOn.appendChild(glyphicon);
+                        labelAddOn.appendChild(text);
+                        
+                        // assign this add-on a unique ID
+                        $(labelAddOn).attr("id", "basic-addon" + counter);
+                        
+                        // create an input for an hour
+                        var hourInput = document.createElement("input");
+                        $(hourInput).attr("type", "text");
+                        $(hourInput).attr("maxlength", "2");
+                        $(hourInput).attr("placeholder", "HH");
+                        $(hourInput).attr("aria-describedby", $(labelAddOn).attr("id"));
+                        $(hourInput).addClass("form-control");
+                        $(hourInput).attr("name", $(this).val() + "_hour");
+                        $(hourInput).attr("autocomplete", "off");
+                        
+                        // add formvalidator validations
+                        $(hourInput).attr("data-validation", "number");
+                        $(hourInput).attr("data-validation-allowing", "range[6;20]");
+                        $(hourInput).attr("data-validation-error-msg", 
+                                "The hour for " + $(this).html() + " must be between 06 and 20.");
+                        
+                        inputGroup.appendChild(hourInput);
+                        
+                        // add a mouseup event
+                        $(hourInput).mouseup(function() {
+                            $(this).select();
+                        });
+                        
+                        // create the time separator span
+                        var separator = document.createElement("span");
+                        $(separator).addClass("input-group-addon");
+                        $(separator).html("<strong>:</strong>");
+                        inputGroup.appendChild(separator);
+                        
+                        // assign a uniquw ID to the separator
+                        counter++;
+                        $(separator).attr("id", "basic-addon" + counter);
+                        
+                        // create an input for minute
+                        var minuteInput = document.createElement("input");
+                        $(minuteInput).attr("type", "text");
+                        $(minuteInput).attr("maxlength", "2");
+                        $(minuteInput).attr("placeholder", "MM");
+                        $(minuteInput).attr("aria-describedby", $(labelAddOn).attr("id"));
+                        $(minuteInput).addClass("form-control");
+                        $(minuteInput).attr("name", $(this).val() + "_minute");
+                        $(minuteInput).attr("autocomplete", "off");
+                        
+                        // add formvalidator validations
+                        $(minuteInput).attr("data-validation", "number");
+                        $(minuteInput).attr("data-validation-allowing", "range[0;59]");
+                        $(minuteInput).attr("data-validation-error-msg",
+                                "The minute for " + $(this).html() + 
+                                        " must be between 00 and 59.");
+                        
+                        inputGroup.appendChild(minuteInput);
+                        
+                        // add a mouseup event
+                        $(minuteInput).mouseup(function() {
+                            $(this).select();
+                        });
+                        
+                    });
+                    
+                    // check if there were children elements added
+                    if ($("#enterTimesWrapper div,span,input").size() === 0) {
+                        $("#enterTimesWrapper").html("<strong>No days of the week were selected.</strong>");
+                    }
+                    
+                    else {
+                        
+                        var mutedText = document.createElement("p");
+                        $(mutedText).addClass("text-muted");
+                        $(mutedText).html("<strong>NB: </strong>Use 24-hour format.");
+                        $(mutedText).prependTo(enterTimesWrapper);
+                        
+                        var instructionLabel = document.createElement("label");
+                        $(instructionLabel).html("Enter the time for each day of week selected:");
+                        $(instructionLabel).prependTo(enterTimesWrapper);
+                        
+                        // re-initialise the form validator
+                        initialiseFormValidator();
+                        
+                    }
+                    
+                });
+                
+                
             });
             
           
@@ -257,6 +422,8 @@
                                 
                             </div>
                             
+                            <hr/>
+                            
                             <div id="assignStudentFormGroup" class="form-group">
                                 <label>Assign to student:</label>
                                 <p class="text-muted">
@@ -266,7 +433,7 @@
                                 </p>
                                 <div class="input-group">
                                     <input type="text" id="student" name="student"
-                                           class="form-control" maxlength="24"
+                                           class="form-control" autocomplete="off"
                                            placeholder="Enter the student's first name(s)"
                                            data-validation="length" data-validation-length="min3"
                                            data-validation-error-msg="The student has to be assigned to the lessons." />
@@ -280,8 +447,133 @@
                                 
                             </div>
                             
+                            <hr/>
+                            
+                            <div class="form-group">
+                                
+                                <label>Find the available tutors?</label>
+                                
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="findNextAvailableTutors" selected value="yes"> Yes
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="findNextAvailableTutors" value="no"> No
+                                    </label>
+                                </div>
+                                
+                            </div>
+                            
+                            <hr/>
+                            
+                            <div class="form-group">
+                                <label>Enter the date the lessons will begin:</label>
+                                <input type="text" id="lessonsStartDate" name="lessonsStartDate"
+                                       class="form-control datepicker" autocomplete="off"
+                                       placeholder="Click to select date (YYYY-MM-DD)" readonly
+                                       data-validation="date" data-validation-format="yyyy-mm-dd" 
+                                       data-validation-error-msg="Enter the date the lessons will begin."
+                                       style="cursor: default; background-color: white; border-radius: 0px"/>
+                            </div>
+                            
+                            <hr/>
+                            
+                            <div class="form-group">
+                                <label>The days of the week in which the lessons will take place:</label>
+                                <p class="text-muted">To select more than one day of the week, 
+                                    hold <b>Ctrl</b> key and click your selection.</p>
+                                <select id="selectedDaysOfWeek" name="selectedDaysOfWeek"
+                                        class="form-control" size="7" multiple>
+                                    
+                                    <option value="2">Mondays</option>
+                                    <option value="3">Tuesdays</option>
+                                    <option value="4">Wednesdays</option>
+                                    <option value="5">Thursdays</option>
+                                    <option value="6">Fridays</option>
+                                    <option value="7">Saturdays</option>
+                                    <option value="1">Sundays</option>
+                                    
+                                </select>
+                            </div>
+                            
+                            <div id="enterTimesWrapper" class="form-group">
+                                   <!-- 
+                                    Elements will go here if a user selected at least one day
+                                   -->
+                            </div>
+                            
+                            <hr/>
+                            
+                            <div class="form-group">
+                                <label>Length in hours per lesson:</label>
+                                <p class="text-muted"><b>Note:</b> To enter half an hour, enter <b>0.5</b> and
+                                    for 1 hour and 45 minutes enter <b>1.75</b>.</p>
+                                <input type="text" id="lengthOfLessons" name="lengthOfLessons"
+                                           class="form-control" value="1.0" autocomplete="off"
+                                           placeholder="Enter the length in hours per lesson"
+                                           data-validation="number" data-validation-allowing="range[0.5;6.0],float"
+                                           data-validation-error-msg="Enter correct length in hours per lesson."/>
+                            </div>
+                            
+                            <hr/>
+                            
+                            <div class="form-group">
+                                <label>Subject:</label>
+                                <select id="subject" name="subject"
+                                        class="form-control">
+                                    
+                                    <%
+                                        for (Subject subject : subjects.values()){
+                                        %>
+                                        <option value="<%= subject.getId() %>">
+                                            <%= subject.getName() %>
+                                        </option>
+                                    <%
+                                        }
+                                    %>
+                                    
+                                </select>
+                            </div>
+                             
+                            <hr/>
+                            
+                            <div class="form-group">
+                                <label>Lesson Status:</label>
+                                <p class="text-muted">
+                                    The default lesson status for newly created lessons
+                                    is <strong>Pending</strong>.
+                                </p>
+                                <select id="lessonStatus" name="lessonStatus"
+                                        class="form-control"
+                                        style="background-color: white">
+                                    
+                                    <%
+                                        long id = 1;
+                                        LessonStatus pending = lessonStatus.get(id);
+                                    %>
+                                    
+                                    <option value="<%= pending.getId() %>">
+                                        <%= pending.getDescription() %>
+                                    </option>
+                                    
+                                </select>
+                            </div>
+                                    
+                            <hr/>
+                                
+                            <br/>
+                            
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary"
+                                       value="Add Lessons" ondblclick="return false;"/>
+                            </div>
+                            
                         </form>
                         
+                        <br/>
+                        <br/>
                     </div>
                     
                 </div>

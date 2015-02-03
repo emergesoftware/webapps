@@ -388,7 +388,7 @@ public class ProfileDAOImpl implements ProfileDAO {
     }
 
     @Override
-    public List<Profile> searchUserProfile(SearchUserProfileType type, Object searchValue, 
+    public List<Profile> searchUserProfile(SearchUserProfileType type, Object searchValue,
             Profile profilePerformingAction) 
             
             throws DataAccessException {
@@ -518,14 +518,17 @@ public class ProfileDAOImpl implements ProfileDAO {
                         searchValue instanceof String && 
                         ((String)searchValue).isEmpty() == false) {
                     
+                        List<Criterion> predicates = new ArrayList<>();
+                        predicates.add(Restrictions.ilike("person.firstNames", 
+                                                searchValue.toString().trim().toLowerCase(),
+                                                MatchMode.ANYWHERE));
+                        predicates.add(Restrictions.gt("profileType.id", profileTypeId));
+                        
                         criteria = session.createCriteria(Profile.class, "profile")
                                 .createAlias("profile.profileType", "profileType")
                                 .createAlias("profile.person", "person")
-                                .add(Restrictions.and(
-                                        Restrictions.ilike("person.firstNames", 
-                                                searchValue.toString().trim().toLowerCase(),
-                                                MatchMode.ANYWHERE), 
-                                        Restrictions.gt("profileType.id", profileTypeId)))
+                                .add(Restrictions.and(predicates
+                                        .toArray(new Criterion[predicates.size()])))
                                 .addOrder(Order.asc("person.firstNames"));
                         
                         return criteria.list();

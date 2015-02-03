@@ -1,5 +1,10 @@
 package za.co.xplain2me.test;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.List;
 import org.codehaus.jackson.map.ObjectMapper;
 import za.co.xplain2me.dao.ProfileDAO;
@@ -12,29 +17,30 @@ public class TestClass {
     
     public static void main(String... args) throws Exception {
         
-        ProfileDAO dao = new ProfileDAOImpl();
-        Profile profilePerformingAction = dao.getProfileById(1, 100);
+        File originalFile = new File("C:\\Users\\user\\Downloads\\block_russian_ip_addresses.txt");
+        BufferedReader reader = new BufferedReader(new FileReader(originalFile));
         
-        if (profilePerformingAction == null)
-            return;
+        File outputFile = new File("C:\\Users\\user\\Downloads\\block_russian_ip_addresses_output.txt");
+        if (outputFile.exists())
+            outputFile.delete();
         
-        System.out.println("-- Profile performing action: [" + 
-                profilePerformingAction.getProfileType().getId() + "] " + 
-                profilePerformingAction.getPerson().getFirstNames());
+        outputFile.createNewFile();
         
-        List<Profile> profiles = dao.searchUserProfile(SearchUserProfileType.MatchFirstNames,
-                "tshepo", profilePerformingAction);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+        StringBuilder contents = new StringBuilder();
         
-        if (profiles == null || profiles.isEmpty())
-            System.out.println("No profiles found.");
-        else {
-            
-            ObjectMapper mapper = new ObjectMapper();
-            
-            for (Profile profile : profiles)
-                System.out.println(mapper.writeValueAsString(profile)); 
+        while (reader.ready()) {
+            contents.append(reader.readLine());
         }
-            
+        
+        reader.close();
+        
+        String changedContents = contents.toString()
+                .replaceAll("iptables", "\r\niptables");
+        writer.write(changedContents + 
+                "\r\niptables -L -n" + 
+                "\r\nservice iptables restart");
+        writer.close();
         
     }
     

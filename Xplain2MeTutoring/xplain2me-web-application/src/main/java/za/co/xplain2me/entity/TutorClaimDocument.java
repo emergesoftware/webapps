@@ -23,9 +23,9 @@ public class TutorClaimDocument implements Serializable {
     @Column(name = "tutor_claim_document_id", nullable = false, unique = true)
     private long id;
     
-    @OneToOne(targetEntity = Profile.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "tutor_profile_id", nullable = false)
-    private Profile tutorProfile;
+    @OneToOne(targetEntity = Tutor.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "tutor_id", nullable = false)
+    private Tutor tutor;
     
     @Column(name = "tutor_claim_document_amount", nullable = false)
     private double claimAmount;
@@ -78,20 +78,6 @@ public class TutorClaimDocument implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Profile getTutorProfile() {
-        return tutorProfile;
-    }
-
-    public void setTutorProfile(Profile tutorProfile) throws IllegalAccessException {
-        
-        if (tutorProfile != null && 
-                tutorProfile.getProfileType().getId() != ProfileType.TUTOR_PROFILE)
-            throw new IllegalAccessException("A tutor profile is required to be assigned - "
-                    + "no other profile is allowed.");
-        
-        this.tutorProfile = tutorProfile;
     }
 
     public double getClaimAmount() {
@@ -181,6 +167,12 @@ public class TutorClaimDocument implements Serializable {
     public void setReasonForCancellation(String reasonForCancellation) {
         this.reasonForCancellation = reasonForCancellation;
     }
-    
-    
+
+    public Tutor getTutor() {
+        return tutor;
+    }
+
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
+    }
 }

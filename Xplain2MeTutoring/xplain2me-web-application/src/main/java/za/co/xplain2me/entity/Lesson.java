@@ -25,14 +25,14 @@ public class Lesson implements Serializable {
     @Column(name = "lesson_id", nullable = false, unique = true)
     private long id;
     
-    @OneToOne(targetEntity = Profile.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "tutor_profile_id", nullable = true)
+    @OneToOne(targetEntity = Tutor.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "tutor_id", nullable = true)
     @NotFound(action = NotFoundAction.IGNORE)
-    private Profile tutorProfile;
+    private Tutor tutor;
     
-    @OneToOne(targetEntity = Profile.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "student_profile_id", nullable = false)
-    private Profile studentProfile;
+    @OneToOne(targetEntity = Student.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lesson_scheduled_date_and_time", nullable = false)
@@ -99,32 +99,20 @@ public class Lesson implements Serializable {
         this.id = id;
     }
 
-    public Profile getTutorProfile() {
-        return tutorProfile;
+    public Tutor getTutor() {
+        return tutor;
     }
 
-    public void setTutorProfile(Profile tutorProfile) throws IllegalAccessException {
-        
-        if (tutorProfile != null && 
-                tutorProfile.getProfileType().getId() != ProfileType.TUTOR_PROFILE)
-            throw new IllegalAccessException("A tutor profile is required to be assigned - "
-                    + "no other profile is allowed.");
-            
-        this.tutorProfile = tutorProfile;
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
     }
 
-    public Profile getStudentProfile() {
-        return studentProfile;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setStudentProfile(Profile studentProfile) throws IllegalAccessException {
-        
-        if (studentProfile != null && 
-                studentProfile.getProfileType().getId() != ProfileType.STUDENT_PROFILE)
-            throw new IllegalAccessException("A student profile is required to be assigned - "
-                    + "no other profile is allowed.");
-        
-        this.studentProfile = studentProfile;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Date getScheduledDateAndTime() {

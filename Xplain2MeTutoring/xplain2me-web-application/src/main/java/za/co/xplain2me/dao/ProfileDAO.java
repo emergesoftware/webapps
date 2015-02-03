@@ -91,11 +91,12 @@ public interface ProfileDAO {
      * 
      * @param type
      * @param searchValue
+     * @param restrainedProfileTypeId
      * @param profilePerformingAction
      * @return
      * @throws DataAccessException 
      */
-    public List<Profile> searchUserProfile(SearchUserProfileType type, Object searchValue, 
+    public List<Profile> searchUserProfile(SearchUserProfileType type, Object searchValue,
             Profile profilePerformingAction) throws DataAccessException;
     
 }

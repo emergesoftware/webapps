@@ -85,4 +85,18 @@ public final class DateTimeUtils {
                 new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
         return formatter.format(date);
     }
+    
+    public static String getDayOfWeek(int number) {
+        switch (number) {
+            case 2: return "Monday";
+            case 3: return "Tuesday";
+            case 4: return "Wednesday";
+            case 5: return "Thursday";
+            case 6: return "Friday";
+            case 7: return "Saturday";
+            case 1: return "Sunday";
+        }
+        
+        return "";
+    }
 }

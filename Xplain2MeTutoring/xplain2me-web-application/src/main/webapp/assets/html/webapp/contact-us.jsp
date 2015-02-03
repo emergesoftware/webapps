@@ -6,7 +6,7 @@
         <meta name="description" content="Shows various ways in which the company
               can be contacted." >
         
-        <title>Xplain2Me | Contact Us | Simplify your learning</title>
+        <title>Xplain2Me Tutoring | Contact Us | Simplify your learning</title>
         
         
         <%@include file="scripts/template/header.jspf" %>

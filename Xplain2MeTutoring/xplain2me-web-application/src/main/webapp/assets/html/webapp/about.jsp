@@ -8,7 +8,7 @@
               their vision and mission in the tutoring industry as well
               as their customer service policy." >
         
-        <title>Xplain2Me | About Us | Simplify your learning</title>
+        <title>Xplain2Me Tutoring | About Us | Simplify your learning</title>
         
         <%@include file="scripts/template/header.jspf" %>
    

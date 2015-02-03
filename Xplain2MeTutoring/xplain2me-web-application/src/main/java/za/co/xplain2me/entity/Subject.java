@@ -3,7 +3,10 @@ package za.co.xplain2me.entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,6 +19,13 @@ public class Subject implements Serializable {
     
     @Column(name = "subject_name", nullable = false, unique = true)
     private String name;
+    
+    @Column(name = "subject_grade", nullable = false)
+    private int grade;
+    
+    @OneToOne(targetEntity = AcademicLevel.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "academic_level_id", nullable = false)
+    private AcademicLevel academicLevel;
     
     public Subject() {
     }
@@ -34,6 +44,22 @@ public class Subject implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public AcademicLevel getAcademicLevel() {
+        return academicLevel;
+    }
+
+    public void setAcademicLevel(AcademicLevel academicLevel) {
+        this.academicLevel = academicLevel;
     }
     
     

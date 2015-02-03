@@ -7,7 +7,7 @@
               that the tutors are offering to the clients as well as
                the lesson breakdowns and performance targets." >
         
-        <title>Xplain2Me | Subjects | Simplify your learning</title>
+        <title>Xplain2Me Tutoring | Subjects | Simplify your learning</title>
         
         <%@include file="scripts/template/header.jspf" %>
    

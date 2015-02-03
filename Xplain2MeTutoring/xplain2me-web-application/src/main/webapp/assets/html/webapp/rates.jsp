@@ -7,7 +7,7 @@
         <meta name="description" content="Outlines a brief on how the rates are
               charged per client and how clients can obtain a qoutation." >
         
-        <title>Xplain2Me | Rates | Simplify your learning</title>
+        <title>Xplain2Me Tutoring | Rates | Simplify your learning</title>
         
         <%@include file="scripts/template/header.jspf" %>
    
