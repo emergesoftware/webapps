@@ -1,4 +1,5 @@
 
+<%@page import="za.co.xplain2me.entity.Subject"%>
 <%@page import="za.co.xplain2me.entity.AcademicLevel"%>
 <%@page import="za.co.xplain2me.entity.BecomeTutorRequest"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -385,15 +386,15 @@
 
                         <!-- If yes, select the levels you tutored -->
                         <div id="academicLevelFormGroup" class="form-group">
-                            <label>If Yes, select the academic levels you have tutored before:</label>
+                            <label>If Yes, select the subjects you have tutored before:</label>
                             <br/>
                             <%
-                                for (AcademicLevel level : form.getAcademicLevels().values()) {
+                                for (Subject subject : form.getSubjects().values()) {
                             %>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" name="academicLevel_<%= level.getId() %>"
-                                           value="<%= level.getId() %>">
-                                    <%= level.getDescription() %>
+                                    <input type="checkbox" name="subject_<%= subject.getId() %>"
+                                           value="<%= subject.getId() %>">
+                                    <%= subject.getName() %>
                                 </label><br/>
                             <% } %>
                         </div>

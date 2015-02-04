@@ -82,11 +82,11 @@ public class BecomeTutorRequest implements Serializable {
     @Column(name = "become_tutor_request_motivation_text", nullable = false)
     private String motivationalText;
     
-    @OneToMany(targetEntity = AcademicLevelsTutoredBefore.class, 
+    @OneToMany(targetEntity = SubjectsTutoredBefore.class, 
             fetch = FetchType.EAGER, 
             mappedBy = "request")
     @NotFound(action = NotFoundAction.IGNORE)
-    private List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore;
+    private List<SubjectsTutoredBefore> subjectsTutoredBefore;
     
     @OneToMany(targetEntity = BecomeTutorSupportingDocument.class, 
             fetch = FetchType.LAZY, 
@@ -233,20 +233,20 @@ public class BecomeTutorRequest implements Serializable {
         this.motivationalText = motivationalText;
     }
 
-    public List<AcademicLevelsTutoredBefore> getAcademicLevelsTutoredBefore() {
-        return academicLevelsTutoredBefore;
-    }
-
-    public void setAcademicLevelsTutoredBefore(List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore) {
-        this.academicLevelsTutoredBefore = academicLevelsTutoredBefore;
-    }
-
     public List<BecomeTutorSupportingDocument> getSupportingDocuments() {
         return supportingDocuments;
     }
 
     public void setSupportingDocuments(List<BecomeTutorSupportingDocument> supportingDocuments) {
         this.supportingDocuments = supportingDocuments;
+    }
+
+    public List<SubjectsTutoredBefore> getSubjectsTutoredBefore() {
+        return subjectsTutoredBefore;
+    }
+
+    public void setSubjectsTutoredBefore(List<SubjectsTutoredBefore> subjectsTutoredBefore) {
+        this.subjectsTutoredBefore = subjectsTutoredBefore;
     }
     
     

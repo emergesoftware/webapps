@@ -79,7 +79,12 @@
                         </div>
 
                         <br/>
-
+                        
+                        <p>
+                            <span><strong>Complete this human test challenge:</strong></span>
+                            <span class="text-muted">Type the text you see on the image below:</span>
+                        </p>
+                        
                         <%@include file="../jspf/template/re-captcha-code-snippet.jspf" %>
 
                         <br/>

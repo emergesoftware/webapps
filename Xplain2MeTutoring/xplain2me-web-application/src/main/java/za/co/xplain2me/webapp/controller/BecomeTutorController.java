@@ -17,6 +17,8 @@ import za.co.xplain2me.dao.CitizenshipDAO;
 import za.co.xplain2me.dao.CitizenshipDAOImpl;
 import za.co.xplain2me.dao.GenderDAO;
 import za.co.xplain2me.dao.GenderDAOImpl;
+import za.co.xplain2me.dao.SubjectDAO;
+import za.co.xplain2me.dao.SubjectDAOImpl;
 import za.co.xplain2me.webapp.component.BecomeTutorForm;
 import za.co.xplain2me.webapp.controller.helper.BecomeTutorControllerHelper;
 
@@ -48,13 +50,13 @@ public class BecomeTutorController extends GenericController implements Serializ
         // the data access objects
         CitizenshipDAO citizenshipDAO = new CitizenshipDAOImpl();
         GenderDAO genderDAO = new GenderDAOImpl();
-        AcademicLevelDAO academicLevelDAO = new AcademicLevelDAOImpl();
+        SubjectDAO subjectDAO = new SubjectDAOImpl();
         
         // create and initialise
         BecomeTutorForm form = new BecomeTutorForm();
         helper.populateCitizenshipEntries(form, citizenshipDAO);
         helper.populateGenderEntries(form, genderDAO);
-        helper.populateAcademicLevels(form, academicLevelDAO);
+        helper.populateSubjects(form, subjectDAO);
         
         // save form to the session
         saveToSessionScope(request, form);
@@ -208,7 +210,7 @@ public class BecomeTutorController extends GenericController implements Serializ
             // save the information to the database
             becomeTutorRequestDAO.saveBecomeTutorRequest(
                     form.getBecomeTutorRequest(), 
-                    form.getAcademicLevelsTutoredBefore(), 
+                    form.getSubjectsTutoredBefore(), 
                     form.getSupportingDocuments());
 
             // start a thread to send the receipt of tutor application

@@ -69,7 +69,7 @@ public class SubjectDAOImpl implements SubjectDAO {
                     getSessionFactory().openSession();
             
             criteria = session.createCriteria(Subject.class)
-                    .addOrder(Order.asc("name"));
+                    .addOrder(Order.asc("id"));
             return criteria.list();
             
         }

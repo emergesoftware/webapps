@@ -39,12 +39,14 @@ import za.co.xplain2me.dao.AcademicLevelDAO;
 import za.co.xplain2me.dao.BecomeTutorRequestDAO;
 import za.co.xplain2me.dao.CitizenshipDAO;
 import za.co.xplain2me.dao.GenderDAO;
+import za.co.xplain2me.dao.SubjectDAO;
 import za.co.xplain2me.entity.AcademicLevel;
-import za.co.xplain2me.entity.AcademicLevelsTutoredBefore;
 import za.co.xplain2me.entity.BecomeTutorRequest;
 import za.co.xplain2me.entity.BecomeTutorSupportingDocument;
 import za.co.xplain2me.entity.Citizenship;
 import za.co.xplain2me.entity.Gender;
+import za.co.xplain2me.entity.Subject;
+import za.co.xplain2me.entity.SubjectsTutoredBefore;
 import za.co.xplain2me.webapp.component.BecomeTutorForm;
 import za.co.xplain2me.webapp.controller.GenericController;
 
@@ -263,10 +265,10 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
                 // the job application object
                 BecomeTutorRequest request = form.getBecomeTutorRequest();
                 
-                // resolve academic levels tutored before
+                // resolve subjects tutored before
                 List<String> levelsTutoredBefore = new ArrayList<>();
-                for (AcademicLevelsTutoredBefore item : form.getAcademicLevelsTutoredBefore()) 
-                    levelsTutoredBefore.add(item.getAcademicLevel().getDescription());
+                for (SubjectsTutoredBefore item : form.getSubjectsTutoredBefore()) 
+                    levelsTutoredBefore.add(item.getSubject().getName());
                 
                 // set up values for injection
                 Map<String, Object> values = new HashMap<>();
@@ -285,7 +287,7 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
                 values.put("citizenship", request.getCitizenship().getDescription());
                 values.put("tutored_before", BooleanToText.format(request.isTutoredBefore(),
                         BooleanToText.YES_NO_FORMAT));
-                values.put("academic_levels_tutored_before", EmailTemplateFactory
+                values.put("subjects_tutored_before", EmailTemplateFactory
                         .constructHtmlListItemsFromList(levelsTutoredBefore, false));
                 values.put("motivation", request.getMotivationalText());
                 values.put("supporting_documents_attached", BooleanToText.format(
@@ -366,21 +368,6 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
     }
     
     /**
-     * Populates the academic levels
-     * @param form
-     * @param dao 
-     */
-    public void populateAcademicLevels(BecomeTutorForm form, AcademicLevelDAO dao) {
-        if (form == null || dao == null) return;
-        
-        List<AcademicLevel> list = dao.getAllAcademicLevels();
-        form.setAcademicLevels(new TreeMap<Long, AcademicLevel>()); 
-        for (AcademicLevel level : list) {
-            form.getAcademicLevels().put(level.getId(), level);
-        }
-    }
-    
-    /**
      * Populates the different
      * citizenship entries from the data source
      * 
@@ -436,9 +423,8 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
                     new ArrayList<BecomeTutorSupportingDocument>());
         
         // initialse the academic levels tutored before list
-        if (item.getAcademicLevelsTutoredBefore() == null)
-            item.setAcademicLevelsTutoredBefore(
-                    new ArrayList<AcademicLevelsTutoredBefore>()); 
+        if (item.getSubjectsTutoredBefore() == null)
+            item.setSubjectsTutoredBefore(new ArrayList<SubjectsTutoredBefore>()); 
         
         // initialise the list of files
         form.setEmailAttachments(new ArrayList<File>());
@@ -652,11 +638,11 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
         // if the user has tutored before, check that, at least
         // one academic level tutored before has been selected
         if (tutoredBefore) {
-            if (form.getAcademicLevelsTutoredBefore() == null || 
-                    form.getAcademicLevelsTutoredBefore().isEmpty()) {
+            if (form.getSubjectsTutoredBefore() == null || 
+                    form.getSubjectsTutoredBefore().isEmpty()) {
                 count++;
-                form.getErrorsEncountered().add("You must select at least one academic "
-                        + "level you have tutored before.");
+                form.getErrorsEncountered().add("You must select at least one subject "
+                        + "you have tutored before.");
             }
         }
         
@@ -904,15 +890,15 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
         }
         
         // Academic Levels tutored before
-        if (name.startsWith("academicLevel_")) {
+        if (name.startsWith("subject_")) {
             
             Long id = Long.parseLong(value);
             
-            AcademicLevelsTutoredBefore tutoredBefore = new AcademicLevelsTutoredBefore();
-            tutoredBefore.setAcademicLevel(form.getAcademicLevels().get(id));
+            SubjectsTutoredBefore tutoredBefore = new SubjectsTutoredBefore();
+            tutoredBefore.setSubject(form.getSubjects().get(id));
             tutoredBefore.setRequest(request);
             
-            form.getAcademicLevelsTutoredBefore().add(tutoredBefore);
+            form.getSubjectsTutoredBefore().add(tutoredBefore);
             
         }
         
@@ -936,5 +922,26 @@ public class BecomeTutorControllerHelper extends GenericController implements Se
         
         return operatingSystemName.contains("windows");
         
+    }
+
+    /**
+     * Populates the form with a list of all
+     * subjects.
+     * 
+     * @param form
+     * @param dao 
+     */
+    public void populateSubjects(BecomeTutorForm form, SubjectDAO dao) {
+        
+        if (form == null || dao == null) return;
+        
+        Map<Long, Subject> map = new TreeMap<>();
+        List<Subject> subjects = dao.getAllSubjects();
+        
+        for (Subject item : subjects)
+            map.put(item.getId(), item);
+        
+        form.setSubjects(map);
+         
     }
 }

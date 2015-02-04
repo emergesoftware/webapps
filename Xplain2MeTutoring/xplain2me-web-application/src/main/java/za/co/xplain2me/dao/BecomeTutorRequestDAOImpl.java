@@ -14,9 +14,9 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import za.co.xplain2me.data.transformation.DataTransformerTool;
-import za.co.xplain2me.entity.AcademicLevelsTutoredBefore;
 import za.co.xplain2me.entity.BecomeTutorRequest;
 import za.co.xplain2me.entity.BecomeTutorSupportingDocument;
+import za.co.xplain2me.entity.SubjectsTutoredBefore;
 
 public class BecomeTutorRequestDAOImpl implements BecomeTutorRequestDAO {
 
@@ -76,7 +76,7 @@ public class BecomeTutorRequestDAOImpl implements BecomeTutorRequestDAO {
 
     @Override
     public BecomeTutorRequest saveBecomeTutorRequest(BecomeTutorRequest request, 
-            List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore, 
+            List<SubjectsTutoredBefore> subjectsTutoredBefore, 
             List<BecomeTutorSupportingDocument> documents) 
             
             throws DataAccessException {
@@ -98,10 +98,10 @@ public class BecomeTutorRequestDAOImpl implements BecomeTutorRequestDAO {
             session.save(request);
             session.persist(request);
             
-            if (academicLevelsTutoredBefore != null &&
-                    academicLevelsTutoredBefore.isEmpty() == false) {
+            if (subjectsTutoredBefore != null &&
+                    subjectsTutoredBefore.isEmpty() == false) {
                 
-                for (AcademicLevelsTutoredBefore item : academicLevelsTutoredBefore) {
+                for (SubjectsTutoredBefore item : subjectsTutoredBefore) {
                     
                     if (item == null) continue;
                     

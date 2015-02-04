@@ -1,8 +1,8 @@
 
-<%@page import="za.co.emergelets.util.BooleanToText"%>
-<%@page import="za.co.emergelets.xplain2me.entity.User"%>
-<%@page import="za.co.emergelets.xplain2me.webapp.component.UserManagementForm"%>
-<%@page import="za.co.emergelets.xplain2me.entity.Profile"%>
+<%@page import="za.co.xplain2me.util.BooleanToText"%>
+<%@page import="za.co.xplain2me.entity.User"%>
+<%@page import="za.co.xplain2me.webapp.component.UserManagementForm"%>
+<%@page import="za.co.xplain2me.entity.Profile"%>
 
 <%
     UserManagementForm form = (UserManagementForm)session

@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.stereotype.Component;
-import za.co.xplain2me.entity.AcademicLevel;
-import za.co.xplain2me.entity.AcademicLevelsTutoredBefore;
 import za.co.xplain2me.entity.BecomeTutorRequest;
 import za.co.xplain2me.entity.BecomeTutorSupportingDocument;
 import za.co.xplain2me.entity.Citizenship;
 import za.co.xplain2me.entity.Gender;
+import za.co.xplain2me.entity.Subject;
+import za.co.xplain2me.entity.SubjectsTutoredBefore;
 
 @Component
 public class BecomeTutorForm implements Serializable {
@@ -26,7 +26,7 @@ public class BecomeTutorForm implements Serializable {
     
     // lists for the drop downs
     private List<Citizenship> citizenships;
-    private Map<Long, AcademicLevel> academicLevels;
+    private Map<Long, Subject> subjects;
     private List<Gender> gender;
     
      // verification fields
@@ -37,7 +37,7 @@ public class BecomeTutorForm implements Serializable {
     private String reCaptchaChallenge;
     private String reCaptchaResponse;
     
-    private List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore;
+    private List<SubjectsTutoredBefore> subjectsTutoredBefore;
     private List<BecomeTutorSupportingDocument> supportingDocuments;
     
     private List<File> emailAttachments;
@@ -45,9 +45,9 @@ public class BecomeTutorForm implements Serializable {
     public BecomeTutorForm() {
         this.citizenships = new ArrayList<>();
         this.gender = new ArrayList<>();
-        this.academicLevels = new TreeMap<>();
+        this.subjects = new TreeMap<>();
         
-        this.academicLevelsTutoredBefore = new ArrayList<>();
+        this.subjectsTutoredBefore = new ArrayList<>();
         this.supportingDocuments = new ArrayList<>();
         
         this.errorsEncountered = new ArrayList<>();
@@ -117,20 +117,20 @@ public class BecomeTutorForm implements Serializable {
         this.errorsEncountered = errorsEncountered;
     }
 
-    public Map<Long, AcademicLevel> getAcademicLevels() {
-        return academicLevels;
+    public Map<Long, Subject> getSubjects() {
+        return subjects;
     }
 
-    public void setAcademicLevels(Map<Long, AcademicLevel> academicLevels) {
-        this.academicLevels = academicLevels;
+    public void setSubjects(Map<Long, Subject> subjects) {
+        this.subjects = subjects;
     }
 
-    public List<AcademicLevelsTutoredBefore> getAcademicLevelsTutoredBefore() {
-        return academicLevelsTutoredBefore;
+    public List<SubjectsTutoredBefore> getSubjectsTutoredBefore() {
+        return subjectsTutoredBefore;
     }
 
-    public void setAcademicLevelsTutoredBefore(List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore) {
-        this.academicLevelsTutoredBefore = academicLevelsTutoredBefore;
+    public void setSubjectsTutoredBefore(List<SubjectsTutoredBefore> subjectsTutoredBefore) {
+        this.subjectsTutoredBefore = subjectsTutoredBefore;
     }
 
     public List<BecomeTutorSupportingDocument> getSupportingDocuments() {

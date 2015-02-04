@@ -1,5 +1,5 @@
 
-<%@page import="za.co.xplain2me.entity.AcademicLevelsTutoredBefore"%>
+<%@page import="za.co.xplain2me.entity.SubjectsTutoredBefore"%>
 <%@page import="za.co.xplain2me.util.BooleanToText"%>
 <%@page import="za.co.xplain2me.util.DateTimeUtils"%>
 <%@page import="za.co.xplain2me.entity.BecomeTutorRequest"%>
@@ -121,11 +121,11 @@
                                                 %>
                                                 <ul>
                                         <%
-                                                for (AcademicLevelsTutoredBefore tutoredBefore : 
-                                                        becomeTutorRequest.getAcademicLevelsTutoredBefore()) {
+                                                for (SubjectsTutoredBefore tutoredBefore : 
+                                                        becomeTutorRequest.getSubjectsTutoredBefore()  ) {
                                                     
                                                     %>
-                                                    <li><%= tutoredBefore.getAcademicLevel().getDescription() %></li>
+                                                    <li><%= tutoredBefore.getSubject().getName() %></li>
                                                     <%
                                                 }
                                                 

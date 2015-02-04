@@ -320,10 +320,10 @@ public class EmailSender {
     }
     
     // the Gmail account username
-    private static final String USERNAME = "support@emergesoftware.co.za";
+    private static final String USERNAME = "xplain2metutoring@gmail.com";
     //the Gmail email address
     private static final String FROM_EMAIL_ADDRESS = USERNAME;
     // the Gmail account password
-    private static final String PASSWORD = "ben10hasGrown";
+    private static final String PASSWORD = "8to0much@JB";
     
 }

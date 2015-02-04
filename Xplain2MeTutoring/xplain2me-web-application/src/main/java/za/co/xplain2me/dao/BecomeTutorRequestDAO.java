@@ -1,9 +1,9 @@
 package za.co.xplain2me.dao;
 
 import java.util.List;
-import za.co.xplain2me.entity.AcademicLevelsTutoredBefore;
 import za.co.xplain2me.entity.BecomeTutorRequest;
 import za.co.xplain2me.entity.BecomeTutorSupportingDocument;
+import za.co.xplain2me.entity.SubjectsTutoredBefore;
 
 public interface BecomeTutorRequestDAO {
     
@@ -23,13 +23,13 @@ public interface BecomeTutorRequestDAO {
      * to the data repo
      * 
      * @param request
-     * @param academicLevelsTutoredBefore
+     * @param subjectsTutoredBefore
      * @param documents
      * @return
      * @throws DataAccessException 
      */
     public BecomeTutorRequest saveBecomeTutorRequest(BecomeTutorRequest request, 
-            List<AcademicLevelsTutoredBefore> academicLevelsTutoredBefore, 
+            List<SubjectsTutoredBefore> subjectsTutoredBefore, 
             List<BecomeTutorSupportingDocument> documents) throws DataAccessException;
     
     /**

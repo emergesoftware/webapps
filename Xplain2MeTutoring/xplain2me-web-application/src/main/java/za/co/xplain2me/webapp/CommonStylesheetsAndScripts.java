@@ -10,7 +10,8 @@ public final class CommonStylesheetsAndScripts {
     private static final String APP_CONTEXT = "";
     
     public static final String BOOTSWATCH_CSS = 
-            "http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cosmo/bootstrap.min.css";
+            "http://maxcdn.bootstrapcdn.com/bootswatch/3.3.2/cosmo/bootstrap.min.css";
+            //"http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cosmo/bootstrap.min.css";
     
     public static final String DEFAULT_CSS = 
             APP_CONTEXT + "/assets/stylesheets/default-style.css";
@@ -22,7 +23,8 @@ public final class CommonStylesheetsAndScripts {
             "http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css";
     
     public static final String BOOTSTRAP_JS = 
-            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js";
+            "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js";
+            //"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js";
     
     public static final String JQUERY_FORM_VALIDATION_JS = 
             "http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js";

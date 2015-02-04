@@ -1,4 +1,8 @@
 
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="za.co.xplain2me.util.DateTimeUtils"%>
 <%@page import="za.co.xplain2me.webapp.controller.RequestMappings"%>
 <%@page import="java.util.TreeSet"%>
 <%@page import="java.util.Set"%>
@@ -25,6 +29,9 @@
     String profileTypeDescription = userContext.getProfile().getProfileType()
             .getDescription().toUpperCase();
     
+    // Date disply format
+    final DateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+    
 %>
 
 <%@ page pageEncoding="UTF-8" %>
@@ -32,16 +39,29 @@
     <div id="menu_bar" class="container" 
          style="background: black; opacity: 0.9; z-index:9999;
          position: fixed; top: 0; left: 0; display: none; height: 100%;
-         color: white; overflow: scroll; width: 100%">
+         color: white; overflow-y: auto; overflow-x: hidden; width: 100%">
         
         <div class="row">
             
             <div class="col-md-6">
                 
-                <button type="button" class="close" onclick="toggleMenuBar()">&times;</button>
-        
-                <h3>Menu Options:</h3>
                 <br/>
+                
+                <button type="button" class="close" title="Close Menu Options"
+                        onclick="toggleMenuBar()">&times;</button>
+        
+                <p>
+                    <span><%= profileTypeDescription.replace("PROFILE", "") %> PANEL</span>
+                    <span>&nbsp;|&nbsp;</span>
+                    <span><%= formatter.format(new Date()) %></span>
+                    <span>&nbsp;|&nbsp;</span>
+                    <span>Logged in as: &nbsp;</span>
+                    <span class="text-warning">
+                        <%= personFullName %>
+                    </span>
+                </p>
+                
+                <h3>Menu Options:</h3>
 
                  <%
                     List<ProfileTypeUrlPermissions> permittedUrls = 
@@ -68,10 +88,10 @@
                         List<MenuItem> menuItems = navBar.get(key);
 
                 %>
-                    <hr style="background-color: transparent; border: 1px solid gray"/>
+                    <hr style="background-color: #484848; height: 1px; border: 0 none"/>
                     <h4>
                         <span class="<%= menuItems.get(0).getCategory().getGlyphiconCssClass() %>"></span>
-                        <span><%= key %></span>
+                        <span>&nbsp;<%= key.toUpperCase() %></span>
                     </h4>
 
                     <%
@@ -80,24 +100,30 @@
                             String title = item.getTitle();
                     %>
 
-                    <a href="<%= href %>" style="display: block; text-decoration: none"
+                    <a href="<%= href %>" style="display: block; text-decoration: none; 
+                       margin: 6px; margin-left: 12px;"
                         <%= (item.isOpensOnNewWindow()) ? "target='_blank'" : "" %>
                         title="<%= title %>">
-                        <span class="glyphicon glyphicon-stop"></span>
-                        <span>&nbsp;<%= item.getDescription() %></span>
+                        <span><%= item.getDescription() %></span>
                     </a> 
 
                      <%
                         }
                     }
                 %>
-
+                
+                <hr style="background-color: #484848; height: 1px; border: 0 none"/>
             </div>
+                
             
             
         </div>
-                
-        <div style="width: 100%; height: 60px"></div> 
+        
+        <div style="width: 100%; height: 40px"></div> 
+        <div style="margin-bottom: 18px">
+            <strong>Xplain2Me Tutoring</strong> - Simplify your learning.<br/>
+            <span class="text-primary">Version 1.1.0 - Build 007 </span>
+        </div>
     </div>
 
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
@@ -126,9 +152,15 @@
         
         <button type="button" class="btn btn-primary navbar-btn"
                 onclick="toggleMenuBar()">
-            Menu Options
+            <span class="glyphicon glyphicon-menu-down"></span>
+            <span>&nbsp;Menu Options</span>
         </button>
        
+        <a href="<%= request.getContextPath() + RequestMappings.LOGOUT %>"
+            class="btn btn-primary navbar-btn">
+            <span class="glyphicon glyphicon-off"></span>
+            <span>&nbsp;Log Off</span>
+        </a>
         
     </div>
 </nav>
