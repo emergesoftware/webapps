@@ -5,6 +5,8 @@ import za.co.xplain2me.entity.UserSalt;
 
 public interface UserDAO {
     
+    public User getUser(String username);
+    
     /**
      * CHECKS IF THE USERNAME IS
      * COMPLETELY UNIQUE

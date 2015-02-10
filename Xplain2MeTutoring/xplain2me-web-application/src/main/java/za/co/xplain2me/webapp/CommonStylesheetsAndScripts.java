@@ -9,9 +9,10 @@ public final class CommonStylesheetsAndScripts {
     
     private static final String APP_CONTEXT = "";
     
+    // NB: replace {0} with the bootswatch theme name
     public static final String BOOTSWATCH_CSS = 
-            "http://maxcdn.bootstrapcdn.com/bootswatch/3.3.2/cosmo/bootstrap.min.css";
-            //"http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cosmo/bootstrap.min.css";
+            "http://maxcdn.bootstrapcdn.com/bootswatch/3.3.2/{0}/bootstrap.min.css";
+            //"http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/{0}/bootstrap.min.css";
     
     public static final String DEFAULT_CSS = 
             APP_CONTEXT + "/assets/stylesheets/default-style.css";

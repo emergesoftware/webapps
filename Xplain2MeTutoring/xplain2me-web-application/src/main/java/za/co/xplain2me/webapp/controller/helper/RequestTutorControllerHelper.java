@@ -5,21 +5,35 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import za.co.xplain2me.bo.validation.EmailAddressValidator;
+import za.co.xplain2me.dao.ProfileDAO;
+import za.co.xplain2me.dao.ProfileDAOImpl;
+import za.co.xplain2me.dao.TutorDao;
+import za.co.xplain2me.dao.TutorDaoImpl;
+import za.co.xplain2me.dao.UserDAO;
+import za.co.xplain2me.dao.UserDAOImpl;
+import za.co.xplain2me.entity.Profile;
 import za.co.xplain2me.util.ReCaptchaUtil;
 import za.co.xplain2me.util.VerificationCodeGenerator;
 import za.co.xplain2me.util.mail.EmailSender;
 import za.co.xplain2me.util.mail.EmailTemplateFactory;
 import za.co.xplain2me.util.mail.EmailTemplateType;
 import za.co.xplain2me.entity.Subject;
+import za.co.xplain2me.entity.Tutor;
 import za.co.xplain2me.entity.TutorRequest;
 import za.co.xplain2me.entity.TutorRequestSubject;
+import za.co.xplain2me.entity.TutorRequestThread;
+import za.co.xplain2me.entity.User;
+import za.co.xplain2me.util.BooleanToText;
+import za.co.xplain2me.util.BucketMap;
 import za.co.xplain2me.webapp.component.RequestTutorForm;
+import za.co.xplain2me.webapp.component.UserContext;
 import za.co.xplain2me.webapp.controller.GenericController;
 
 @Component
@@ -424,6 +438,131 @@ public class RequestTutorControllerHelper extends GenericController {
         
         form.setVerificationCode(VerificationCodeGenerator.generateVerificationCode());
         form.setDateGeneratedVerificationCode(new Date());
+        
+    }
+
+    /**
+     * Finds a list of tutors who teach the specific
+     * subject as requested by the client
+     * and send these tutors a notification.
+     * 
+     * @param form 
+     */
+    public void notifyPotentialTutorsAsync(RequestTutorForm form) {
+        
+        if (form == null) {
+            LOG.warning(" ... the form is null ...");
+            return;
+        }
+        
+        // message thread for this tutor request
+        List<TutorRequestThread> messages = new ArrayList<>();
+        
+        // the performing profile
+        ProfileDAO profileDao = new ProfileDAOImpl();
+        Profile profilePerformingAction = profileDao.getProfileById(1, 100);
+        
+        // get the system user
+        UserDAO userDao = new UserDAOImpl();
+        User user = userDao.getUser("system");
+        
+        // get the list of all the subjects the
+        // client needs attention in
+        List<TutorRequestSubject> subjects = form.getTutorRequest().getSubjects();
+        
+        // get a list of tutors who teach each subject
+        BucketMap<Subject, Tutor> availableTutors = new BucketMap<>();
+        TutorDao tutorDao = new TutorDaoImpl();
+        
+        // iterate tutors for each subject
+        for (TutorRequestSubject requestedSubject : subjects) {
+            
+            // search for tutors delivering this subject
+            Subject subject = requestedSubject.getSubject();
+            List<Tutor> foundTutors = tutorDao.searchTutor(TutorDao.SEARCH_BY_SUBJECT_TUTORING,
+                    subject, profilePerformingAction);
+            
+            // if no tutor could be found - append a message
+            if (foundTutors == null || foundTutors.isEmpty()) {
+                
+                // create a thread
+                TutorRequestThread thread = new TutorRequestThread();
+                thread.setUser(user);
+                thread.setMessage("The system could not find any tutors for "
+                        + "the subject: " + subject.getName());
+                thread.setRequest(form.getTutorRequest()); 
+                thread.setTimestamp(new Date());
+                
+                messages.add(thread);
+                
+            }
+            
+            else {
+                
+                for (Tutor foundTutor : foundTutors) 
+                    availableTutors.put(subject, foundTutor);
+                
+            }
+        }
+        
+        // if there were any tutors found - send emails to these tutors
+        // the subject
+        for (Subject subject : availableTutors.keySet()) {
+            
+            TutorRequest request = form.getTutorRequest();
+            List<Tutor> availableTutorsList = availableTutors.get(subject);
+            
+            for (Tutor tutor : availableTutorsList) {
+            
+                String body = "";
+
+                // template injections
+                Map<String, Object> values = new HashMap<>();
+                values.put("date_completed", request.getDateReceived());
+                values.put("last_name", request.getLastName());
+                values.put("first_names", request.getFirstNames());
+                values.put("gender", BooleanToText.format(request.isGender(), BooleanToText.GENDER_FORMAT));
+                values.put("email_address", request.getEmailAddress());
+                values.put("contact_number", request.getContactNumber());
+                values.put("street_address", request.getPhysicalAddress());
+                values.put("suburb", request.getSuburb());
+                values.put("city", request.getCity());
+                values.put("area_code", request.getAreaCode());
+                values.put("academic_level", request.getGradeLevel().getDescription());
+                values.put("subject", subject);
+                values.put("reference_number", request.getReferenceNumber());
+
+                try {
+                    // the message body
+                    body = EmailTemplateFactory.injectValuesIntoEmailTemplate(
+                            EmailTemplateFactory.getTemplateByType(EmailTemplateType
+                                    .NotifyTutorOfNewRequest),
+                            values);
+                } catch (IOException ex) {
+                    Logger.getLogger(RequestTutorControllerHelper.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                }
+
+                // send email
+                EmailSender emailSender = new EmailSender();
+                emailSender.setToAddress(tutor.getProfile().getPerson()
+                        .getContactDetail().getEmailAddress().toLowerCase());
+                emailSender.setSubject("New Tutor Request | Xplain2Me Tutoring");
+                emailSender.setHtmlBody(true);
+                emailSender.sendEmail(body);
+                
+                try {
+                    // sleep for five seconds
+                    // before sending another
+                    Thread.sleep(5000);
+                }
+                catch (InterruptedException e) {
+                    LOG.log(Level.WARNING, 
+                            "... could not send thread to sleep : {0}", e.getMessage());
+                } 
+            }
+            
+        }
         
     }
     

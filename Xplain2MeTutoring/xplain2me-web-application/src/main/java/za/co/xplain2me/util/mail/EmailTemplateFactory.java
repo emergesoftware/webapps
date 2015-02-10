@@ -140,6 +140,10 @@ public final class EmailTemplateFactory {
             case SendNewUserVerificationInstructions:
                 template = readTemplateFromHtmlFile("send_new_user_verification_instructions.html");
                 break;
+                
+            case NotifyTutorOfNewRequest:
+                template = readTemplateFromHtmlFile("notify_tutor_of_new_request.html");
+                break;
         
         }
         

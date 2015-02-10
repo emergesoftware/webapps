@@ -1,47 +1,36 @@
 package za.co.xplain2me.test;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.List;
-import org.codehaus.jackson.map.ObjectMapper;
 import za.co.xplain2me.dao.ProfileDAO;
 import za.co.xplain2me.dao.ProfileDAOImpl;
+import za.co.xplain2me.dao.SubjectDAO;
+import za.co.xplain2me.dao.SubjectDAOImpl;
+import za.co.xplain2me.dao.TutorDao;
+import za.co.xplain2me.dao.TutorDaoImpl;
 import za.co.xplain2me.entity.Profile;
-import za.co.xplain2me.model.SearchUserProfileType;
+import za.co.xplain2me.entity.Subject;
+import za.co.xplain2me.entity.Tutor;
 
 
 public class TestClass {
     
     public static void main(String... args) throws Exception {
+       
+        TutorDao tutorDao = new TutorDaoImpl();
+        SubjectDAO subjectDao = new SubjectDAOImpl();
+        ProfileDAO profileDao = new ProfileDAOImpl();
         
-        File originalFile = new File("C:\\Users\\user\\Downloads\\block_russian_ip_addresses.txt");
-        BufferedReader reader = new BufferedReader(new FileReader(originalFile));
+        Subject subject = subjectDao.getSubject(1039);
+        Profile profile = profileDao.getProfileById(1, 100);
         
-        File outputFile = new File("C:\\Users\\user\\Downloads\\block_russian_ip_addresses_output.txt");
-        if (outputFile.exists())
-            outputFile.delete();
+        List<Tutor> tutors = tutorDao.searchTutor(TutorDao.SEARCH_BY_SUBJECT_TUTORING, 
+                subject, profile);
         
-        outputFile.createNewFile();
-        
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-        StringBuilder contents = new StringBuilder();
-        
-        while (reader.ready()) {
-            contents.append(reader.readLine());
+        for (Tutor tutor : tutors) {
+            
+            System.out.println("\r\n - name : " + tutor.getProfile().getPerson().getFirstNames());
+            
         }
-        
-        reader.close();
-        
-        String changedContents = contents.toString()
-                .replaceAll("iptables", "\r\niptables");
-        writer.write(changedContents + 
-                "\r\niptables -L -n" + 
-                "\r\nservice iptables restart");
-        writer.close();
-        
     }
     
 }

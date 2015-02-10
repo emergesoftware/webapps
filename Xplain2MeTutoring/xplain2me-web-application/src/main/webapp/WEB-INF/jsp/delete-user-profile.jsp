@@ -107,5 +107,7 @@
             <%@include file="../jspf/template/default-footer.jspf" %> 
             
         </div>
+            
+        </div>
     </body>
 </html>

@@ -196,7 +196,7 @@ public class RequestTutorController extends GenericController {
             @RequestParam(value = "verificationCode")String verificationCode) {
         
         // get the form
-        RequestTutorForm form = (RequestTutorForm)getFromSessionScope(request, 
+        final RequestTutorForm form = (RequestTutorForm)getFromSessionScope(request, 
                 RequestTutorForm.class);
         
         if (form == null) {
@@ -260,6 +260,14 @@ public class RequestTutorController extends GenericController {
                 // confirm that the application was received
                 helper.sendApplicantReceiptNotificationEmailAsync(form);
                 
+                // find a list of tutors who teach the 
+                // subjects requested by the client
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        helper.notifyPotentialTutorsAsync(form);
+                    }
+                }).start();
                 
             }
             

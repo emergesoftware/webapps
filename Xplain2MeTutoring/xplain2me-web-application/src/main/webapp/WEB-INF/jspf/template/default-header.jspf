@@ -3,7 +3,7 @@
 <%@ page pageEncoding="UTF-8" %>
        
 <!-- Bootstrap: Latest compiled and minified CSS -->
-<link rel="stylesheet" href="<%= CommonStylesheetsAndScripts.BOOTSWATCH_CSS %>" />
+<link rel="stylesheet" href="<%= CommonStylesheetsAndScripts.BOOTSWATCH_CSS.replace("{0}", "cosmo") %>" />
 
 <!-- Bootstrap Glyphicons -->
 <link rel="stylesheet" href="<%= CommonStylesheetsAndScripts.BOOTSTRAP_GLYPHICONS_CSS %>" />

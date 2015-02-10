@@ -310,7 +310,8 @@ public class ProfileDAOImpl implements ProfileDAO {
     }
 
     @Override
-    public boolean deleteUserProfile(Profile profileToDelete, Profile profilePerformingAction) throws DataAccessException {
+    public boolean deleteUserProfile(Profile profileToDelete, 
+            Profile profilePerformingAction) throws DataAccessException {
         
         if (profileToDelete == null || profilePerformingAction == null) {
             LOG.warning(" ... either the profile to be deleted or the profile "

@@ -1,15 +1,16 @@
 html, body { 
     background-image: url('../images/background001.png');
     background-repeat: repeat;
-    background-attachment: fixed;
+    background-attachment: fixed; 
 }
 
 #wrapper {
     
     background-color: transparent;
+    opacity: 0.9;
     background-image: url('../images/background002.png');
     background-repeat: repeat;
-    background-attachment: scroll;
+    background-attachment: scroll; 
     margin-top: 60px;
 }
 

@@ -74,10 +74,10 @@
                                                 tutor job applications on page <strong><%= currentPage %></strong>.
                                             </span>
                                         </p>
-                                        <table class="table table-bordered" style="font-size: 100%">
+                                        <table class="table table-condensed table-hover" style="font-size: 100%">
                                             <thead>
                                                 <tr>
-                                                    <th>Actions</th>
+                                                    <th></th>
                                                     <th>Sequence #</th>
                                                     <th>Last Name</th>
                                                     <th>First Names</th>
@@ -104,8 +104,7 @@
 
                                                     <button type="button" data-toggle="dropdown" 
                                                             class="btn btn-primary btn-sm dropdown-toggle">
-                                                        <span class="glyphicon glyphicon-list"></span>
-                                                        <span class="caret"></span>
+                                                        <span class="glyphicon glyphicon-menu-down"></span>
                                                     </button>
 
                                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">

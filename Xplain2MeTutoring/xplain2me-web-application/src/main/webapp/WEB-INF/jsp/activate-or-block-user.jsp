@@ -37,7 +37,12 @@
             
             <div class="container-fluid" id="page-wrapper">
                 
-                <h2>Activate / Block User</h2>
+                <h3>Activate / Block User</h3>
+                <p>
+                    <b>Note:</b>
+                    Activating a user allows the user to have login access into the 
+                    web application. A blocked user is denied access during login.
+                </p>
                 <hr/>
                 
                 <%@include file="../jspf/template/default-alert-block.jspf" %>

@@ -69,4 +69,14 @@ public interface RequestMappings {
     public static final String ADD_NEW_LESSONS = "/portal/lessons/create";
     public static final String FIND_STUDENT_ASYNC = "/portal/lessons/find-student-async";
     
+    // TUTOR MANAGEMENT
+    public static final String CREATE_TUTOR = "/portal/tutors/create";
+    public static final String ASSIGN_SUBJECTS_TO_TUTOR = "/portal/tutors/assign-subjects";
+    public static final String SEARCH_TUTORS = "/portal/tutors/search";
+    public static final String UPDATE_TUTOR = "/portal/tutors/update";
+    public static final String ASSIGN_LESSONS_TO_TUTOR = "/portal/tutors/assign-lessons";
+    public static final String DETACH_USER_AS_TUTOR = "/portal/tutors/detach";
+    public static final String GET_TUTOR_LESSONS = "/portal/tutors/retrieve-lessons";
+    public static final String GET_TUTOR_SUBJECTS = "/portal/tutors/retrieve-subjects";
+    
 }

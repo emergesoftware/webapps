@@ -61,4 +61,10 @@ public interface Views {
     // LESSON MANAGEMENT
     public static final String ADD_NEW_LESSONS = "add-new-lessons";
     
+    
+    // TUTOR MANAGEMENT
+    public static final String CREATE_TUTOR_SELECTION = "create-tutor-selection";
+    public static final String CREATE_TUTOR_CONFIRMATION = "create-tutor-confirmation";
+    public static final String ASSIGN_SUBJECTS_TO_TUTOR = "assign-subjects-to-tutor";
+    
 }

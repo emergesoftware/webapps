@@ -6,11 +6,11 @@
         <span class="text-primary">Xplain2Me Tutoring Services. </span>
         <span>Copyright © 2010 - 2015. All Rights Reserved. </span>
         <br/>
-        <span class="text-primary">Website developed by </span>
+        <!-- span class="text-primary">Website developed by </span>
         <span>
             <strong><a href="http://emergesoftware.co.za" 
                        target="_blank">Emerge Software (Pty) Ltd</a></strong>.
-        </span>
+        </span-->
     </p>
     
     <br/>

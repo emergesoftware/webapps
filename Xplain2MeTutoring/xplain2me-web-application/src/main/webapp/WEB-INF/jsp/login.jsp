@@ -33,7 +33,7 @@
             
             <%@include file="../jspf/template/default-nav-bar.jspf" %>
            
-            <h3>Login | Xplain2Me Tutoring | Portal</h3>
+            <h3>Login</h3>
             <p class="text-muted">
                 To utilise our portal, please provide your
                 login credentials below:

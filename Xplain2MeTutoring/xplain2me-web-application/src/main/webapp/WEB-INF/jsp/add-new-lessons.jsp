@@ -289,7 +289,7 @@
                         // create a label add-on span element
                         var labelAddOn = document.createElement("span");
                         $(labelAddOn).addClass("input-group-addon");
-                        $(labelAddOn).css({ width : "35%" });
+                        $(labelAddOn).css({ width : "50%" });
                         inputGroup.appendChild(labelAddOn);
                         
                         // add the glyphicon + text
@@ -395,10 +395,22 @@
             
             <div class="container-fluid" id="page-wrapper">
                 
-                <h2>Add New Lessons</h2>
-                <hr/>
-                
-                <%@include file="../jspf/template/default-alert-block.jspf" %>
+                <div class="row">
+                    <div class="col-md-6">
+                        
+                        <h3>Add New Lessons</h3>
+                        <p class="text-muted">
+                            To add new lessons - fill in the fields below.
+                            This adds lessons as a bulk or package. You
+                            may assign a tutor for these lessons later if none
+                            is available now.
+                        </p>
+                        <hr/>
+
+                        <%@include file="../jspf/template/default-alert-block.jspf" %>
+                        
+                    </div>
+                </div>
                 
                 <div class="row">
                     

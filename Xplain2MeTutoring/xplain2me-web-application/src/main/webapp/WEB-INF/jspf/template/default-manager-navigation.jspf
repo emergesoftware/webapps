@@ -126,8 +126,7 @@
         </div>
     </div>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
-         style="min-height: 60px">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" 
@@ -141,9 +140,6 @@
                href="<%= request.getContextPath() %>/portal/dashboard/overview">
                 <span style="display: block; font-size: 90%">
                     <strong>XPLAIN2ME TUTORING</strong>
-                </span>
-                <span style="display: block; font-size: 70%">
-                    <%= profileTypeDescription.replace("PROFILE", "") %> PANEL 
                 </span>
             </a>
         </div>

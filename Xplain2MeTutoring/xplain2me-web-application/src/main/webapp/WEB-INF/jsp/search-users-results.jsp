@@ -1,4 +1,5 @@
 
+<%@page import="za.co.xplain2me.entity.ProfileType"%>
 <%@page import="za.co.xplain2me.webapp.controller.UserManagementController"%>
 <%@page import="za.co.xplain2me.util.DateTimeUtils"%>
 <%@page import="java.util.TreeMap"%>
@@ -110,6 +111,10 @@
                                                     String removeUserProfile = request.getContextPath() + 
                                                             RequestMappings.DELETE_USER_PROFILE + 
                                                             "?profile-id=" + profile.getId();
+                                                    
+                                                    String assignUserAsTutor = request.getContextPath() + 
+                                                            RequestMappings.CREATE_TUTOR + "?profile_id=" + 
+                                                            profile.getId(); 
                                                 %>
 
                                                 <div class="btn-group">
@@ -154,6 +159,29 @@
                                                                 &nbsp;Remove
                                                             </a>
                                                         </li>
+                                                        
+                                                        <%
+                                                        
+                                                        long profileTypeId = profile.getProfileType().getId();
+                                                        
+                                                            if (profileTypeId == ProfileType.TUTOR_PROFILE || 
+                                                                profileTypeId == ProfileType.APP_MANAGER_PROFILE) {
+                                                                
+                                                                %>
+                                                        
+                                                        <li>
+                                                            <a title="Assign user as tutor" 
+                                                               href="<%= assignUserAsTutor %>">
+                                                                <span class="glyphicon glyphicon-education"></span>
+                                                                &nbsp;Assign user as tutor
+                                                            </a>
+                                                        </li>
+                                                                
+                                                        <%
+                                                                
+                                                            }
+                                                        %>
+                                                        
                                                     </ul>
 
                                                 </div>

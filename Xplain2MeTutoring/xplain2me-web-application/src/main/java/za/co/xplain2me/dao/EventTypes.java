@@ -36,4 +36,7 @@ public interface EventTypes {
     /** Delete User */
     public static final long DELETE_USER_PROFILE = 2006;
     
+    /** Create tutor */
+    public static final long CREATE_NEW_TUTOR = 3001;
+    
 }

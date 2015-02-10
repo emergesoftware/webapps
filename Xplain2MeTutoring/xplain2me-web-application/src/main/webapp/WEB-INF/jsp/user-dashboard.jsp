@@ -69,7 +69,7 @@
 
                                 else {
                                 %>
-                                <table border="0" class="table table-stripped">
+                                <table border="0" class="table table-condensed table-hover">
                                     <thead>
                                         <tr>
                                             <th>Sequence #</th>

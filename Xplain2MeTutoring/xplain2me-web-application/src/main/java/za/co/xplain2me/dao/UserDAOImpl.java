@@ -166,5 +166,40 @@ public class UserDAOImpl implements UserDAO {
             HibernateConnectionProvider.closeConnection(session);
         }
     }
+
+    @Override
+    public User getUser(String username) {
+        
+        if (username == null || username.isEmpty()) {
+            LOG.warning("... the username is null ...");
+            return null;
+        }
+        
+        User user = null;
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            criteria = session.createCriteria(User.class, "user")
+                    .add(Restrictions.eq("user.username", username));
+            Iterator iterator = criteria.list().iterator();
+            
+            while (iterator.hasNext())
+                user = (User)iterator.next();
+            
+            return user;
+        }
+        
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+        
+    }
     
 }

@@ -73,9 +73,10 @@
                                     <span>You have <%= count %> new or unread tutor requests.</span>
                                 </p>
 
-                                <table border="0" class="table table-bordered">
+                                <table class="table table-condensed table-hover">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>#</th>
                                             <th>Reference</th>
                                             <th>Full Names</th>
@@ -84,7 +85,7 @@
                                             <th>Address</th>
                                             <th>Academic Level</th>
                                             <th>Subjects</th>
-                                            <th></th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -94,6 +95,51 @@
 
                                                 %>
                                             <tr id="tutorRequestRowEntryNo_<%= item.getId() %>">
+                                                
+                                                <!-- actions -->
+                                                <td class="text-primary">
+
+                                                    <div class="btn-group">
+
+                                                        <button type="button" data-toggle="dropdown" 
+                                                                class="btn btn-primary btn-sm dropdown-toggle">
+                                                            <span class="glyphicon glyphicon-menu-down"></span>
+                                                        </button>
+
+                                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                                                            <li>
+                                                                <a  title="Mark This Request As Read"
+                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/mark-as-read?requestId=<%= item.getId() %>">
+                                                                    <span class="glyphicon glyphicon-bookmark"></span>
+                                                                    &nbsp;Mark As Read
+                                                                </a>
+                                                            </li>
+                                                             <li>
+                                                                <a  title="Show more details"
+                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/details?requestId=<%= item.getId() %>">
+                                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                                    &nbsp;Show Details
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a title="Send requestee an email" href="mailto:<%= item.getEmailAddress() %>"
+                                                                   target="_blank">
+                                                                    <span class="glyphicon glyphicon-envelope"></span>
+                                                                    &nbsp;Compose Email
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a title="Remove this request"
+                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/remove?requestId=<%= item.getId() %>">
+                                                                    <span class="glyphicon glyphicon-bookmark"></span>
+                                                                    &nbsp;Remove
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+
+                                                    </div>
+                                                </td>
+                                                
                                                 <td>
                                                     <%= item.getId() %>
                                                 </td>
@@ -131,50 +177,7 @@
                                                     </ul>
                                                 </td>
 
-                                                <!-- actions -->
-                                                <td class="text-primary" 
-                                                    style="font-size: 90%; min-width: 135px">
-
-                                                    <div class="btn-group">
-
-                                                        <button type="button" data-toggle="dropdown" 
-                                                                class="btn btn-primary dropdown-toggle">
-                                                            Action <span class="caret"></span>
-                                                        </button>
-
-                                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                                                            <li>
-                                                                <a  title="Mark This Request As Read"
-                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/mark-as-read?requestId=<%= item.getId() %>">
-                                                                    <span class="glyphicon glyphicon-bookmark"></span>
-                                                                    &nbsp;Mark As Read
-                                                                </a>
-                                                            </li>
-                                                             <li>
-                                                                <a  title="Show more details"
-                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/details?requestId=<%= item.getId() %>">
-                                                                    <span class="glyphicon glyphicon-th-list"></span>
-                                                                    &nbsp;Show Details
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a title="Send requestee an email" href="mailto:<%= item.getEmailAddress() %>"
-                                                                   target="_blank">
-                                                                    <span class="glyphicon glyphicon-envelope"></span>
-                                                                    &nbsp;Compose Email
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a title="Remove this request"
-                                                                    href="<%=request.getContextPath() %>/portal/tutor-requests/remove?requestId=<%= item.getId() %>">
-                                                                    <span class="glyphicon glyphicon-bookmark"></span>
-                                                                    &nbsp;Remove
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-
-                                                    </div>
-                                                </td>
+                                                
                                             </tr>
 
                                         <%

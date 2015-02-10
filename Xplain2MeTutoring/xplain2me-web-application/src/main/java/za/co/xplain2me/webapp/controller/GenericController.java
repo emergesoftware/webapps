@@ -252,6 +252,21 @@ public abstract class GenericController {
     }
     
     /**
+     * Serialises the object to the request scope
+     * 
+     * @param request
+     * @param object
+     * @param attributeName 
+     */
+    protected void saveToRequestScope(HttpServletRequest request, Object object, String attributeName) {
+        if (object == null || attributeName == null ||
+                attributeName.isEmpty())
+            return;
+        
+        request.setAttribute(attributeName, object);
+    }
+    
+    /**
      * Gets the object instance from the 
      * request scope
      * 
