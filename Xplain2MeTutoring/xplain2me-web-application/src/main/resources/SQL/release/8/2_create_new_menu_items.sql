@@ -17,4 +17,10 @@ insert into menu_item(menu_item_id, menu_item_desc, menu_item_title, menu_item_r
 values(26, 'Assign Subjects to Tutor', 'Assign Subjects to Tutor', '/portal/tutors/assign-subjects',
        false, false, 8);
 
+-- add menu item (id=27)
+insert into menu_item(menu_item_id, menu_item_desc, menu_item_title, menu_item_relative_url, 
+                      menu_item_opens_on_new_window, menu_item_load_onto_panel, menu_category_id)
+values(27, 'Browse Tutors', 'Browse existing tutors', '/portal/tutors/browse',
+       false, true, 8);
+
 commit;

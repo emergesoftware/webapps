@@ -263,10 +263,7 @@ public class RequestTutorController extends GenericController {
                 // find a list of tutors who teach the 
                 // subjects requested by the client
                 new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        helper.notifyPotentialTutorsAsync(form);
-                    }
+                    public void run() { helper.notifyPotentialTutorsAsync(form); }
                 }).start();
                 
             }

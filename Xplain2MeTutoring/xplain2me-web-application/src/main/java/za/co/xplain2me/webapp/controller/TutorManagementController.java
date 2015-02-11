@@ -2,7 +2,10 @@ package za.co.xplain2me.webapp.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -22,10 +25,12 @@ import za.co.xplain2me.entity.Profile;
 import za.co.xplain2me.entity.ProfileType;
 import za.co.xplain2me.entity.Subject;
 import za.co.xplain2me.entity.Tutor;
+import za.co.xplain2me.entity.TutorSubject;
 import za.co.xplain2me.model.SearchUserProfileType;
 import za.co.xplain2me.util.NumericUtils;
 import za.co.xplain2me.util.mail.EmailSender;
 import za.co.xplain2me.webapp.component.AlertBlock;
+import za.co.xplain2me.webapp.component.TutorManagementForm;
 import za.co.xplain2me.webapp.component.UserContext;
 
 @Controller
@@ -38,6 +43,80 @@ public class TutorManagementController extends GenericController implements Seri
     }
     
     /**
+     * Browse the existing tutors
+     * 
+     * @param request
+     * @param startFrom
+     * @param resultsPerPage
+     * @return 
+     */
+    @RequestMapping(value = RequestMappings.BROWSE_TUTORS, 
+            method = RequestMethod.GET)
+    public ModelAndView showBrowseTutorsPage(
+            HttpServletRequest request,
+            @RequestParam(value = "start_from", required = false)Integer startFrom,
+            @RequestParam(value = "results_per_page", required = false)Integer resultsPerPage) {
+        
+        // create a new form
+        TutorManagementForm form = new TutorManagementForm();
+        
+        // get the starting point and limit per page
+        if (startFrom == null || 
+                startFrom < 0 || startFrom > Integer.MAX_VALUE)
+            startFrom = 0;
+        
+        form.setBrowseStartingFrom(startFrom);
+        
+        if (resultsPerPage == null || 
+                resultsPerPage == 0 || resultsPerPage > 50)
+            resultsPerPage = TutorManagementForm.LIMIT_RESULTS_PER_PAGE_TO;
+        
+        form.setBrowseLimitPerPage(resultsPerPage);
+        
+        // get the user context
+        UserContext context = getUserContext(request);
+        Profile profilePerformingAction = context.getProfile();
+        
+        // get a list of all tutors
+        TutorDao tutorDao = new TutorDaoImpl();
+        List<Tutor> tutors = tutorDao.browseTutors(startFrom, resultsPerPage, 
+                profilePerformingAction);
+        
+        // if there were no results in the
+        // the browse search
+        if (tutors == null || tutors.isEmpty()) {
+            
+            // create an alert into the
+            // request scope
+            saveToRequestScope(request, new AlertBlock()
+                    .setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE)
+                    .addAlertBlockMessage("You have reached the end of the list " + 
+                            "of available tutors."));
+            
+        }
+        
+        else {
+            
+            // update the start from variable
+            if (tutors.size() == resultsPerPage)
+                form.setBrowseStartingFrom(startFrom + resultsPerPage);
+            
+            // set the tutors into a tree map
+            form.setTutors(new TreeMap<Long, Tutor>());
+            for (Tutor tutor : tutors)
+                form.getTutors().put(tutor.getId(), tutor);
+            
+        }
+        
+        // save the form to the 
+        // session scope
+        saveToSessionScope(request, form);
+         
+        // return a view
+        return createModelAndView(Views.BROWSE_TUTORS);
+    }
+    
+    /**
      * Displays a page of all tutor-eligible user
      * profiles for selection to be added as a tutor.
      * 
@@ -47,6 +126,7 @@ public class TutorManagementController extends GenericController implements Seri
     @RequestMapping(value = RequestMappings.CREATE_TUTOR, 
             method = RequestMethod.GET)
     public ModelAndView showCreateTutorSelectionPage(HttpServletRequest request) {
+        
         
         // get the user context from the
         // session scope
@@ -83,6 +163,10 @@ public class TutorManagementController extends GenericController implements Seri
                         + "added as tutors could be found."));
             
         }
+        
+        // migrate alert block from session scope
+        // to request scope
+        migrateAlertBlockToRequestScope(request);
         
         // save the list of tutor profiles
         // to the request scope
@@ -268,13 +352,18 @@ public class TutorManagementController extends GenericController implements Seri
      * @return 
      */
     @RequestMapping(value = RequestMappings.ASSIGN_SUBJECTS_TO_TUTOR, 
-            method = RequestMethod.GET, 
-            params = "tutor_id")
+            method = RequestMethod.GET)
     public ModelAndView showAssignSubjectsToTutorPage(
             HttpServletRequest request,
-            @RequestParam(value = "tutor_id")Long tutorId) {
+            @RequestParam(value = "tutor_id", required = true)Long tutorId) {
         
-        if (tutorId < 0 || tutorId > Long.MAX_VALUE) {
+        // create a new form
+        TutorManagementForm form = new TutorManagementForm();
+        form.setTutors(new TreeMap<Long, Tutor>());
+        
+        // validate the tutor ID
+        if (tutorId == null || 
+                tutorId < 0 || tutorId > Long.MAX_VALUE) {
             
             // save to the request scope
             // an alert block
@@ -314,10 +403,16 @@ public class TutorManagementController extends GenericController implements Seri
         
         // get a single instance of the tutor
         Tutor tutor = tutors.get(0);
+        form.getTutors().put(tutor.getId(), tutor);
         
         // get a list of subjects the tutor is already assigned
         List<Subject> subjectsAlreadyAssigned = tutorDao.getTutorSubjects(tutor, 
                 profilePerformingAction);
+        
+        // save the subjects to a form
+        form.setSubjectsAlreadyAssigned(new TreeMap<Long, Subject>());
+        for (Subject item : subjectsAlreadyAssigned)
+            form.getSubjectsAlreadyAssigned().put(item.getId(), item);
         
         // get a list of all other subjects
         SubjectDAO subjectDao = new SubjectDAOImpl();
@@ -331,12 +426,174 @@ public class TutorManagementController extends GenericController implements Seri
                 subjectsToChooseFrom.remove(subject);
         }
         
-        // save to the request scope
-        saveToRequestScope(request, subjectsAlreadyAssigned, "subjectsAlreadyAssigned"); 
-        saveToRequestScope(request, subjectsToChooseFrom, "subjectsToChooseFrom");
-        saveToRequestScope(request, tutor, "tutor");
+        // save the subjects to choose from to the
+        // form
+        form.setSubjectsToChooseFrom(new TreeMap<Long, Subject>()); 
+        for (Subject item : subjectsToChooseFrom) 
+            form.getSubjectsToChooseFrom().put(item.getId(), item);
+        
+        // migrate the alert block
+        migrateAlertBlockToRequestScope(request);
+        
+        // save to the session scope
+        saveToSessionScope(request, form);
         
         // return a view
         return createModelAndView(Views.ASSIGN_SUBJECTS_TO_TUTOR);
     }
+    
+    /**
+     * Processes the request to add, remove or append 
+     * subjects to a tutor.
+     * 
+     * @param request
+     * @param addSubjects
+     * @param removeSubjects
+     * @return 
+     */
+    @RequestMapping(value = RequestMappings.ASSIGN_SUBJECTS_TO_TUTOR, 
+            method = RequestMethod.POST)
+    public ModelAndView processAssignSubjectsToTutorPage(
+            HttpServletRequest request, 
+            @RequestParam(value = "add_subject", required = false)Long[] addSubjects, 
+            @RequestParam(value = "remove_subject", required = false)Long[] removeSubjects) {
+        
+        // variables
+        Map<String, String> parameters = null;
+        TutorDao tutorDao = null;
+        
+        // get the form from the 
+        // session scope
+        TutorManagementForm form = (TutorManagementForm)
+                getFromSessionScope(request, TutorManagementForm.class);
+        
+        if (form == null) {
+            
+            // create an error alert into the
+            // session scope
+            saveToSessionScope(request, 
+                    new AlertBlock(AlertBlock.ALERT_BLOCK_ERROR, 
+                    "An invalid request was detected."));
+            
+            // send a redirect
+            parameters = new HashMap<>();
+            parameters.put("invalid-request", "1");
+
+            return sendRedirect(RequestMappings.BROWSE_TUTORS,
+                    parameters);
+            
+        }
+        
+        // get the tutor
+        Tutor tutor = form.getTutors().firstEntry().getValue();
+        
+        // get the user context
+        UserContext context = getUserContext(request);
+        Profile profilePerformingAction = context.getProfile();
+        
+        // instantiate the tutor DAO
+        tutorDao = new TutorDaoImpl();
+        
+        boolean completed = false;
+        boolean changeDone = false;
+        
+        // if there are subjects to be 
+        // removed 
+        if (removeSubjects != null && removeSubjects.length > 0) {
+            
+            // build a list of new tutor subject entities
+            List<Subject> entries = new ArrayList<>();
+            
+            for (Long subjectId : removeSubjects) {
+                
+                Subject entry = form
+                        .getSubjectsAlreadyAssigned().get(subjectId);
+                entries.add(entry);
+            }
+            
+            completed = tutorDao.removeSubjectsFromTutor(tutor, entries,
+                    profilePerformingAction);
+            changeDone = true;
+        }
+        
+        // if there are subjects to be added
+        if (addSubjects != null && addSubjects.length > 0) {
+            
+            // build a list of new tutor subject entities
+            List<TutorSubject> entries = new ArrayList<>();
+            
+            for (Long subjectId : addSubjects) {
+                
+                TutorSubject entry = new TutorSubject();
+                entry.setSubject(form.getSubjectsToChooseFrom().get(subjectId));
+                entry.setTutor(tutor); 
+                
+                entries.add(entry);
+            }
+            
+            completed = tutorDao.assignSubjectsToTutor(entries, 
+                    profilePerformingAction);
+            changeDone = true;
+        }
+        
+        // if the update was successful and there
+        // was some changes done
+        if (completed && changeDone) {
+            
+            // create an alert into the
+            // session scope
+            saveToSessionScope(request, new AlertBlock()
+                    .setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE)
+                    .addAlertBlockMessage("Changes to the assignment of subjects to " + 
+                            "were successfully done.")
+            );
+            
+        }
+        
+        // if the update was not successful and 
+        // there were changes attempted
+        else if (!completed && changeDone) {
+            
+            // create an alert into the
+            // session scope
+            saveToSessionScope(request, new AlertBlock()
+                    .setAlertBlockType(AlertBlock.ALERT_BLOCK_WARNING)
+                    .addAlertBlockMessage("Changes to the assignment of subjects to " + 
+                            "were not successfully done - an internal error occured. " + 
+                            "Contact your system administrator if this persists.")
+            );
+            
+        }
+        
+        // if the update was not completed 
+        // and no changes could be picked up
+        else if (!completed && !changeDone) {
+            
+            // create an alert into the
+            // session scope
+            saveToSessionScope(request, new AlertBlock()
+                    .setAlertBlockType(AlertBlock.ALERT_BLOCK_INFORMATIVE)
+                    .addAlertBlockMessage("No changes were made to the " + 
+                            "assignment of subjects to the tutor.")
+            );
+            
+        }
+        
+        // remove form from session
+        // scope
+        removeFromSessionScope(request, TutorManagementForm.class);
+        
+        // send a redirect
+        parameters = new HashMap<>();
+        parameters.put("tutor_id", String.valueOf(tutor.getId()));
+        parameters.put("action", "completed");
+        
+        return sendRedirect(RequestMappings.ASSIGN_SUBJECTS_TO_TUTOR, parameters);
+    }
+    
+    
+    // =========================================================================
+    //  CUSTOM METHODS
+    // =========================================================================
+    
 }

@@ -1,16 +1,18 @@
 html, body { 
-    background-image: url('../images/background001.png');
+    /* background-image: url('../images/background001.png');
     background-repeat: repeat;
-    background-attachment: fixed; 
+    background-attachment: fixed; */
+    
+    background-color: white;
 }
 
 #wrapper {
     
     background-color: transparent;
-    opacity: 0.9;
+    /* opacity: 0.9;
     background-image: url('../images/background002.png');
     background-repeat: repeat;
-    background-attachment: scroll; 
+    background-attachment: scroll; */
     margin-top: 60px;
 }
 

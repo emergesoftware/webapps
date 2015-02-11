@@ -12,4 +12,9 @@ insert into profile_type_url_permissions(profile_type_url_permissions_desc,
 profile_type_id, menu_item_id)
 values('A manager can assign subjects to an existing tutor.', 101, 26);
 
+-- grant the permissions for menu (id=27) to the manager
+insert into profile_type_url_permissions(profile_type_url_permissions_desc, 
+profile_type_id, menu_item_id)
+values('A manager can browse through existing tutors.', 101, 27);
+
 commit;

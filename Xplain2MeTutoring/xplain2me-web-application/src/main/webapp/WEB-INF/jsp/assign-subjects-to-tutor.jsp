@@ -1,31 +1,35 @@
 
-
+<%@page import="java.util.TreeMap"%>
+<%@page import="za.co.xplain2me.webapp.component.TutorManagementForm"%>
 <%@page import="za.co.xplain2me.entity.Tutor"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="za.co.xplain2me.entity.Subject"%>
 <%
     
-    // the tutor
-    Tutor tutor = (Tutor)request.getAttribute("tutor");
-    if (tutor == null) {
+    // the form
+    TutorManagementForm form = (TutorManagementForm)session
+            .getAttribute(TutorManagementForm.class.getName());
+    if (form == null) {
         
         response.sendRedirect(request.getContextPath() + 
-                RequestMappings.DASHBOARD_OVERVIEW + 
+                RequestMappings.BROWSE_TUTORS + 
                 "?invalid-request=1");
         return;
     }
     
+    // the tutor
+    Tutor tutor = form.getTutors()
+            .firstEntry().getValue();
+            
     // subjects to choose from
-    List<Subject> subjectsToChooseFrom = (List)
-            request.getAttribute("subjectsToChooseFrom");
+    TreeMap<Long, Subject> subjectsToChooseFrom = form.getSubjectsToChooseFrom();
     if (subjectsToChooseFrom == null)
-        subjectsToChooseFrom = new ArrayList<Subject>();
+        subjectsToChooseFrom = new TreeMap<Long, Subject>();
     
     // subjects already assigned
-    List<Subject> subjectsAlreadyAssigned = (List)
-            request.getAttribute("subjectsAlreadyAssigned");
+    TreeMap<Long, Subject> subjectsAlreadyAssigned = form.getSubjectsAlreadyAssigned();
     if (subjectsAlreadyAssigned == null)
-        subjectsAlreadyAssigned = new ArrayList<Subject>();
+        subjectsAlreadyAssigned = new TreeMap<Long, Subject>();
     
 %>
 
@@ -164,7 +168,16 @@
                     $(selectedSubjectsPanel)
                             .html("<p class='text-primary'>None selected at the moment</p>");
                     
-                    $("#button_area").css({ display : 'none' });
+                    // check if there are subjects to be 
+                    // removed
+                    if (document.getElementsByName("remove_subject").length > 0) {
+
+                        // show the button to update
+                        $("#button_area").css({ display : 'block' });
+
+                    }
+                    else 
+                        $("#button_area").css({ display : 'none' });
                 }
                 
                 // change the hidden element name
@@ -178,12 +191,25 @@
                 
                 if (item === null) return;
                 
+                // if the subject is checked - mark it
+                // for removal
                 if ($(item).prop('checked') === true) {
                     $(item).attr("name", "remove_subject");
                 }
                 
+                // if the subject is unchecked
+                // mark it to be ignored
                 else {
                     $(item).attr("name", "ignore_subject");
+                }
+                
+                // check if there are subjects to be 
+                // removed
+                if (document.getElementsByName("remove_subject").length > 0) {
+                    
+                    // show the button to update
+                    $("#button_area").css({ display : 'block' });
+                        
                 }
                 
             }
@@ -198,11 +224,52 @@
 
             <div class="container-fluid" id="page-wrapper">
 
-                <h2>Assign Subjects to tutor</h2>
-                <hr/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>Assign Subjects to Tutor</h2>
+                        <p class="text-primary">
+                            Assign new or remove already assigned subjects
+                            to / from this tutor in the briefing.
+                        </p>
+                        <hr/>
+                        
+                        <%@include file="../jspf/template/default-alert-block.jspf" %>
+                        
+                        <div class="panel panel-info">
+                            
+                            <div class="panel-heading">
+                                Tutor Briefing
+                            </div>
+                            
+                            <div class="panel-body">
+                                <table class="table table-condensed table-hover">
+                                    <tr>
+                                        <td><b>Tutor ID</b></td>
+                                        <td><%= tutor.getId() %></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Full Names</b></td>
+                                        <td>
+                                            <%= tutor.getProfile().getPerson().getFirstNames() + " " +
+                                                    tutor.getProfile().getPerson().getLastName() %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gender</b></td>
+                                        <td><%= tutor.getProfile().getPerson().getGender().getDescription() %></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Identity Number</b></td>
+                                        <td><%= tutor.getProfile().getPerson().getIdentityNumber() %></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
 
-                <%@include file="../jspf/template/default-alert-block.jspf" %>
-
+                        
+                    </div>
+                </div>
+                
                 <div class="row">
 
                     <div class="col-md-6">
@@ -210,11 +277,23 @@
                         <form id="tutorForm" id="tutorForm"
                               method="post" action="<%= RequestMappings.ASSIGN_SUBJECTS_TO_TUTOR %>">
                             
+                            <input type="hidden" name="tutor_id" value="<%= tutor.getId() %>" >
+                            
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
-                                    Subjects already assigned to tutor
+                                    Subjects Assignment Briefing
                                 </div>
                                 <div class="panel-body">
+                                    
+                                    <strong class="text-info">
+                                        Subjects already assigned to this tutor:
+                                    </strong><br/>
+                                    <span class="text-muted">
+                                        Tick the subject to remove from this tutor 
+                                        in the box on the right of the subject.
+                                    </span>
+                                    
+                                    <hr/>
                                     
                                     <%
                                         if (subjectsAlreadyAssigned.isEmpty()) {
@@ -242,14 +321,14 @@
                                             <tbody>
                                                 
                                                 <%
-                                                    for (Subject subject : subjectsAlreadyAssigned) {
+                                                    for (Subject subject : subjectsAlreadyAssigned.values()) {
                                                     
                                                         %>
                                                         
                                                         <tr>
                                                             <td><%= subject.getId() %></td>
                                                             <td><%= subject.getName() %></td>
-                                                            <td><%= subject.getGrade() %></td>
+                                                            <td><%= (subject.getGrade() == 13) ? "N/A" : subject.getGrade() %></td>
                                                             <td><%= subject.getAcademicLevel().getDescription() %></td>
                                                             <td>
                                                                 <input type="checkbox" name="ignore_subject" 
@@ -272,15 +351,22 @@
                                     <hr/>
                                     
                                     <strong class="text-info">
-                                        Subjects you selected to assign:
-                                    </strong>
+                                        Subjects you have selected to be assigned to this tutor:
+                                    </strong><br/>
+                                    <span class="text-muted">
+                                        To add a subject to this list, simply tap the
+                                        subject from the list to below. To remove
+                                        a subject here, simply tap the subject.
+                                    </span>
+                                    
+                                    <hr/>
                                     
                                     <div id="selected_subjects_panel" class="list-group">
                                         <p class="text-primary">None selected at the moment</p>
                                     </div>
                                     
                                     <div id="button_area" class="form-group" style="display: none">
-                                        <input type="submit" value="Update"
+                                        <input type="submit" value="Save Changes"
                                                class="btn btn-primary"
                                                ondblclick="return false" />
                                     </div>
@@ -301,7 +387,8 @@
                                         <input type="text" id="filterSubjectNames"
                                                class="form-control" 
                                                placeholder="Type your text here to start filtering"
-                                               onkeyup="filterSearch(this)">
+                                               onkeyup="filterSearch(this)"
+                                               autocomplete="off">
                                         
                                         <p id="filter_text" class="text-warning" style="display: none">
                                             Type in at least 3 characters to begin filtering subjects.
@@ -314,7 +401,7 @@
                                     <%
                                         int counter = -1;
                                         
-                                        for (Subject subject : subjectsToChooseFrom) {
+                                        for (Subject subject : subjectsToChooseFrom.values()) {
                                             
                                             counter++;
                                             
@@ -332,7 +419,7 @@
                                                     
                                                     <p class="list-group-item-text">
                                                         <span><strong>Grade: </strong></span>
-                                                        <span><%= subject.getGrade() %></span>
+                                                        <span><%= (subject.getGrade() == 13) ? "N/A" : subject.getGrade() %></span>
                                                         <br/>
                                                         <span><strong>Academic Phase: </strong></span>
                                                         <span><%= subject.getAcademicLevel().getDescription() %></span>

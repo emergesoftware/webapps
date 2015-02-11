@@ -3,21 +3,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
     <head>
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="tutoring, private home tuition, tutors">
+        <meta name="author" content="Tsepo Maleka">
+        
         <title>Verify Own User Profile</title>
         
         <%@include file="../jspf/template/default-header.jspf" %>
         <%@include file="../jspf/template/form-validation-script.jspf" %>
         
     </head>
-    <body>
+    <body data-spy="scroll" data-offset="0" data-target="#navbar-main">
+        
+        <%@include file="../jspf/template/default-nav-bar.jspf" %>
         
         <div class="container" id="content">
 
-            <%@include file="../jspf/template/default-banner.jspf" %>
-            <%@include file="../jspf/template/default-nav-bar.jspf" %>
-
-            <h3>Verify new user profile</h3>
-            <p class="text-muted">
+            <h3 class="centered">Verify new user profile</h3>
+            <p class="text-muted centered">
                 To verify your new user profile, please
                 enter the details required below, including
                 the verification code that was emailed to you.
@@ -26,7 +31,7 @@
             <hr/>
             
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     
                     <%@include file="../jspf/template/default-alert-block.jspf" %>
                     
@@ -98,11 +103,10 @@
                 </div>
             </div>
 
-            <br/>
-
-            <%@include file="../jspf/template/default-footer.jspf" %>
-
+            <br/> 
         </div>
-            
+
+        <%@include file="../jspf/template/default-footer.jspf" %>
+   
     </body>
 </html>

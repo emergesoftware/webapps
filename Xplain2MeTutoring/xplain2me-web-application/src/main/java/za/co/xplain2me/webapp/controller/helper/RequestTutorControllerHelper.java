@@ -507,61 +507,63 @@ public class RequestTutorControllerHelper extends GenericController {
         
         // if there were any tutors found - send emails to these tutors
         // the subject
-        for (Subject subject : availableTutors.keySet()) {
+        if (availableTutors.isEmpty() == false) {
             
-            TutorRequest request = form.getTutorRequest();
-            List<Tutor> availableTutorsList = availableTutors.get(subject);
-            
-            for (Tutor tutor : availableTutorsList) {
-            
-                String body = "";
+            for (Subject subject : availableTutors.keySet()) {
 
-                // template injections
-                Map<String, Object> values = new HashMap<>();
-                values.put("date_completed", request.getDateReceived());
-                values.put("last_name", request.getLastName());
-                values.put("first_names", request.getFirstNames());
-                values.put("gender", BooleanToText.format(request.isGender(), BooleanToText.GENDER_FORMAT));
-                values.put("email_address", request.getEmailAddress());
-                values.put("contact_number", request.getContactNumber());
-                values.put("street_address", request.getPhysicalAddress());
-                values.put("suburb", request.getSuburb());
-                values.put("city", request.getCity());
-                values.put("area_code", request.getAreaCode());
-                values.put("academic_level", request.getGradeLevel().getDescription());
-                values.put("subject", subject);
-                values.put("reference_number", request.getReferenceNumber());
+                TutorRequest request = form.getTutorRequest();
+                List<Tutor> availableTutorsList = availableTutors.get(subject);
 
-                try {
-                    // the message body
-                    body = EmailTemplateFactory.injectValuesIntoEmailTemplate(
-                            EmailTemplateFactory.getTemplateByType(EmailTemplateType
-                                    .NotifyTutorOfNewRequest),
-                            values);
-                } catch (IOException ex) {
-                    Logger.getLogger(RequestTutorControllerHelper.class.getName())
-                            .log(Level.SEVERE, null, ex);
+                for (Tutor tutor : availableTutorsList) {
+
+                    String body = "";
+
+                    // template injections
+                    Map<String, Object> values = new HashMap<>();
+                    values.put("date_completed", request.getDateReceived());
+                    values.put("last_name", request.getLastName());
+                    values.put("first_names", request.getFirstNames());
+                    values.put("gender", BooleanToText.format(request.isGender(), BooleanToText.GENDER_FORMAT));
+                    values.put("email_address", request.getEmailAddress());
+                    values.put("contact_number", request.getContactNumber());
+                    values.put("street_address", request.getPhysicalAddress());
+                    values.put("suburb", request.getSuburb());
+                    values.put("city", request.getCity());
+                    values.put("area_code", request.getAreaCode());
+                    values.put("academic_level", request.getGradeLevel().getDescription());
+                    values.put("subject", subject);
+                    values.put("reference_number", request.getReferenceNumber());
+
+                    try {
+                        // the message body
+                        body = EmailTemplateFactory.injectValuesIntoEmailTemplate(
+                                EmailTemplateFactory.getTemplateByType(EmailTemplateType
+                                        .NotifyTutorOfNewRequest),
+                                values);
+                    } catch (IOException ex) {
+                        Logger.getLogger(RequestTutorControllerHelper.class.getName())
+                                .log(Level.SEVERE, null, ex);
+                    }
+
+                    // send email
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.setToAddress(tutor.getProfile().getPerson()
+                            .getContactDetail().getEmailAddress().toLowerCase());
+                    emailSender.setSubject("New Tutor Request | Xplain2Me Tutoring");
+                    emailSender.setHtmlBody(true);
+                    emailSender.sendEmail(body);
+
+                    try {
+                        // sleep for five seconds
+                        // before sending another
+                        Thread.sleep(5000);
+                    }
+                    catch (InterruptedException e) {
+                        LOG.log(Level.WARNING, 
+                                "... could not send thread to sleep : {0}", e.getMessage());
+                    } 
                 }
-
-                // send email
-                EmailSender emailSender = new EmailSender();
-                emailSender.setToAddress(tutor.getProfile().getPerson()
-                        .getContactDetail().getEmailAddress().toLowerCase());
-                emailSender.setSubject("New Tutor Request | Xplain2Me Tutoring");
-                emailSender.setHtmlBody(true);
-                emailSender.sendEmail(body);
-                
-                try {
-                    // sleep for five seconds
-                    // before sending another
-                    Thread.sleep(5000);
-                }
-                catch (InterruptedException e) {
-                    LOG.log(Level.WARNING, 
-                            "... could not send thread to sleep : {0}", e.getMessage());
-                } 
             }
-            
         }
         
     }

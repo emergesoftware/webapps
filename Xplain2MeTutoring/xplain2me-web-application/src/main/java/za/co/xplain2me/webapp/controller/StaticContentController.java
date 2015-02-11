@@ -30,7 +30,7 @@ public class StaticContentController extends GenericController implements Serial
      */
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
     public ModelAndView welcomePage(HttpServletRequest request) {
-        return createModelAndView("static/index");
+        return sendRedirect("/web-app/index.html");
     }
     
     /**
@@ -41,7 +41,7 @@ public class StaticContentController extends GenericController implements Serial
      */
     @RequestMapping(value = "/about-us", method = RequestMethod.GET)
     public ModelAndView aboutUsPage(HttpServletRequest request) {
-        return createModelAndView("static/about");
+        return sendRedirect("/web-app/index.html#about");
     }
     
     /**
@@ -51,7 +51,7 @@ public class StaticContentController extends GenericController implements Serial
      */
     @RequestMapping(value = "/contact-us", method = RequestMethod.GET)
     public ModelAndView contactUsPage(HttpServletRequest request) {
-        return createModelAndView("static/contact-us");
+        return sendRedirect("/web-app/index.html#contact");
     }
     
     /**
@@ -62,7 +62,7 @@ public class StaticContentController extends GenericController implements Serial
      */
     @RequestMapping(value = "/our-rates", method = RequestMethod.GET)
     public ModelAndView ratesPage(HttpServletRequest request) {
-        return createModelAndView("static/rates");
+        return sendRedirect("/web-app/index.html#about");
     }
     
     /**
@@ -73,6 +73,6 @@ public class StaticContentController extends GenericController implements Serial
      */
     @RequestMapping(value = "/subjects-offered", method = RequestMethod.GET)
     public ModelAndView subjectsPage(HttpServletRequest request) {
-        return createModelAndView("static/subjects");
+        return sendRedirect("/web-app/index.html#subjects");
     }
 }

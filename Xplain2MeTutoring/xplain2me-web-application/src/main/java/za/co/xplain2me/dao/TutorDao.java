@@ -14,6 +14,19 @@ public interface TutorDao {
     public final static int SEARCH_BY_TUTOR_ID = 101;
     
     /**
+     * Gets a list of tutors for browsing
+     * from starting point and limited to
+     * per browsing instance.
+     * 
+     * @param startFrom
+     * @param limitTo
+     * @param profilePerformingAction
+     * @return
+     * @throws DataAccessException 
+     */
+    public List<Tutor> browseTutors(int startFrom, int limitTo, Profile profilePerformingAction) throws DataAccessException;
+    
+    /**
      * Creates a new tutor entity from the provided
      * profile.
      * 
@@ -29,14 +42,25 @@ public interface TutorDao {
      * Assigns the tutor to subjects.
      * 
      * @param tutorSubjects
-     * @param appendTo
      * @param profilePerformingAction
      * @return
      * @throws DataAccessException 
      */
-    public boolean assignSubjectsToTutor(List<TutorSubject> tutorSubjects, 
-            boolean appendTo,
+    public boolean assignSubjectsToTutor(List<TutorSubject> tutorSubjects,
             Profile profilePerformingAction) throws DataAccessException;
+    
+    /**
+     * Removes subjects from tutor
+     * 
+     * @param tutor
+     * @param subjects
+     * @param profilePerformingAction
+     * @return
+     * @throws DataAccessException 
+     */
+    public boolean removeSubjectsFromTutor(Tutor tutor, List<Subject> subjects, 
+            Profile profilePerformingAction)
+            throws DataAccessException;
     
     /**
      * Searches for tutor(s) 

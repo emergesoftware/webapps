@@ -1,38 +1,84 @@
 <%@ page pageEncoding="UTF-8" %>
 
-<br/>
+<div id="navbar-main">
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        
+        <div class="container">
+        
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" 
+                        data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" 
+                   href="/welcome#home">
+                    <span style="display: block; font-size: 90%">
+                        <strong>XPLAIN2ME TUTORING</strong>
+                    </span>
+                </a>
+            </div>
+          
+            <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li> <a href="/welcome#home" class="smoothScroll">Home</a></li>
+                        <li> <a href="/welcome#about" class="smoothScroll"> About</a></li>
+                        <li> <a href="/welcome#why_choose_us" class="smoothScroll"> Why Choose Us</a></li>
+                        <li> <a href="/welcome#what_we_do" class="smoothScroll"> What We Do</a></li>
+                        <li> <a href="/welcome#subjects" class="smoothScroll"> Subjects</a></li>
+                        <li> <a href="#contact" class="smoothScroll"> Contact</a></li>
+                        <li> <a href="/account/login" title="Login" class="smoothScroll"> Login</a></li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
 
-<ul id="nav-bar" class="nav nav-pills navbar-right">
-    <li>
-        <a href="<%= request.getContextPath() %>/assets/html/webapp/index.jsp" title="Home">
-            <span class="glyphicon glyphicon-home"></span>
-            <span>&nbsp;Home</span>
-        </a>
-    </li>
-    <li>
-        <a href="<%= request.getContextPath() %>/request-a-tutor" title="Request a tutor">
-            <span class="glyphicon glyphicon-bullhorn"></span>
-            <span>&nbsp;Request a tutor</span>
-        </a>
-    </li>
-    <li>
-        <a href="<%= request.getContextPath() %>/quote-request" title="Request a quote">
-            <span class="glyphicon glyphicon-credit-card"></span>
-            <span>&nbsp;Request a quote</span>
-        </a>
-    </li>
-    <li>
-        <a href="<%= request.getContextPath() %>/become-a-tutor" title="Become a tutor">
-            <span class="glyphicon glyphicon-user"></span>
-            <span>&nbsp;Become a tutor</span>
-        </a>
-    </li>
-    <li>
-        <a href="<%= request.getContextPath() %>/account/login" title="Login">
-            <span class="glyphicon glyphicon-lock"></span>
-            <span>&nbsp;Login</span>
-        </a>
-    </li>
-</ul>
-<br/>
-<hr/>
+    <section class="section-divider textdivider divider2">
+        <div class="container" style="background: black; opacity: 0.6">
+
+            <h2 style="color: white">
+                <span>
+                    <img alt="open quotes" src="/web-app/assets/img/open_quotes.png"
+                         style="width: 42px" />
+                </span>
+                <span>
+                    Develop a passion for learning. If you <br/>
+                    do, you will never cease to grow.
+                </span>
+                <span>
+                    <img alt="open quotes" src="/web-app/assets/img/close_quotes.png"
+                         style="width: 42px" />
+                </span>
+            </h2>
+            <hr>
+
+            <h3 style="color: white">ANTHONY J. D'ANGELO (1924 -2004)</h3>
+
+        </div>
+        <div class="container">
+            <br>
+            <br>
+            
+            <a href="/request-a-tutor" title="Get a tutor"
+                class="btn btn-default btn-lg">
+                <span class="glyphicon glyphicon-bullhorn"></span>
+                <span>&nbsp;Get a tutor</span>
+            </a>
+            
+            <a href="/become-a-tutor" title="Become a tutor"
+                class="btn btn-default btn-lg">
+                <span class="glyphicon glyphicon-user"></span>
+                <span>&nbsp;Become a tutor</span>
+            </a>
+            
+            <a href="/quote-request" title="Get a quote"
+                class="btn btn-default btn-lg">
+                <span class="glyphicon glyphicon-credit-card"></span>
+                <span>&nbsp;Get a quote</span>
+            </a>
+        </div>
+    </section>

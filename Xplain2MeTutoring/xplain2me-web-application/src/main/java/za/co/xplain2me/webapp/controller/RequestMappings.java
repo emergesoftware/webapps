@@ -78,5 +78,6 @@ public interface RequestMappings {
     public static final String DETACH_USER_AS_TUTOR = "/portal/tutors/detach";
     public static final String GET_TUTOR_LESSONS = "/portal/tutors/retrieve-lessons";
     public static final String GET_TUTOR_SUBJECTS = "/portal/tutors/retrieve-subjects";
+    public static final String BROWSE_TUTORS = "/portal/tutors/browse";
     
 }

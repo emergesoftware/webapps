@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "subject")
-public class Subject implements Serializable {
+public class Subject implements Serializable, Comparable<Subject> {
     
     @Id
     @Column(name = "subject_id")
@@ -82,6 +82,11 @@ public class Subject implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(Subject o) {
+        return (int)(id - o.getId());
     }
     
 }

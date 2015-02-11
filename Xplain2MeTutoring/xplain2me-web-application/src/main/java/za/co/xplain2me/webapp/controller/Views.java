@@ -63,6 +63,7 @@ public interface Views {
     
     
     // TUTOR MANAGEMENT
+    public static final String BROWSE_TUTORS = "browse-tutors";
     public static final String CREATE_TUTOR_SELECTION = "create-tutor-selection";
     public static final String CREATE_TUTOR_CONFIRMATION = "create-tutor-confirmation";
     public static final String ASSIGN_SUBJECTS_TO_TUTOR = "assign-subjects-to-tutor";

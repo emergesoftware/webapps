@@ -34,7 +34,8 @@ public class TutorDaoImpl implements TutorDao {
     }
 
     @Override
-    public Tutor createTutor(Tutor tutor, Profile profilePerformingAction) throws DataAccessException {
+    public Tutor createTutor(Tutor tutor, Profile profilePerformingAction) 
+            throws DataAccessException {
         
         if (tutor == null || profilePerformingAction == null) {
             LOG.warning("... either the tutor is null or the "
@@ -78,7 +79,8 @@ public class TutorDaoImpl implements TutorDao {
     }
 
     @Override
-    public boolean assignSubjectsToTutor(List<TutorSubject> tutorSubjects, boolean appendTo, Profile profilePerformingAction)
+    public boolean assignSubjectsToTutor(List<TutorSubject> tutorSubjects, 
+            Profile profilePerformingAction)
             throws DataAccessException {
         
         if (tutorSubjects == null || tutorSubjects.isEmpty() || 
@@ -97,72 +99,29 @@ public class TutorDaoImpl implements TutorDao {
             tx = session.beginTransaction();
             
             long count = 0L;
-            
-            // if appendTo is TRUE
-            if (appendTo) {
-                
-                // check first if the tutor is not assigned the subjects
-                for (TutorSubject tutorSubject : tutorSubjects) {
-                    
-                    criteria = session.createCriteria(TutorSubject.class, "tutorSubject")
-                            .createAlias("tutorSubject.tutor", "tutor")
-                            .createAlias("tutorSubject.subject", "subject")
-                            .setProjection(Projections.count("tutorSubject.id"))
-                            .add(Restrictions.and(
-                                    Restrictions.eq("tutor.id", tutorSubject.getTutor().getId()),
-                                    Restrictions.eq("subject.id", tutorSubject.getSubject().getId())));
-                    
-                    iterator = criteria.list().iterator();
-                    while (iterator.hasNext())
-                        count = (Long)iterator.next();
-                    
-                    // if this entry does not exist then insert
-                    if (count == 0) {
-                        session.save(tutorSubject);
-                        session.persist(tutorSubject);
-                    }
-                    
+            // check first if the tutor is not assigned the subjects
+            for (TutorSubject tutorSubject : tutorSubjects) {
+
+                criteria = session.createCriteria(TutorSubject.class, "tutorSubject")
+                        .createAlias("tutorSubject.tutor", "tutor")
+                        .createAlias("tutorSubject.subject", "subject")
+                        .setProjection(Projections.count("tutorSubject.id"))
+                        .add(Restrictions.and(
+                                Restrictions.eq("tutor.id", tutorSubject.getTutor().getId()),
+                                Restrictions.eq("subject.id", tutorSubject.getSubject().getId())));
+
+                iterator = criteria.list().iterator();
+                while (iterator.hasNext())
+                    count = (Long)iterator.next();
+
+                // if this entry does not exist then insert
+                if (count == 0) {
+                    session.save(tutorSubject);
+                    session.persist(tutorSubject);
                 }
-            }
-            
-            else {
+
+            }  
                 
-                // delete all the entries from the table - if they
-                // exist and insert new entries
-                for (TutorSubject tutorSubject : tutorSubjects) {
-                    
-                    criteria = session.createCriteria(TutorSubject.class, "tutorSubject")
-                            .createAlias("tutorSubject.tutor", "tutor")
-                            .createAlias("tutorSubject.subject", "subject")
-                            .setProjection(Projections.count("tutorSubject.id"))
-                            .add(Restrictions.and(
-                                    Restrictions.eq("tutor.id", tutorSubject.getTutor().getId()),
-                                    Restrictions.eq("subject.id", tutorSubject.getSubject().getId())));
-                    
-                    iterator = criteria.list().iterator();
-                    while (iterator.hasNext())
-                        count = (Long)iterator.next();
-                    
-                    // if this entry does not exist then insert
-                    if (count == 0) {
-                        session.save(tutorSubject);
-                        session.persist(tutorSubject);
-                    }
-                    
-                    // else then delete then insert
-                    else {
-                        
-                        session.delete(tutorSubject);
-                        
-                        session.save(tutorSubject);
-                        session.persist(tutorSubject);
-                        
-                    }
-                    
-                }
-                
-            }
-            
             tx.commit();
             
             return true;
@@ -181,6 +140,63 @@ public class TutorDaoImpl implements TutorDao {
         
     }
 
+    @Override
+    public boolean removeSubjectsFromTutor(Tutor tutor, List<Subject> subjects, 
+            Profile profilePerformingAction)
+            throws DataAccessException {
+        
+        if (tutor == null || (subjects == null || subjects.isEmpty()) || 
+                profilePerformingAction == null) {
+            
+            LOG.warning("... either no tutor or subjects are not provided or "
+                    + "the profile performing action is null ...");
+            return false;
+        }
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+
+            tx = session.beginTransaction();
+            
+            TutorSubject tutorSubject = null;
+            
+            for (Subject subject : subjects) {
+
+                criteria = session.createCriteria(TutorSubject.class, "tutorSubject")
+                        .createAlias("tutorSubject.tutor", "tutor")
+                        .createAlias("tutorSubject.subject", "subject")
+                        .add(Restrictions.and(
+                                Restrictions.eq("tutor.id", tutor.getId()),
+                                Restrictions.eq("subject.id", subject.getId())));
+
+                iterator = criteria.list().iterator();
+                while (iterator.hasNext())
+                    tutorSubject = (TutorSubject)iterator.next();
+
+                if (tutorSubject != null) 
+                    session.delete(tutorSubject);
+                
+            }  
+                
+            tx.commit();
+            
+            return true;
+        }
+        
+        catch (HibernateException e) {
+            
+            HibernateConnectionProvider.rollback(tx);
+            
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            return false;
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
+    }
+    
     @Override
     public List<Tutor> searchTutor(int tutorSearchCriteria, Object value, Profile profilePerformingAction) throws DataAccessException {
         
@@ -265,6 +281,47 @@ public class TutorDaoImpl implements TutorDao {
     public Tutor updateTutor(Tutor tutor, Profile profilePerformingAction) throws DataAccessException {
         throw new UnsupportedOperationException("Not supported yet.");
         //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public List<Tutor> browseTutors(int startFrom, int limitTo, Profile profilePerformingAction)
+            throws DataAccessException {
+        
+        if ((startFrom < 0 || startFrom > Integer.MAX_VALUE) || 
+                (limitTo <= 0 || limitTo > 50) ||
+                profilePerformingAction == null || 
+                profilePerformingAction.getProfileType() == null) {
+            
+            LOG.warning("... some parameters appear invalid ...");
+            return null;
+        }
+        
+        try {
+            
+            session = HibernateConnectionProvider.
+                    getSessionFactory().openSession(); 
+            
+            long profileTypeId = profilePerformingAction.getProfileType().getId();
+
+            criteria = session.createCriteria(Tutor.class, "tutor")
+                    .createAlias("tutor.profile", "profile")
+                    .createAlias("profile.profileType", "profileType")
+                    .add(Restrictions.gt("profileType.id", profileTypeId))
+                    .setMaxResults(limitTo)
+                    .setFirstResult(startFrom)
+                    .addOrder(Order.asc("tutor.id"));
+            
+            return criteria.list();
+            
+        }
+        
+        catch (HibernateException e) {
+            LOG.log(Level.SEVERE, "Error: {0}", e.getMessage());
+            throw new DataAccessException(e);
+        }
+        finally {
+            HibernateConnectionProvider.closeConnection(session);
+        }
     }
 
     @Override

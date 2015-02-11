@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.springframework.web.servlet.ModelAndView;
+import za.co.xplain2me.webapp.component.AlertBlock;
 import za.co.xplain2me.webapp.component.UserContext;
 
 public abstract class GenericController {
@@ -281,5 +282,38 @@ public abstract class GenericController {
         return object;
     }
 
-
+    
+    /**
+     * Migrates any alert block in the session scope to the
+     * request scope.
+     * 
+     * @param request 
+     */
+    protected void migrateAlertBlockToRequestScope(HttpServletRequest request) {
+        
+        AlertBlock alertBlock = (AlertBlock)
+                getFromSessionScope(request, AlertBlock.class);
+        
+        if (alertBlock != null && 
+                alertBlock.getAlertBlockMessages() != null &&
+                !alertBlock.getAlertBlockMessages().isEmpty()) {
+            
+            saveToRequestScope(request, alertBlock); 
+            removeFromSessionScope(request, AlertBlock.class);
+            
+        }
+    }
+    
+    /**
+     * Gets the user context from the session scope.
+     * 
+     * @param request
+     * @return 
+     */
+    protected UserContext getUserContext(HttpServletRequest request) {
+        UserContext context = (UserContext)
+                getFromSessionScope(request, UserContext.class);
+        return context;
+    }
+    
 }
