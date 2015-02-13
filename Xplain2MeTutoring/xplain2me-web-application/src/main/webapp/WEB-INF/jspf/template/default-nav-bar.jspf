@@ -24,25 +24,85 @@
           
             <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li> <a href="/welcome#home" class="smoothScroll">Home</a></li>
-                        <li> <a href="/welcome#about" class="smoothScroll"> About</a></li>
-                        <li> <a href="/welcome#why_choose_us" class="smoothScroll"> Why Choose Us</a></li>
-                        <li> <a href="/welcome#what_we_do" class="smoothScroll"> What We Do</a></li>
-                        <li> <a href="/welcome#subjects" class="smoothScroll"> Subjects</a></li>
-                        <li> <a href="#contact" class="smoothScroll"> Contact</a></li>
-                        <li> <a href="/account/login" title="Login" class="smoothScroll"> Login</a></li>
+                        <li> 
+                            <a href="/welcome" title="Home" hreflang="en">
+                                <span class="icon icon-home"></span>
+                                <span>&nbsp;</span>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" 
+                               role="button" aria-expanded="false">
+                                <span class="icon icon-people"></span>
+                                <span>&nbsp;</span>
+                                <span>About</span>
+                                <span class="caret"></span>
+                            </a>
+                            
+                            <ul class="dropdown-menu" role="menu">
+                                
+                                <li><a href="/about" title="About" hreflang="en">About Us</a></li>
+                                <li><a href="/welcome#services" class="smoothScroll">Services + Rates</a></li>
+                                <li><a href="/welcome#why_choose_us" class="smoothScroll">Why Choose Us</a></li>
+                                <li><a href="/welcome#how_we_do_it" class="smoothScroll">What We Do</a></li>
+                                <li><a href="/welcome#subjects" class="smoothScroll">Subjects Offered</a></li>
+                                
+                            </ul>
+                        </li>
+                        
+                        <li> 
+                            <a title="Request a tutor" href="/request-a-tutor" hreflang="en"> 
+                                <span class="icon icon-accessibility"></span>
+                                <span>&nbsp;</span>
+                                <span>Get a tutor</span>
+                            </a>
+                        </li>
+                        
+                        <li> 
+                            <a title="Become a tutor" href="/become-a-tutor" hreflang="en"> 
+                                <span class="icon icon-enter"></span>
+                                <span>&nbsp;</span>
+                                <span>Become a tutor</span>
+                            </a>
+                        </li>
+                        
+                        <li> 
+                            <a title="Request Quote" href="/quote-request" hreflang="en"> 
+                                <span class="icon icon-cart-checkout"></span>
+                                <span>&nbsp;</span>
+                                <span>Request Quote</span>
+                            </a>
+                        </li>
+                        
+                        <li> 
+                            <a  title="Contact Us" href="#contact" class="smoothScroll"> 
+                                <span class="icon icon-envelop"></span>
+                                <span>&nbsp;</span>
+                                <span>Contact</span>
+                            </a>
+                        </li>
+                        
+                        <li> 
+                            <a href="/account/login" title="Login" hreflang="en">
+                                <span class="icon icon-lock"></span>
+                                <span>&nbsp;</span>
+                                <span>Login</span>
+                            </a>
+                        </li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </div>
     </div>
 
-    <section class="section-divider textdivider divider2">
+    <section class="section-divider textdivider divider6">
         <div class="container" style="background: black; opacity: 0.6">
 
             <h2 style="color: white">
                 <span>
-                    <img alt="open quotes" src="/web-app/assets/img/open_quotes.png"
+                    <img alt="open quotes" src="/assets/landing-page-theme/img/open_quotes.png"
                          style="width: 42px" />
                 </span>
                 <span>
@@ -50,7 +110,7 @@
                     do, you will never cease to grow.
                 </span>
                 <span>
-                    <img alt="open quotes" src="/web-app/assets/img/close_quotes.png"
+                    <img alt="open quotes" src="/assets/landing-page-theme/img/close_quotes.png"
                          style="width: 42px" />
                 </span>
             </h2>
@@ -64,21 +124,22 @@
             <br>
             
             <a href="/request-a-tutor" title="Get a tutor"
-                class="btn btn-default btn-lg">
+                class="btn btn-primary btn-lg btn-blue" style="margin: 5px">
                 <span class="glyphicon glyphicon-bullhorn"></span>
                 <span>&nbsp;Get a tutor</span>
             </a>
             
             <a href="/become-a-tutor" title="Become a tutor"
-                class="btn btn-default btn-lg">
+                class="btn btn-danger btn-lg btn-red" style="margin: 5px">
                 <span class="glyphicon glyphicon-user"></span>
                 <span>&nbsp;Become a tutor</span>
             </a>
             
             <a href="/quote-request" title="Get a quote"
-                class="btn btn-default btn-lg">
+                class="btn btn-success btn-lg btn-green" style="margin: 5px">
                 <span class="glyphicon glyphicon-credit-card"></span>
                 <span>&nbsp;Get a quote</span>
             </a>
+            
         </div>
     </section>

@@ -37,17 +37,20 @@
          
             <h1 class="centered">Verification Code:</h1>
             <hr/>
-            <p>
-                <span>We have sent you an email to </span>
-                <span><b><%= form.getTutorRequest().getEmailAddress() %></b>.</span>
-                <br/>
-                <span>Go to your email inbox to obtain the 4-digit verification code.</span>
-                <br/>
-                <span>You must do this in the next 5 minutes, or else the code will expire.</span>
-            </p> 
+            
            
-            <div class="row white">
-                <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3">
+                    
+                    <p>
+                        <span>We have sent you an email to </span>
+                        <span><b><%= form.getTutorRequest().getEmailAddress() %></b>.</span>
+                        <br/>
+                        <span>Go to your email inbox to obtain the 4-digit verification code.</span>
+                        <br/>
+                        <span>You must do this in the next 5 minutes, or else the code will expire.</span>
+                    </p> 
+                    
                     <%
                         if (form.getErrorsEncountered().isEmpty() == false) {
                             %>

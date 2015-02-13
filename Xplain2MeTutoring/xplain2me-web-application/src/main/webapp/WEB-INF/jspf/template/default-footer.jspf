@@ -5,7 +5,7 @@
 
             <h2 style="color: white">
                 <span>
-                    <img alt="open quotes" src="/web-app/assets/img/open_quotes.png"
+                    <img alt="open quotes" src="/assets/landing-page-theme/img/open_quotes.png"
                          style="width: 42px" />
                 </span>
                 <span>
@@ -13,7 +13,7 @@
                     can use to change the world.
                 </span>
                 <span>
-                    <img alt="open quotes" src="/web-app/assets/img/close_quotes.png"
+                    <img alt="open quotes" src="/assets/landing-page-theme/img/close_quotes.png"
                          style="width: 42px" />
                 </span>
             </h2>
@@ -25,75 +25,74 @@
     </section>
 
     <!-- Contact -->
-    <div class="container" id="contact" name="contact">
+    <div id="contact" name="contact"></div>
+    <div class="container" >
         
         <div class="row">
             <br>
             <h1 class="centered">EXTRAS</h1>
             <hr>
             <br>
-            <br>
             <div class="col-lg-4">
+                
                 <h3>Contact Information</h3>
-                <br/>
-                <p><span class="icon icon-home"></span> Braamfontein, Johannesburg<br/>
-                    <span class="icon icon-phone"></span> +27(0) 72 893 1542 <br/>
-                    <span class="icon icon-mobile"></span> +27(0) 72 893 1542 <br/>
-                    <span class="icon icon-envelop"></span> <a href="#"> info@xplain2me.co.za</a> <br/>
-                    <span class="icon icon-twitter"></span> <a href="#"> @xplain2me1 </a> <br/>
-                    <span class="icon icon-facebook"></span> <a href="#"> Xplain2Me Tutoring Company </a> <br/>
+                <br>
+                
+                <p>
+                    <span class="icon icon-home"></span>&nbsp;Johannesburg, South Africa<br/>
+                    <span class="icon icon-phone"></span>&nbsp;+27(0) 72 893 1542<br/>
+                    <span class="icon icon-mobile"></span>&nbsp;+27(0) 72 893 1542 <br/>
+                    
+                    <span class="icon icon-envelop"></span>
+                    <a href="mailto:info@xplain2me.co.za" target="_blank"
+                       title="Send us an email">&nbsp;info@xplain2me.co.za</a><br/>
+                    
+                    <span class="icon icon-twitter"></span> 
+                    <a title="Follow us on Twitter"
+                        href="https://twitter.com/xplain2me1" target="_blank">
+                        &nbsp;@xplain2me1 </a> <br/>
+                    
+                    <span class="icon icon-facebook">
+                    </span> <a title="Like our Facebook page" target="_blank"
+                       href="https://www.facebook.com/pages/Xplain2me-Tutoring-company/1539808466275946?ref=ts&fref=ts"> 
+                        &nbsp;Xplain2Me Tutoring</a> <br/>
                 </p>
             </div>
 
             <div class="col-lg-4">
-                <h3>Portal Login</h3>
+                <h3>Company Information</h3>
+                <br>
+                <img alt="company logo" src="/assets/landing-page-theme/img/logo.png" 
+                     style="width: 50%; margin: 0px auto"/>
                 <br/>
-                <p>Tutors and registered students can login in here:</p>
+                
                 <p>
-                    <form role="form" id="loginForm"
-                          method="post" action="/account/login">
-
-                        <!-- Username -->
-                    <div id="usernameFormGroup" class="form-group">
-                        <label>Username</label>
-                        <input type="text" class="form-control" id="username"
-                               name="username" maxlength="16"
-                               placeholder="Enter Username"
-                               data-validation="length" data-validation-length="min8"
-                               data-validation-error-msg="You did not enter a username."/>
-                    </div>
-
-                    <!-- Password -->
-                    <div id="passwordFormGroup" class="form-group">
-                        <label>Password</label>
-                        <input type="password" class="form-control" id="password"
-                               name="password" maxlength="32"
-                               placeholder="Enter Password"
-                               data-validation="required"
-                               data-validation-error-msg="You did not enter a password."/>
-                    </div>
-
-                    <input type="submit" id="loginButton"
-                        name="loginButton" class="btn btn-primary"
-                        value="Login"/>
-
-                    </form>
+                    Xplain2Me was founded by well versed, resourceful and committed graduates
+                    who commenced private tutoring in and around the province, effectively and 
+                    efficiently from 2009 till to date.
                 </p>
+                
             </div>
             
             <div class="col-lg-4">
-                <h3>Links</h3>
-                <br/>
-                
+                <h3>Navigation</h3>
+             
                 <ul>
-                <li><a href="#home">Home</a></li>
-                <li> <a href="/welcome#about"> About</a></li>
-                <li> <a href="/welcome#why_choose_us"> Why Choose Us</a></li>
-                <li> <a href="/welcome#what_we_do"> What We Do</a></li>
-                <li> <a href="/welcome#subjects"> Subjects</a></li>
-                <li> <a href="#contact"> Contact</a></li>
-                <li> <a href="/account/login" title="Login"> Login</a></li>
-            </ul>
+                    <li> <a href="/welcome" title="Home" hreflang="en"> Home</a></li>
+                    <li> <a href="/about" title="About Us" hreflang="en"> About Us</a></li>
+                    <li> <a href="/request-a-tutor" title="Request a tutor" hreflang="en"> Get a Tutor</a></li>
+                    <li> <a href="/become-a-tutor" title="Become a tutor" hreflang="en"> Become a Tutor</a></li>
+                    <li> <a href="/quote-request" title="Request a quote" hreflang="en"> Request Quote</a></li>
+                    <li> <a href="/account/login" title="Login" hreflang="en"> Login</a></li>
+                </ul>
+                
+                <h3>Legal</h3>
+             
+                <ul>
+                    <li> <a href="#" title="Terms of service" hreflang="en"> Terms of Service</a></li>
+                    <li> <a href="#" title="Usage Policy" hreflang="en"> Usage Policy</a></li>
+                    <li> <a href="#" title="Privacy Policy" hreflang="en"> Privacy Policy</a></li>
+                </ul>
                 
             </div>
         </div>
@@ -101,13 +100,19 @@
     </div>
 
     <div id="footerwrap">
-            <div class="container">
-                <h4>
-                    Xplain2Me Tutoring Services
-                    <br/>
-                    Copyright&copy; 2010-2015 -- All Rights Reserved.
-                </h4>
-            </div>
+        <div class="container">
+            <h4>
+                <span class="text-primary">
+                    <strong>Xplain2Me Tutoring (Pty) Ltd (ZA)</strong><br/>
+                    <small class="text-muted">Simplify your learning</small>
+                </span>
+                <br>
+                <br/>
+                <span style="font-size: 90%">
+                    Copyright&copy; 2010-2015 - All Rights Reserved.
+                </span>
+            </h4>
+        </div>
     </div>
 
     <!-- Bootstrap core JavaScript
@@ -115,11 +120,11 @@
     <!-- Placed at the end of the document so the pages load faster -->
 		
 
-    <script type="text/javascript" src="/web-app/assets/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/web-app/assets/js/retina.js"></script>
-    <script type="text/javascript" src="/web-app/assets/js/jquery.easing.1.3.js"></script>
-    <script type="text/javascript" src="/web-app/assets/js/smoothscroll.js"></script>
-    <script type="text/javascript" src="/web-app/assets/js/jquery-func.js"></script>
+    <script type="text/javascript" src="/assets/landing-page-theme/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/assets/landing-page-theme/js/retina.js"></script>
+    <script type="text/javascript" src="/assets/landing-page-theme/js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="/assets/landing-page-theme/js/smoothscroll.js"></script>
+    <script type="text/javascript" src="/assets/landing-page-theme/js/jquery-func.js"></script>
 
     <script type="text/javascript">
 

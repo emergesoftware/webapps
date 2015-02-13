@@ -45,16 +45,18 @@
         
         <div class="container">
                    
-            <h1 class="centered">Become a tutor</h1>
+            <h1 class="centered">BECOME A TUTOR</h1>
             <hr/>
-            <p class="text-muted centered">
-                Thanks for your interest in joining our wonderful, vibrant, driven
-                and passionate tutors. To join, please fill in the form below
-                and we will get back to you shortly. Good luck.
-            </p>
+            
 
-            <div class="row white">
-                <div class="col-lg-8">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    
+                    <p class="text-muted centered">
+                        Thanks for your interest in joining our wonderful, vibrant, driven
+                        and passionate tutors. To join, please fill in the form below
+                        and we will get back to you shortly. Good luck.
+                    </p>
 
                     <form id="becomeTutorForm" name="becomeTutorForm" role="form"
                           action="<%= request.getContextPath() %>/become-a-tutor"
@@ -90,8 +92,7 @@
                             %>
 
                         </div>
-
-                        <br/>
+                            
                         <p class="text-primary">
                             <strong>Note:&nbsp;</strong>
                             All fields are mandatory.
@@ -390,17 +391,19 @@
                                 <!-- If yes, select the levels you tutored -->
                                 <div id="academicLevelFormGroup" class="form-group">
                                     <label>If Yes, select the subjects you have tutored before:</label>
-                                    <br/>
+                                    <br>
                                     <%
                                         for (Subject subject : form.getSubjects().values()) {
-                                    %>
+                                        %>
                                         <label class="checkbox-inline">
                                             <input type="checkbox" name="subject_<%= subject.getId() %>"
-                                                   value="<%= subject.getId() %>">
+                                                   value="<%= subject.getId() %>" />
                                             <%= subject.getName() %>
                                         </label><br/>
                                     <% } %>
+                                    
                                 </div>
+                                
 
                                 <!-- Upload documents -->
 

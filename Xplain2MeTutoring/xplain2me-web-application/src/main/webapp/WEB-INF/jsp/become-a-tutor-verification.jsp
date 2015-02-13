@@ -63,8 +63,8 @@
             <h3 class="centered">Verification Code:</h3>
             <hr/>
             
-            <div class="row white">
-                <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3">
             
                     <p>
                         <span>We have sent you an email to </span>

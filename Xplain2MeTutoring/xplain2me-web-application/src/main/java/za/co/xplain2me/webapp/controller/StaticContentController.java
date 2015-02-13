@@ -30,49 +30,19 @@ public class StaticContentController extends GenericController implements Serial
      */
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
     public ModelAndView welcomePage(HttpServletRequest request) {
-        return sendRedirect("/web-app/index.html");
+        LOG.info("... delivering the home page ...");
+        return createModelAndView("static/index");
     }
     
     /**
-     * The ABOUT US page
+     * The ABOUT page
      * 
      * @param request
      * @return 
      */
-    @RequestMapping(value = "/about-us", method = RequestMethod.GET)
+    @RequestMapping(value = "/about", method = RequestMethod.GET)
     public ModelAndView aboutUsPage(HttpServletRequest request) {
-        return sendRedirect("/web-app/index.html#about");
-    }
-    
-    /**
-     * The CONTACT US page
-     * @param request
-     * @return 
-     */
-    @RequestMapping(value = "/contact-us", method = RequestMethod.GET)
-    public ModelAndView contactUsPage(HttpServletRequest request) {
-        return sendRedirect("/web-app/index.html#contact");
-    }
-    
-    /**
-     * The RATES page
-     * 
-     * @param request
-     * @return 
-     */
-    @RequestMapping(value = "/our-rates", method = RequestMethod.GET)
-    public ModelAndView ratesPage(HttpServletRequest request) {
-        return sendRedirect("/web-app/index.html#about");
-    }
-    
-    /**
-     * The SUBJECTS page 
-     * 
-     * @param request
-     * @return 
-     */
-    @RequestMapping(value = "/subjects-offered", method = RequestMethod.GET)
-    public ModelAndView subjectsPage(HttpServletRequest request) {
-        return sendRedirect("/web-app/index.html#subjects");
+        LOG.info(" .. delivering the about us page ...");
+        return createModelAndView("static/about");
     }
 }

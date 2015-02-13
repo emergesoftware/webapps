@@ -22,16 +22,16 @@
         <div class="container" id="content">
 
             <h3 class="centered">Verify new user profile</h3>
-            <p class="text-muted centered">
-                To verify your new user profile, please
-                enter the details required below, including
-                the verification code that was emailed to you.
-            </p>
-
             <hr/>
             
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6 col-lg-offset-2">
+                    
+                    <p class="text-muted centered">
+                        To verify your new user profile, please
+                        enter the details required below, including
+                        the verification code that was emailed to you.
+                    </p>
                     
                     <%@include file="../jspf/template/default-alert-block.jspf" %>
                     

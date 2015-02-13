@@ -2,21 +2,48 @@
 <%@ page pageEncoding="UTF-8" %>
 
 <!-- Bootstrap core CSS -->
-<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
 <!-- Custom styles for this template -->
-<link href="/web-app/assets/css/main.css" rel="stylesheet">
-<link rel="stylesheet" href="/web-app/assets/css/icomoon.css">
-<link href="/web-app/assets/css/animate-custom.css" rel="stylesheet">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/assets/landing-page-theme/css/main.css">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/assets/landing-page-theme/css/icomoon.css">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/assets/landing-page-theme/css/animate-custom.css">
 
+<!-- Fonts -->
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script type="text/javascript" src="/web-app/assets/js/modernizr.custom.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/assets/landing-page-theme/js/modernizr.custom.js"></script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
-    <script src="/web-app/assets/js/html5shiv.js"></script>
-    <script src="/web-app/assets/js/respond.min.js"></script>
+    <script src="/assets/landing-page-theme/js/html5shiv.js"></script>
+    <script src="/assets/landing-page-theme/js/respond.min.js"></script>
 <![endif]-->
+
+<style type="text/css">
+    
+    .btn-red {
+        background-color: #FF0000;
+        border-color: #C80000;
+    }
+    
+    .btn-blue {
+        background-color: #000099;
+        border-color: #003399;
+    }
+    
+    .btn-green {
+        background-color: #006600;
+        border-color: #006600;
+    }
+    
+    body {
+        background-image: url('/assets/landing-page-theme/img/pattern_bg.png');
+        background-repeat: repeat;
+        background-attachment: scroll;
+        background-color: transparent;
+    }
+    
+</style>

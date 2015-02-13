@@ -30,6 +30,7 @@
         <script src="<%= request.getContextPath() %>/assets/js/login.js"></script>
         
     </head>
+    
     <body data-spy="scroll" data-offset="0" data-target="#navbar-main" onload="initialisation()">
         
         <%@include file="../jspf/template/default-nav-bar.jspf" %>
@@ -43,8 +44,8 @@
                 login credentials below:
             </p>
             
-            <div class="row white">
-                <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3">
                     
                     <form role="form" id="loginForm" name="loginForm" method="post"
                         onsubmit="return validateLoginForm(this)">

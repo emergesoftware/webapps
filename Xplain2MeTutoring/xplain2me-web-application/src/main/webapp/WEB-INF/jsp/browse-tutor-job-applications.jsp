@@ -257,7 +257,7 @@
                 
             </div>
                         
-            <%@include file="../jspf/template/default-footer.jspf" %> 
+            <%@include file="../jspf/template/default-manager-footer.jspf" %> 
             
         </div>
     </body>

@@ -30,11 +30,11 @@
         
         <div class="container">
             
-            <h1 class="centered">Request Submission Result</h1>
+            <h1 class="centered">Request Submission Result:</h1>
             <hr/>
             
-            <div class="row white">
-                <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3">
                     <%
                         boolean hasErrors = (form.getErrorsEncountered() != null && 
                                 form.getErrorsEncountered().isEmpty() == false);

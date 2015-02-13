@@ -39,18 +39,21 @@
   
         <div class="container">
 
-            <div class="row white">
+            <div class="row">
                 <br>
                 <h1 class="centered">REQUEST A QUOTE</h1>
                 <hr>
 
-                <p class="text-muted">
-                    To request a quote with our rates, please 
-                    fill in this form and we will send you 
-                    a quote as soon as possible.
-                </p>
                 
-                <div class="col-lg-6">
+                
+                <div class="col-lg-6 col-lg-offset-3">
+                    
+                    <p class="text-muted">
+                        To request a quote with our rates, please 
+                        fill in this form and we will send you 
+                        a quote as soon as possible.
+                    </p>
+                
                     <form id="requestQuoteForm" name="requestQuoteForm" role="form"
                           action="<%= request.getContextPath() %>/quote-request"
                           method="post" onsubmit="return validateRequestQuoteForm(this)">
@@ -85,7 +88,6 @@
 
                         </div>
 
-                        <br/>
                         <p class="text-primary">
                             <strong>Note: </strong>
                             All fields are mandatory.

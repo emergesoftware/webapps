@@ -18,7 +18,6 @@
     </mvc:annotation-driven>
 
     <mvc:resources mapping="/assets/**" location="/assets/*" />
-    <mvc:resources mapping="/web-app/**" location="/web-app/*" />
     
     <context:component-scan base-package="za.co.xplain2me.webapp.controller.helper"/>
     <context:component-scan base-package="za.co.xplain2me.webapp.component"/>

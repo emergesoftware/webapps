@@ -1,0 +1,16 @@
+
+<%@ page pageEncoding="UTF-8" %>
+
+<div>
+    <br/><hr/>
+    <div class="container text-center">
+        
+        <p>
+            Xplain2Me Tutoring Services
+            <br/>
+            Copyright&copy; 2010-2015 -- All Rights Reserved.
+        </p>
+    </div>
+    <br>
+    <br>
+</div>

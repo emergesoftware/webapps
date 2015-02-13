@@ -34,17 +34,20 @@
         
         <div class="container">
             
-            <div class="row white">
+            <div class="row">
                 <br>
                 <h1 class="centered">REQUEST A TUTOR</h1>
                 <hr>
-                <p class="text-muted">
-                    Thanks for your interest in our tutoring services. To request a tutor,
-                    please fill in the information below and we will get back to you
-                    soon.
-                </p>
+                
             
-                <div class="col-lg-8">
+                <div class="col-lg-8 col-lg-offset-2">
+                    
+                    <p class="text-muted">
+                        Thanks for your interest in our tutoring services. To request a tutor,
+                        please fill in the information below and we will get back to you
+                        soon.
+                    </p>
+                    
                     <form role="form" id="requestTutorForm" name="requestTutorForm" method="post"
                         action='<%= (request.getContextPath() + "/request-a-tutor") %>'
                         onsubmit="return validateRequestTutorForm(this)">
